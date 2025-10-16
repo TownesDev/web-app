@@ -1,5 +1,6 @@
 import { definePlugin } from 'sanity'
 import { sendEmail } from './emailSender'
+import { toast } from 'sonner'
 
 export const clientAutomation = definePlugin({
   name: 'client-automation',
@@ -75,7 +76,9 @@ export const clientAutomation = definePlugin({
                 props.onComplete()
               } catch (error) {
                 console.error('Error creating documents:', error)
-                alert('Error creating documents. Check console for details.')
+                toast.error('Error creating documents', {
+                  description: 'Check console for details.',
+                })
               }
             },
             tone: 'positive',
@@ -341,14 +344,16 @@ export const clientAutomation = definePlugin({
                     // Retainer invoice
                     const planData = clientData?.selectedPlan
                     if (!planData) {
-                      alert('Client has no selected plan. Please assign a plan first.')
+                      toast.error('Client has no selected plan', {
+                        description: 'Please assign a plan first.',
+                      })
                       return
                     }
 
                     // Get plan details
                     const planDetails = await context.getClient({ apiVersion: '2024-01-01' }).getDocument(planData._ref)
                     if (!planDetails) {
-                      alert('Plan details not found.')
+                      toast.error('Plan details not found')
                       return
                     }
 
@@ -360,7 +365,9 @@ export const clientAutomation = definePlugin({
                     }]
 
                   } else if (typeSelect.value === 'incident') {
-                    alert('Incident invoice generation coming soon!')
+                    toast.info('Incident invoice generation', {
+                      description: 'Coming soon!',
+                    })
                     return
 
                   } else if (typeSelect.value === 'custom') {
@@ -374,7 +381,9 @@ export const clientAutomation = definePlugin({
                     const unitPrice = parseFloat(priceInput?.value || '0')
 
                     if (!description || !unitPrice || quantity <= 0) {
-                      alert('Please fill in all required fields with valid values.')
+                      toast.error('Invalid input', {
+                        description: 'Please fill in all required fields with valid values.',
+                      })
                       return
                     }
 
@@ -410,14 +419,20 @@ export const clientAutomation = definePlugin({
                       throw new Error(result.error || 'Failed to create invoice')
                     }
 
-                    alert(`Invoice created successfully!\nInvoice Number: ${result.invoice.invoiceNumber}\nTotal: $${result.invoice.totalAmount}`)
+                    toast.success('Invoice created successfully!', {
+                      description: `Invoice #${result.invoice.invoiceNumber} - $${result.invoice.totalAmount}`,
+                    })
 
                     // Open the invoice in Sanity
-                    window.open(`/admin/intent/edit/id=${result.invoice._id};type=invoice/`, '_blank')
+                    setTimeout(() => {
+                      window.open(`/admin/intent/edit/id=${result.invoice._id};type=invoice/`, '_blank')
+                    }, 1500)
 
                   } catch (error) {
                     console.error('Error creating invoice:', error)
-                    alert('Error creating invoice. Check console for details.')
+                    toast.error('Error creating invoice', {
+                      description: 'Check console for details.',
+                    })
                   }
                 }
 
@@ -438,7 +453,9 @@ export const clientAutomation = definePlugin({
 
               } catch (error) {
                 console.error('Error opening invoice creation modal:', error)
-                alert('Error opening invoice creation modal. Check console for details.')
+                toast.error('Error opening invoice creation modal', {
+                  description: 'Check console for details.',
+                })
               }
             },
             tone: 'primary',
@@ -454,7 +471,9 @@ export const clientAutomation = definePlugin({
                 const emailTemplates = await context.getClient({ apiVersion: '2024-01-01' }).fetch('*[_type == "emailTemplate"]')
 
                 if (emailTemplates.length === 0) {
-                  alert('No email templates found. Please create an email template first.')
+                  toast.error('No email templates found', {
+                    description: 'Please create an email template first.',
+                  })
                   return
                 }
 
@@ -577,13 +596,15 @@ export const clientAutomation = definePlugin({
                   const recipientEmail = emailInput.value.trim()
 
                   if (!selectedTemplateId || !recipientEmail) {
-                    alert('Please select a template and enter an email address.')
+                    toast.error('Missing information', {
+                      description: 'Please select a template and enter an email address.',
+                    })
                     return
                   }
 
                   const selectedTemplate = emailTemplates.find((t: any) => t._id === selectedTemplateId)
                   if (!selectedTemplate) {
-                    alert('Selected template not found.')
+                    toast.error('Template not found')
                     return
                   }
 
@@ -608,10 +629,12 @@ export const clientAutomation = definePlugin({
                       recipientEmail
                     )
 
-                    alert('Email sent successfully!')
+                    toast.success('Email sent successfully!')
                   } catch (error) {
                     console.error('Error sending email:', error)
-                    alert('Error sending email. Check console for details.')
+                    toast.error('Error sending email', {
+                      description: 'Check console for details.',
+                    })
                   }
                 }
 
@@ -632,7 +655,9 @@ export const clientAutomation = definePlugin({
                 select.focus()
               } catch (error) {
                 console.error('Error opening email dialog:', error)
-                alert('Error opening email dialog. Check console for details.')
+                toast.error('Error opening email dialog', {
+                  description: 'Check console for details.',
+                })
               }
             },
             tone: 'primary',

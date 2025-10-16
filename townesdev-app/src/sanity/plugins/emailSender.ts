@@ -9,9 +9,6 @@ const getResendApiKey = () => {
   if (!apiKey) {
     throw new Error("RESEND_API_KEY environment variable is required");
   }
-
-  console.log("🔑 Using Resend API Key:", apiKey.substring(0, 10) + "...");
-
   return apiKey;
 };
 

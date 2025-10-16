@@ -10,3 +10,12 @@ export const sanity = createClient({
   perspective: process.env.SANITY_READ_TOKEN ? 'published' : 'published',
   // enable stega if we want live-preview later
 });
+
+// Client with write permissions for mutations
+export const sanityWrite = createClient({
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
+  apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-01-01',
+  useCdn: false, // writes need fresh data
+  token: process.env.NEXT_PUBLIC_SANITY_AUTH_TOKEN, // write token for mutations
+});
