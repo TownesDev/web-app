@@ -49,7 +49,7 @@ export function PlanCard({
                 clipRule="evenodd"
               />
             </svg>
-            <span className="text-gray-700">{feature}</span>
+            <span className="text-gray-700">{feature.charAt(0).toUpperCase() + feature.slice(1)}</span>
           </li>
         ))}
       </ul>

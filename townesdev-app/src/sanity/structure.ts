@@ -1,5 +1,23 @@
 import type { StructureResolver } from "sanity/structure";
 import React from "react";
+import {
+  Users,
+  Settings,
+  FileText,
+  Briefcase,
+  Calendar,
+  AlertTriangle,
+  UserX,
+  Mail,
+  DollarSign,
+  FolderOpen,
+  User,
+  MessageSquare,
+  Image,
+  MapPin,
+  Star,
+  CheckSquare
+} from "lucide-react";
 
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
 export const structure: StructureResolver = (S) =>
@@ -9,9 +27,11 @@ export const structure: StructureResolver = (S) =>
       // Configuration Section
       S.listItem()
         .title("SEO Configuration")
+        .icon(Settings)
         .child(S.document().schemaType("seoConfig").documentId("seoConfig")),
       S.listItem()
         .title("Operation Configuration")
+        .icon(Settings)
         .child(
           S.document()
             .schemaType("operationConfig")
@@ -23,35 +43,41 @@ export const structure: StructureResolver = (S) =>
 
       // Landing Page Section
       S.listItem()
-        .title("🏠 Landing Page")
+        .title("Landing Page")
+        .icon(FileText)
         .child(
           S.list()
             .title("Landing Page Content")
             .items([
               S.listItem()
-                .title("📁 Projects")
+                .title("Projects")
+                .icon(FolderOpen)
                 .child(S.documentTypeList("project").title("Projects")),
               S.listItem()
-                .title("👤 About Me")
+                .title("About Me")
+                .icon(User)
                 .child(
                   S.document().schemaType("aboutMe").documentId("aboutMe")
                 ),
               S.listItem()
-                .title("📧 Contact Info")
+                .title("Contact Info")
+                .icon(Mail)
                 .child(
                   S.document()
                     .schemaType("contactInfo")
                     .documentId("contactInfo")
                 ),
               S.listItem()
-                .title("🎯 Hero Section")
+                .title("Hero Section")
+                .icon(Image)
                 .child(
                   S.document()
                     .schemaType("heroSection")
                     .documentId("heroSection")
                 ),
               S.listItem()
-                .title("📝 Testimonials")
+                .title("Testimonials")
+                .icon(MessageSquare)
                 .child(S.documentTypeList("testimonial").title("Testimonials")),
             ])
         ),
@@ -70,9 +96,37 @@ export const structure: StructureResolver = (S) =>
           "offboarding",
           "emailTemplate",
         ].includes(listItem.getId() || "")
-      ),
+      ).map((item) => {
+        // Add custom icons based on document type
+        const id = item.getId()
+        switch (id) {
+          case 'client':
+            return item.icon(Users)
+          case 'plan':
+            return item.icon(Briefcase)
+          case 'kickoffChecklist':
+            return item.icon(CheckSquare)
+          case 'monthlyRhythm':
+            return item.icon(Calendar)
+          case 'incident':
+            return item.icon(AlertTriangle)
+          case 'offboarding':
+            return item.icon(UserX)
+          case 'emailTemplate':
+            return item.icon(Mail)
+          default:
+            return item
+        }
+      }),
+
+      // Users Section
       S.listItem()
-        .title("💰 Invoices")
+        .title("Users")
+        .icon(Users)
+        .child(S.documentTypeList("user").title("Users")),
+      S.listItem()
+        .title("Invoices")
+        .icon(DollarSign)
         .child(
           S.documentTypeList("invoice")
             .title("Invoices")

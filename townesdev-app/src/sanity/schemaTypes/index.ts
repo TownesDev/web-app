@@ -71,6 +71,72 @@ export const operationConfig: SchemaTypeDefinition = {
   ],
 }
 
+export const user: SchemaTypeDefinition = {
+  name: 'user',
+  title: 'User',
+  type: 'document',
+  icon: () => '👤',
+  fields: [
+    {
+      name: 'email',
+      title: 'Email',
+      type: 'string',
+      validation: Rule => Rule.required().email(),
+      description: 'User email address (unique identifier)',
+    },
+    {
+      name: 'name',
+      title: 'Full Name',
+      type: 'string',
+      validation: Rule => Rule.required(),
+      description: 'User\'s full name',
+    },
+    {
+      name: 'password',
+      title: 'Password Hash',
+      type: 'string',
+      hidden: true,
+      description: 'Hashed password (not visible in studio)',
+    },
+    {
+      name: 'role',
+      title: 'Role',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Admin', value: 'admin' },
+          { title: 'Client', value: 'client' },
+          { title: 'User', value: 'user' }
+        ]
+      },
+      initialValue: 'user',
+      description: 'User role for access control',
+    },
+    {
+      name: 'createdAt',
+      title: 'Created At',
+      type: 'datetime',
+      readOnly: true,
+      initialValue: () => new Date().toISOString(),
+      description: 'Account creation timestamp',
+    },
+    {
+      name: 'lastLogin',
+      title: 'Last Login',
+      type: 'datetime',
+      readOnly: true,
+      description: 'Last login timestamp',
+    },
+    {
+      name: 'isActive',
+      title: 'Active Account',
+      type: 'boolean',
+      initialValue: true,
+      description: 'Whether the account is active',
+    },
+  ],
+}
+
 export const client: SchemaTypeDefinition = {
   name: 'client',
   title: 'Client',
@@ -82,6 +148,19 @@ export const client: SchemaTypeDefinition = {
       title: 'Client Name',
       type: 'string',
       description: 'Name of the client',
+    },
+    {
+      name: 'user',
+      title: 'Associated User',
+      type: 'reference',
+      to: [{ type: 'user' }],
+      description: 'Link this client to a registered user account',
+      options: {
+        filter: ({ document }) => ({
+          filter: 'email == $email',
+          params: { email: document.email }
+        })
+      }
     },
     {
       name: 'selectedPlan',
@@ -1027,6 +1106,7 @@ export const invoice: SchemaTypeDefinition = {
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
+    user,
     seoConfig,
     operationConfig,
     plan,
@@ -1043,5 +1123,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     contactInfo,
     heroSection,
     testimonial,
+
   ],
 }
