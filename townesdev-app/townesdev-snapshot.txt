@@ -1,0 +1,154 @@
+
+## TREE (depth=2)
+```
+- .env
+- .env.local
+- .env.local.example
+- .gitignore
+- eslint.config.mjs
+- next-env.d.ts
+- next.config.ts
+- nextconfig.txt
+- package-lock.json
+- package.json
+- pkg.json
+- postcss.config.mjs
+- public/
+  - file.svg
+  - globe.svg
+  - next.svg
+  - vercel.svg
+  - window.svg
+- README.md
+- repo-tree.txt
+- sanity.cli.ts
+- sanity.config.ts
+- src/
+  - app/
+    - admin/
+    - api/
+    - globals.css
+    - invoice/
+    - layout.tsx
+    - page.tsx
+    - plans/
+    - ThemeController.tsx
+  - components/
+    - PlanCard.tsx
+  - lib/
+    - presentation/
+  - sanity/
+    - actions/
+    - env.ts
+    - lib/
+    - plugins/
+    - schemaTypes/
+    - structure.ts
+- tools/
+  - snapshot.mjs
+- tsconfig.json
+- tsconfig.txt
+```
+
+## package.json
+```
+{
+  "name": "townesdev-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build --turbopack",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@react-email/render": "^1.3.2",
+    "@sanity/image-url": "^1.2.0",
+    "@sanity/vision": "^4.10.3",
+    "next": "15.5.5",
+    "next-sanity": "^11.5.1",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "resend": "^6.1.3",
+    "sanity": "^4.10.3",
+    "styled-components": "^6.1.19"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.5",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
+
+```
+
+## next.config
+```
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  /* config options here */
+};
+
+export default nextConfig;
+
+```
+
+## tsconfig.json
+```
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}
+```
+
+## middleware.ts
+```
+
+```
+
+## Key pages/layouts
+```
+
+```
+
+## ENV KEYS (detected)
+```
+NEXT_PUBLIC_RESEND_API_KEY
+NEXT_PUBLIC_SANITY_API_VERSION
+NEXT_PUBLIC_SANITY_AUTH_TOKEN
+NEXT_PUBLIC_SANITY_DATASET
+NEXT_PUBLIC_SANITY_PROJECT_ID
+RESEND_API_KEY
+SANITY_PREVIEW_SECRET
+```

@@ -9,7 +9,7 @@ export const locations = {
       if (!doc) return {locations: []}
       return {
         locations: [
-          {title: `Invoice ${doc.title || doc.slug}`, href: `/invoice/${doc.slug}`},
+          {title: `Invoice ${doc.title || doc.slug}`, href: `/app/invoice/${doc.slug}`},
         ],
       }
     },
@@ -19,7 +19,7 @@ export const locations = {
 // Configures documents presentation tool should open by default when navigating to an URL
 export const mainDocuments = defineDocuments([
   {
-    route: '/invoice/:id',
+    route: '/app/invoice/:id',
     filter: `_type == "invoice" && _id == $id`,
   },
 ])

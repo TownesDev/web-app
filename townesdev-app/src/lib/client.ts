@@ -1,14 +1,5 @@
-import { createClient } from 'next-sanity'
-
-import { apiVersion, dataset, projectId } from '../env'
-
-export const client = createClient({
-  projectId,
-  dataset,
-  apiVersion,
-  useCdn: true, // Set to false if statically generating pages, using ISR or tag-based revalidation
-})
-
+// server-only Sanity client
+import { createClient } from 'next-sanity';
 
 export const sanity = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
@@ -17,5 +8,5 @@ export const sanity = createClient({
   useCdn: true, // public reads
   token: process.env.SANITY_READ_TOKEN, // ONLY set on the server when needed
   perspective: process.env.SANITY_READ_TOKEN ? 'published' : 'published',
-  // you can enable stega if you want live-preview later
+  // enable stega if we want live-preview later
 });

@@ -1,44 +1,34 @@
-import { createClient } from '@sanity/client'
-import { PlanCard } from '../../components/PlanCard'
-
-const client = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
-  apiVersion: '2024-01-01',
-  useCdn: true,
-})
+import { PlanCard } from "../../../components/PlanCard";
+import { sanity } from "../../../lib/client";
+import { qPlans } from "../../../sanity/lib/queries";
 
 interface Plan {
-  _id: string
-  name: string
-  price: string
-  features: string[]
-  description: string
+  _id: string;
+  name: string;
+  price: string;
+  features: string[];
+  description: string;
 }
 
 async function getPlans(): Promise<Plan[]> {
-  const plans = await client.fetch(`
-    *[_type == "plan"] | order(_createdAt asc) {
-      _id,
-      name,
-      price,
-      features,
-      description
-    }
-  `)
-  return plans
+  const plans = await sanity.fetch(qPlans);
+  return plans;
 }
 
 export default async function PlansPage() {
-  const plans = await getPlans()
+  const plans = await getPlans();
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Choose Your Plan</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            Choose Your Plan
+          </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Select the perfect plan for your business needs. All plans include our core features with different levels of support and customization.
+            Select the perfect plan for your business needs. All plans include
+            our core features with different levels of support and
+            customization.
           </p>
         </div>
 
@@ -65,5 +55,5 @@ export default async function PlansPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

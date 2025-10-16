@@ -169,7 +169,7 @@ function InvoicePreviewComponent() {
               <div className="text-gray-700">
                 <p className="font-medium">TownesDev</p>
                 <p>Professional Software Development</p>
-                <p>support@townesdev.com</p>
+                <p>support@townes.dev</p>
               </div>
             </div>
 
