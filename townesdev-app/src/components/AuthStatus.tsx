@@ -74,7 +74,7 @@ export function AuthStatus() {
   return (
     <div className="flex items-center space-x-4">
       <a
-        href="app/"
+        href="/app"
         className="text-comet-700 dark:text-comet-300 hover:text-nile-blue-600 dark:hover:text-nile-blue-400 font-body text-sm font-medium"
       >
         Client Portal
