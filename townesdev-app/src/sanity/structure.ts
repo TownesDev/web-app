@@ -89,7 +89,7 @@ export const structure: StructureResolver = (S) =>
                       );
                       return React.createElement(PreviewComponent, {
                         id: documentId,
-                      });
+                      } as any);
                     })
                     .title("Preview"),
                 ])
