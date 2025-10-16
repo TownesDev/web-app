@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 interface SessionUser {
   id: string;
@@ -19,7 +19,7 @@ export function AuthStatus() {
 
   const checkSession = async () => {
     try {
-      const response = await fetch('/api/auth/session');
+      const response = await fetch("/api/auth/session");
       if (response.ok) {
         const sessionData = await response.json();
         setUser(sessionData.user);
@@ -27,7 +27,7 @@ export function AuthStatus() {
         setUser(null);
       }
     } catch (error) {
-      console.error('Session check failed:', error);
+      console.error("Session check failed:", error);
       setUser(null);
     } finally {
       setLoading(false);
@@ -36,11 +36,11 @@ export function AuthStatus() {
 
   const handleSignOut = async () => {
     try {
-      await fetch('/api/auth/signout', { method: 'POST' });
+      await fetch("/api/auth/signout", { method: "POST" });
       setUser(null);
-      window.location.href = '/';
+      window.location.href = "/";
     } catch (error) {
-      console.error('Sign out failed:', error);
+      console.error("Sign out failed:", error);
     }
   };
 
@@ -73,6 +73,12 @@ export function AuthStatus() {
 
   return (
     <div className="flex items-center space-x-4">
+      <a
+        href="app/"
+        className="text-comet-700 dark:text-comet-300 hover:text-nile-blue-600 dark:hover:text-nile-blue-400 font-body text-sm font-medium"
+      >
+        Client Portal
+      </a>
       <span className="text-comet-700 dark:text-comet-300 font-body text-sm">
         Welcome, {user.name}
       </span>

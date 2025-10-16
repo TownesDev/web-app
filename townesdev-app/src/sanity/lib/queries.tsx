@@ -71,6 +71,22 @@ export const qClientByEmail = /* groq */ `
   }
 `;
 
+export const qClientById = /* groq */ `
+  *[_type=="client" && _id==$id][0]{
+    _id, name, email, status,
+    startDate, maintenanceWindow,
+    selectedPlan->{name,price,features}
+  }
+`;
+
+export const qClientByUserId = /* groq */ `
+  *[_type=="client" && user._ref==$userId][0]{
+    _id, name, email, status,
+    startDate, maintenanceWindow,
+    selectedPlan->{name,price,features}
+  }
+`;
+
 export const qMonthlyRhythmByClient = /* groq */ `
   *[_type=="monthlyRhythm" && client._ref==$clientId]|order(month desc){
     _id, month, hoursUsed, hoursIncluded,

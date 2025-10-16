@@ -1,13 +1,13 @@
 // server-only Sanity client
-import { createClient } from 'next-sanity';
+import { createClient } from "next-sanity";
 
 export const sanity = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
-  apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-01-01',
+  apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || "2024-01-01",
   useCdn: true, // public reads
   token: process.env.SANITY_READ_TOKEN, // ONLY set on the server when needed
-  perspective: process.env.SANITY_READ_TOKEN ? 'published' : 'published',
+  perspective: process.env.SANITY_READ_TOKEN ? "published" : "published",
   // enable stega if we want live-preview later
 });
 
@@ -15,7 +15,14 @@ export const sanity = createClient({
 export const sanityWrite = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
-  apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-01-01',
+  apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || "2024-01-01",
   useCdn: false, // writes need fresh data
   token: process.env.NEXT_PUBLIC_SANITY_AUTH_TOKEN, // write token for mutations
 });
+
+export async function runQuery(
+  query: string,
+  params?: { [key: string]: unknown }
+) {
+  return sanity.fetch(query, params);
+}
