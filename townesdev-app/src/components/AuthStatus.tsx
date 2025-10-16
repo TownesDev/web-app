@@ -57,7 +57,7 @@ export function AuthStatus() {
       <div className="flex items-center space-x-4">
         <a
           href="/auth/signin"
-          className="text-comet-700 dark:text-comet-300 hover:text-nile-blue-600 dark:hover:text-nile-blue-400 font-body text-sm font-medium"
+          className="text-nile-blue-800 dark:text-nile-blue-200 hover:text-nile-blue-900 dark:hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
         >
           Sign In
         </a>
@@ -75,16 +75,16 @@ export function AuthStatus() {
     <div className="flex items-center space-x-4">
       <a
         href="/app"
-        className="text-comet-700 dark:text-comet-300 hover:text-nile-blue-600 dark:hover:text-nile-blue-400 font-body text-sm font-medium"
+        className="text-nile-blue-800 dark:text-nile-blue-200 hover:text-nile-blue-900 dark:hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
       >
         Client Portal
       </a>
-      <span className="text-comet-700 dark:text-comet-300 font-body text-sm">
+      <span className="text-nile-blue-800 dark:text-nile-blue-200 font-body text-sm">
         Welcome, {user.name}
       </span>
       <button
         onClick={handleSignOut}
-        className="text-comet-600 dark:text-comet-400 hover:text-red-600 dark:hover:text-red-400 font-body text-sm font-medium transition-colors"
+        className="text-nile-blue-700 dark:text-nile-blue-300 hover:text-red-600 dark:hover:text-red-400 font-body text-sm font-medium transition-colors"
       >
         Sign Out
       </button>
