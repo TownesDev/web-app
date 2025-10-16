@@ -1,16 +1,7 @@
 'use client'
 
-import { createClient } from '@sanity/client'
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-
-const client = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
-  apiVersion: '2024-01-01',
-  useCdn: false,
-  token: process.env.NEXT_PUBLIC_SANITY_AUTH_TOKEN!,
-})
 
 interface Invoice {
   _id: string
@@ -51,9 +42,35 @@ function InvoicePreviewComponent() {
 
   // Handle the case where params.id might be an array from catch-all routes
   const tool = params.tool as string[]
-  const id = tool?.[1] ? decodeURIComponent(tool[1]).split(';')[1] : undefined
-  console.log('Extracted tool array:', tool)
-  console.log('Extracted ID:', id)
+  console.log('Tool array:', tool)
+
+  // The URL format is: /admin/structure/invoices;invoiceId,view=preview
+  // So tool[1] should be "invoices;invoiceId,view=preview"
+  const encodedPart = tool?.[1]
+  console.log('Encoded part:', encodedPart)
+
+  let id: string | undefined
+  if (encodedPart) {
+    // Decode the URI component
+    const decoded = decodeURIComponent(encodedPart)
+    console.log('Decoded part:', decoded)
+
+    // Split by comma to separate the document ID and view parameter
+    const parts = decoded.split(',')
+    console.log('Parts after split:', parts)
+
+    // The first part should be "invoices;invoiceId"
+    const invoicePart = parts[0]
+    if (invoicePart && invoicePart.includes(';')) {
+      id = invoicePart.split(';')[1]
+    }
+  }
+
+  console.log('Final extracted ID:', id)
+
+  // Clean the ID by removing any trailing ",view=preview" if present
+  const cleanId = id?.split(',')[0]
+  console.log('Clean ID:', cleanId)
   const [invoice, setInvoice] = useState<Invoice | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -61,39 +78,14 @@ function InvoicePreviewComponent() {
   useEffect(() => {
     const fetchInvoice = async () => {
       try {
-        console.log('Fetching invoice with ID:', id)
-        const result = await client.fetch<Invoice | null>(
-          `*[_type == "invoice" && _id == $id][0]{
-            _id,
-            invoiceNumber,
-            issueDate,
-            dueDate,
-            currency,
-            subtotal,
-            taxRate,
-            taxAmount,
-            totalAmount,
-            status,
-            lineItems[]{
-              description,
-              quantity,
-              unitPrice,
-              amount
-            },
-            notes,
-            terms,
-            client->{
-              name,
-              email
-            }
-          }`,
-          { id },
-          {
-            perspective: 'previewDrafts'
-          }
-        )
-        console.log('Fetched invoice:', result)
-        setInvoice(result)
+        console.log('Fetching invoice with ID:', cleanId)
+        const response = await fetch(`/api/invoices?id=${cleanId}&preview=true`)
+        if (!response.ok) {
+          throw new Error('Failed to fetch invoice')
+        }
+        const data = await response.json()
+        console.log('Fetched invoice:', data.invoice)
+        setInvoice(data.invoice)
       } catch (err) {
         console.error('Failed to load invoice:', err)
         setError('Failed to load invoice')
@@ -102,13 +94,13 @@ function InvoicePreviewComponent() {
       }
     }
 
-    if (id) {
+    if (cleanId) {
       fetchInvoice()
     } else {
       console.log('No ID provided')
       setIsLoading(false)
     }
-  }, [id])
+  }, [cleanId])
 
   if (isLoading) {
     return <div>Loading invoice...</div>
@@ -119,7 +111,7 @@ function InvoicePreviewComponent() {
   }
 
   if (!invoice) {
-    return <div>Invoice {id} not found</div>
+    return <div>Invoice {cleanId} not found</div>
   }
 
   const formatCurrency = (amount: number, currency: string = 'USD') => {

@@ -1,56 +1,25 @@
-import { createClient } from "@sanity/client";
 import { notFound } from "next/navigation";
-import { draftMode } from "next/headers";
-
-const client = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
-  apiVersion: "2024-01-01",
-  useCdn: false,
-  token: process.env.NEXT_PUBLIC_SANITY_AUTH_TOKEN,
-});
 
 interface InvoicePageProps {
   params: Promise<{ id: string }>;
 }
 
 async function getInvoice(id: string) {
-  const { isEnabled } = await draftMode()
+  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/invoices?id=${id}`, {
+    cache: 'no-store' // Ensure fresh data
+  })
 
-  const invoice = await client.fetch(
-    `
-    *[_type == "invoice" && _id == $id][0]{
-      _id,
-      invoiceNumber,
-      issueDate,
-      dueDate,
-      currency,
-      subtotal,
-      taxRate,
-      taxAmount,
-      totalAmount,
-      status,
-      lineItems[]{
-        description,
-        quantity,
-        unitPrice,
-        amount
-      },
-      notes,
-      terms,
-      client->{
-        name,
-        email
-      }
-    }
-  `,
-    { id },
-    {
-      perspective: isEnabled ? 'previewDrafts' : 'published'
-    }
-  );
 
-  return invoice;
+  if (!response.ok) {
+    if (response.status === 404) {
+      return null
+    }
+    throw new Error('Failed to fetch invoice')
+  }
+
+  const data = await response.json()
+
+  return data.invoice
 }
 
 export default async function InvoicePage({ params }: InvoicePageProps) {

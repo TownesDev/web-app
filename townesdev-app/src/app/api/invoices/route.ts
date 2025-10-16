@@ -143,37 +143,65 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const clientId = searchParams.get('clientId')
-    const status = searchParams.get('status')
+    const id = searchParams.get('id')
+    const preview = searchParams.get('preview') === 'true'
 
-    let query = '*[_type == "invoice"]'
-    const params: any = {}
-
-    if (clientId) {
-      query += ' && client._ref == $clientId'
-      params.clientId = clientId
+    if (!id) {
+      return NextResponse.json(
+        { error: 'Invoice ID is required' },
+        { status: 400 }
+      )
     }
 
-    if (status) {
-      query += ' && status == $status'
-      params.status = status
+    const invoice = await client.fetch(
+      `*[_type == "invoice" && _id == $id][0]{
+        _id,
+        invoiceNumber,
+        issueDate,
+        dueDate,
+        currency,
+        subtotal,
+        taxRate,
+        taxAmount,
+        totalAmount,
+        status,
+        lineItems[]{
+          description,
+          quantity,
+          unitPrice,
+          amount
+        },
+        notes,
+        terms,
+        client->{
+          name,
+          email
+        }
+      }`,
+      { id },
+      {
+        perspective: preview ? 'previewDrafts' : 'published'
+      }
+    )
+
+    if (!invoice) {
+      return NextResponse.json(
+        { error: 'Invoice not found' },
+        { status: 404 }
+      )
     }
-
-    query += ' | order(issueDate desc)'
-
-    const invoices = await client.fetch(query, params)
 
     return NextResponse.json({
       success: true,
-      invoices
+      invoice
     })
 
   } catch (error: any) {
-    console.error('❌ Error fetching invoices:', error)
+    console.error('❌ Error fetching invoice:', error)
 
     return NextResponse.json(
       {
-        error: 'Failed to fetch invoices',
+        error: 'Failed to fetch invoice',
         message: error?.message || 'Unknown error'
       },
       { status: 500 }
