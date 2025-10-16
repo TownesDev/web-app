@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
     }
 
     const emailOptions: any = {
-      from: 'donovan@townes.dev',
+      from: 'noreply@townes.dev',
       to: recipientEmail,
       subject: personalizedSubject,
     }

@@ -12,7 +12,7 @@ export const previewInvoice: DocumentActionComponent = (props) => {
 
   const handlePreview = () => {
     const baseUrl = window.location.origin.replace('/admin', '')
-    const previewUrl = `${baseUrl}/invoice/${doc._id}`
+    const previewUrl = `${baseUrl}/app/invoice/${doc._id}`
     window.open(previewUrl, '_blank')
   }
 
