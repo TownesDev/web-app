@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+# custom
+schematypes.txt
+/townesdev-snapshot.txt
+/townesdev-codebase-analysis.md
+.vscode/
