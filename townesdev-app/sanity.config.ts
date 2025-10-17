@@ -18,12 +18,12 @@ import { previewInvoice, sendStatusUpdateEmail } from './src/sanity/actions/clie
 import {locations, mainDocuments} from './src/lib/presentation/resolve'
 
 export default defineConfig({
-  basePath: '/admin',
+  basePath: '/studio',
   projectId,
   dataset,
   // Add and edit the content schema in the './sanity/schemaTypes' folder
   schema,
-  title: 'TownesDev Admin',
+  title: 'TownesDev Sanity Admin',
   plugins: [
     structureTool({structure}),
     clientAutomation(),

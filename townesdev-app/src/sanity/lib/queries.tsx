@@ -87,6 +87,12 @@ export const qClientByUserId = /* groq */ `
   }
 `;
 
+export const qUserById = /* groq */ `
+  *[_type=="user" && _id==$id][0]{
+    _id, email, name, role
+  }
+`;
+
 export const qMonthlyRhythmByClient = /* groq */ `
   *[_type=="monthlyRhythm" && client._ref==$clientId]|order(month desc){
     _id, month, hoursUsed, hoursIncluded,
