@@ -1,18 +1,21 @@
-export default function IncidentsPage() {
+import { getCurrentClient } from "../../../../lib/auth";
+import { getIncidentsByClient } from "../../../../queries/incidents";
+import IncidentManager from "../../../../components/IncidentManager";
+import { notFound } from "next/navigation";
+
+export default async function IncidentsPage() {
+  const client = await getCurrentClient();
+
+  if (!client) {
+    notFound();
+  }
+
+  const incidents = await getIncidentsByClient(client._id);
+
   return (
     <div className="py-8 px-4">
       <div className="max-w-6xl mx-auto">
-        <div className="bg-white shadow rounded-lg p-6">
-          <h1 className="text-3xl font-bold text-nile-blue-900 mb-4">
-            Incidents
-          </h1>
-          <p className="text-gray-600">
-            Track and manage your support incidents here.
-          </p>
-          <div className="mt-6 text-gray-500">
-            Incident tracking coming soon...
-          </div>
-        </div>
+        <IncidentManager initialIncidents={incidents} />
       </div>
     </div>
   );

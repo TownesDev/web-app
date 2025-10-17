@@ -102,7 +102,7 @@ export const qMonthlyRhythmByClient = /* groq */ `
 
 export const qIncidentsByClient = /* groq */ `
   *[_type=="incident" && client._ref==$clientId]|order(reportedAt desc){
-    _id, title, severity, description, reportedAt, resolvedAt, hoursUsed, outOfScope
+    _id, title, severity, description, reportedAt, resolvedAt, status, hoursUsed, outOfScope
   }
 `;
 
