@@ -394,6 +394,7 @@ export const incident: SchemaTypeDefinition = {
       title: "Client",
       type: "reference",
       to: [{ type: "client" }],
+      validation: (Rule) => Rule.required(),
       description: "The client this incident is for",
     },
     {
@@ -407,8 +408,14 @@ export const incident: SchemaTypeDefinition = {
       title: "Severity",
       type: "string",
       options: {
-        list: ["P1", "P2", "P3"],
+        list: [
+          { title: "Low", value: "low" },
+          { title: "Medium", value: "medium" },
+          { title: "High", value: "high" },
+          { title: "Critical", value: "critical" },
+        ],
       },
+      validation: (Rule) => Rule.required(),
       description: "Incident severity level",
     },
     {
@@ -447,6 +454,21 @@ export const incident: SchemaTypeDefinition = {
       title: "Out of Scope",
       type: "boolean",
       description: "Whether this was determined to be out of scope",
+    },
+    {
+      name: "status",
+      title: "Status",
+      type: "string",
+      options: {
+        list: [
+          { title: "Open", value: "open" },
+          { title: "In Progress", value: "in_progress" },
+          { title: "Resolved", value: "resolved" },
+          { title: "Closed", value: "closed" },
+        ],
+      },
+      initialValue: "open",
+      description: "Current status of the incident",
     },
   ],
 };
