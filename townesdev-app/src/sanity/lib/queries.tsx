@@ -153,7 +153,7 @@ export const qAllInvoices = /* groq */ `
 
 export const qEmailTemplates = /* groq */ `
   *[_type=="emailTemplate"]|order(name asc){
-    _id, name, subject, purpose
+    _id, name, subject, purpose, htmlBody
   }
 `;
 
