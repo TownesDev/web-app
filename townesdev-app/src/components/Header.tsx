@@ -57,6 +57,12 @@ export default function Header({ variant }: HeaderProps) {
               Dashboard
             </Link>
             <Link
+              href="/app/plans"
+              className="text-nile-blue-200 hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
+            >
+              Plans & Billing
+            </Link>
+            <Link
               href="/app/invoices"
               className="text-nile-blue-200 hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
             >

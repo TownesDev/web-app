@@ -10,12 +10,14 @@ export const plan: SchemaTypeDefinition = {
       title: "Plan Name",
       type: "string",
       description: "The name of the plan (e.g., Bronze, Silver, Gold)",
+      validation: (Rule) => Rule.required(),
     },
     {
       name: "price",
       title: "Price",
       type: "string",
       description: "The price of the plan (e.g., $150/month)",
+      validation: (Rule) => Rule.required(),
     },
     {
       name: "features",
@@ -23,12 +25,14 @@ export const plan: SchemaTypeDefinition = {
       type: "array",
       of: [{ type: "string" }],
       description: "List of features included in the plan",
+      validation: (Rule) => Rule.required(),
     },
     {
       name: "description",
       title: "Description",
       type: "text",
       description: "A brief description of the plan",
+      validation: (Rule) => Rule.required(),
     },
     {
       name: "content",
@@ -41,6 +45,27 @@ export const plan: SchemaTypeDefinition = {
       title: "File",
       type: "file",
       description: "Upload the plan file (e.g., .md)",
+    },
+    {
+      name: "stripeProductId",
+      title: "Stripe Product ID",
+      type: "string",
+      description: "Stripe product ID for this plan",
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: "stripePriceId",
+      title: "Stripe Price ID",
+      type: "string",
+      description: "Stripe price ID for this plan's subscription",
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: "hoursIncluded",
+      title: "Hours Included",
+      type: "number",
+      description: "Number of hours included in this retainer plan",
+      validation: (Rule) => Rule.required().min(0),
     },
   ],
 };
@@ -187,6 +212,14 @@ export const client: SchemaTypeDefinition = {
       title: "Email",
       type: "string",
       description: "Client email address for communications",
+      validation: (Rule) => Rule.required().email(),
+    },
+    {
+      name: "stripeCustomerId",
+      title: "Stripe Customer ID",
+      type: "string",
+      description: "Stripe customer ID for billing",
+      readOnly: true,
     },
     {
       name: "status",
@@ -1398,6 +1431,14 @@ export const retainer: SchemaTypeDefinition = {
       initialValue: 0,
       validation: (Rule) => Rule.min(0),
       description: "Hours used so far in the current period",
+    },
+    {
+      name: "asset",
+      title: "Asset",
+      type: "reference",
+      to: [{ type: "serviceAsset" }],
+      description:
+        "Optional: Specific asset this retainer applies to (leave empty for client-wide retainer)",
     },
   ],
 };

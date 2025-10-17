@@ -51,7 +51,7 @@ export const qTestimonials = /* groq */ `
 
 export const qPlans = /* groq */ `
   *[_type=="plan"]|order(_createdAt asc){
-    _id, name, price, features, description
+    _id, name, price, features, description, stripeProductId, stripePriceId, hoursIncluded
   }
 `;
 

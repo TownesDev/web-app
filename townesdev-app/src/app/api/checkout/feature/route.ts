@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCurrentClient } from "@/lib/auth";
 import { runQuery } from "@/lib/client";
 import { qFeaturesByType } from "@/sanity/lib/queries";
+import { Stripe } from 'stripe'
 
-// import Stripe from 'stripe'; not yet installed
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2024-06-20",
