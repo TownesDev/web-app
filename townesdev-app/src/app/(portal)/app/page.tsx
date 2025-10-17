@@ -5,6 +5,7 @@ import { getInvoicesByClient } from "../../../queries/invoices";
 import InvoiceTable from "../../../components/invoices/InvoiceTable";
 import ClientInfoGrid from "../../../components/ClientInfoGrid";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 
 export default async function ClientDashboard() {
   const client = await getCurrentClient();
@@ -14,6 +15,11 @@ export default async function ClientDashboard() {
   }
 
   const invoices = await getInvoicesByClient(client._id);
+
+  // Calculate next maintenance window (simplified - would need more logic)
+  const nextMaintenance = client.maintenanceWindow
+    ? new Date(client.maintenanceWindow).toLocaleDateString()
+    : "TBD";
 
   return (
     <div className="py-8 px-4">
@@ -28,6 +34,67 @@ export default async function ClientDashboard() {
           </p>
         </div>
 
+        {/* Plan Card and Maintenance Window */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Current Plan */}
+          <div className="bg-white shadow rounded-lg p-6">
+            <h2 className="text-xl font-semibold text-nile-blue-900 mb-4">
+              Current Plan
+            </h2>
+            {client.selectedPlan ? (
+              <div>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-medium text-gray-900">
+                    {client.selectedPlan.name}
+                  </h3>
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    Active
+                  </span>
+                </div>
+                <p className="text-gray-600 mt-2">
+                  {client.selectedPlan.price}
+                </p>
+                <div className="mt-4">
+                  <Link
+                    href="/app/assets"
+                    className="inline-flex items-center text-sm text-blue-600 hover:text-blue-500"
+                  >
+                    Manage Assets →
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-4">
+                <p className="text-gray-500">No active plan</p>
+                <Link
+                  href="/plans"
+                  className="inline-flex items-center mt-2 text-sm text-blue-600 hover:text-blue-500"
+                >
+                  View Plans →
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {/* Next Maintenance Window */}
+          <div className="bg-white shadow rounded-lg p-6">
+            <h2 className="text-xl font-semibold text-nile-blue-900 mb-4">
+              Next Maintenance Window
+            </h2>
+            <div className="flex items-center">
+              <div className="text-2xl mr-4">🛠️</div>
+              <div>
+                <p className="text-lg font-medium text-gray-900">
+                  {nextMaintenance}
+                </p>
+                <p className="text-sm text-gray-600">
+                  Scheduled maintenance period
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Client Information Grid */}
         <ClientInfoGrid client={client} />
 
@@ -36,7 +103,31 @@ export default async function ClientDashboard() {
           <h2 className="text-2xl font-semibold text-nile-blue-900 mb-4">
             Quick Links
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <a
+              href="/app/assets"
+              className="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
+            >
+              <div className="text-green-600 mr-3">
+                <svg
+                  className="w-6 h-6"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-medium text-green-900">Assets</h3>
+                <p className="text-sm text-green-700">
+                  Manage your bots & apps
+                </p>
+              </div>
+            </a>
             <a
               href="/app/invoices"
               className="flex items-center p-4 bg-nile-blue-50 rounded-lg hover:bg-nile-blue-100 transition-colors"

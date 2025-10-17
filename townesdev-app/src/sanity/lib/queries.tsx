@@ -112,6 +112,24 @@ export const qInvoicesByClient = /* groq */ `
   }
 `;
 
+export const qAssetsByClient = /* groq */ `
+  *[_type=="serviceAsset" && client._ref==$clientId]|order(_createdAt desc){
+    _id, name, type, externalIds, notes
+  }
+`;
+
+export const qFeaturesByType = /* groq */ `
+  *[_type=="feature" && assetType==$assetType && isPrivate!=true]|order(name asc){
+    _id, name, slug, summary, price, sku, configKey
+  }
+`;
+
+export const qEntitlementsByAsset = /* groq */ `
+  *[_type=="entitlement" && asset._ref==$assetId && status=="active"]{
+    _id, feature->{name, configKey}, activatedAt
+  }
+`;
+
 export const qOffboardingByClient = /* groq */ `
   *[_type=="offboarding" && client._ref==$clientId][0]{
     offboardingDate, finalRunbookDelivered, latestBackupDelivered,

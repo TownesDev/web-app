@@ -5,38 +5,105 @@
 - .env.local
 - .env.local.example
 - .gitignore
+- brand-kit/
+  - 01_Logos/
+    - townesdev_icon_dark.svg
+    - townesdev_icon_dark_512.png
+    - townesdev_icon_light.svg
+    - townesdev_icon_light_512.png
+    - townesdev_logo_dark.svg
+    - townesdev_logo_dark_1024.png
+    - townesdev_logo_light.svg
+    - townesdev_logo_light_1024.png
+    - townesdev_logo_sub_dark.svg
+    - townesdev_logo_sub_light.svg
+    - townesdev_wordmark.svg
+    - townesdev_wordmark_dark_1024.png
+    - townesdev_wordmark_light_1024.png
+  - 02_Favicon/
+    - apple-touch-icon.png
+    - favicon-96x96.png
+    - favicon.ico
+    - favicon.svg
+    - site.webmanifest
+    - web-app-manifest-192x192.png
+    - web-app-manifest-512x512.png
+  - 03_Social/
+    - banner.png
+    - townesdev_githubbanner_1500x500.png
+    - townesdev_githubbanner_1500x500.svg
+    - townesdev_linkedin_800x800.png
+    - townesdev_linkedin_800x800.svg
+    - townesdev_ogbanner_1200x630.png
+    - townesdev_ogbanner_1200x630.svg
+    - townesdev_twittercard_1600x900.png
+    - townesdev_twittercard_1600x900.svg
+  - 04_Guidelines/
+    - brand_colors.md
+    - Fira_Code/
+    - logo_usage.md
+    - Oswald/
+    - typography.md
+  - 05_Source/
+    - TownesDev Sketch.svg
+    - townesdev_master.svg
+  - brand_colors_tailwinds_hex.txt
+  - brand_overview.md
+- CHANGELOG.md
+- components.json
 - eslint.config.mjs
+- index.ts
+- middleware.ts
 - next-env.d.ts
 - next.config.ts
-- nextconfig.txt
 - package-lock.json
 - package.json
-- pkg.json
 - postcss.config.mjs
 - public/
-  - file.svg
-  - globe.svg
-  - next.svg
-  - vercel.svg
-  - window.svg
+  - townesdev_icon_dark.svg
+  - townesdev_icon_light.svg
+  - townesdev_logo_dark.svg
+  - townesdev_logo_light.svg
+  - townesdev_logo_sub_dark.svg
+  - townesdev_logo_sub_light.svg
+  - townesdev_wordmark.svg
 - README.md
-- repo-tree.txt
 - sanity.cli.ts
 - sanity.config.ts
+- schematypes.txt
 - src/
   - app/
-    - admin/
+    - (admin)/
+    - (portal)/
+    - (public)/
+    - 403/
     - api/
+    - auth/
+    - brand/
     - globals.css
-    - invoice/
     - layout.tsx
-    - page.tsx
-    - plans/
-    - ThemeController.tsx
   - components/
+    - admin/
+    - AuthStatus.tsx
+    - ClientInfoGrid.tsx
+    - Footer.tsx
+    - Header.tsx
+    - invoices/
     - PlanCard.tsx
+    - PlanModal.tsx
+    - SignInForm.tsx
+    - SignUpForm.tsx
+    - ui/
   - lib/
+    - auth.ts
+    - client.ts
     - presentation/
+    - rbac/
+    - session.ts
+    - utils.ts
+  - queries/
+    - clients.ts
+    - invoices.ts
   - sanity/
     - actions/
     - env.ts
@@ -46,8 +113,9 @@
     - structure.ts
 - tools/
   - snapshot.mjs
+- townesdev-codebase-analysis.md
+- townesdev-snapshot.txt
 - tsconfig.json
-- tsconfig.txt
 ```
 
 ## package.json
@@ -60,19 +128,30 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "snapshot": "node tools/snapshot.mjs && cp src\\sanity\\schemaTypes\\index.ts > schematypes.txt"
   },
   "dependencies": {
     "@react-email/render": "^1.3.2",
     "@sanity/image-url": "^1.2.0",
     "@sanity/vision": "^4.10.3",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "bcryptjs": "^3.0.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "jsonwebtoken": "^9.0.2",
+    "lucide-react": "^0.545.0",
     "next": "15.5.5",
     "next-sanity": "^11.5.1",
+    "next-themes": "^0.4.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "resend": "^6.1.3",
     "sanity": "^4.10.3",
-    "styled-components": "^6.1.19"
+    "sonner": "^2.0.7",
+    "styled-components": "^6.1.19",
+    "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -83,6 +162,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.5.5",
     "tailwindcss": "^4",
+    "tw-animate-css": "^1.4.0",
     "typescript": "^5"
   }
 }
@@ -134,6 +214,61 @@ export default nextConfig;
 
 ## middleware.ts
 ```
+/**
+ * Middleware for protecting admin routes
+ * Ensures only authenticated users can access admin areas
+ * Role/capability checks are handled in individual page components
+ */
+
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { verifyToken } from "./src/lib/auth";
+
+export function middleware(request: NextRequest) {
+  // Only protect admin routes
+  if (!request.nextUrl.pathname.startsWith("/admin")) {
+    return NextResponse.next();
+  }
+
+  // Allow access to studio (content editors need this)
+  if (request.nextUrl.pathname.startsWith("/admin/studio")) {
+    return NextResponse.next();
+  }
+
+  // Check for auth token
+  const token = request.cookies.get("auth-token")?.value;
+  if (!token) {
+    return NextResponse.redirect(new URL("/auth/signin", request.url));
+  }
+
+  // Verify token
+  const payload = verifyToken(token);
+  if (!payload) {
+    return NextResponse.redirect(new URL("/auth/signin", request.url));
+  }
+
+  // Add user info to headers for downstream use
+  const response = NextResponse.next();
+  response.headers.set("x-user-id", payload.id);
+  response.headers.set("x-user-email", payload.email);
+  response.headers.set("x-user-name", payload.name);
+
+  return response;
+}
+
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public files with extensions
+     */
+    "/admin/:path*",
+  ],
+};
 
 ```
 
@@ -144,11 +279,15 @@ export default nextConfig;
 
 ## ENV KEYS (detected)
 ```
+JWT_SECRET
+NEXT_PUBLIC_BASE_URL
 NEXT_PUBLIC_RESEND_API_KEY
 NEXT_PUBLIC_SANITY_API_VERSION
 NEXT_PUBLIC_SANITY_AUTH_TOKEN
 NEXT_PUBLIC_SANITY_DATASET
 NEXT_PUBLIC_SANITY_PROJECT_ID
+NODE_ENV
 RESEND_API_KEY
 SANITY_PREVIEW_SECRET
+SANITY_READ_TOKEN
 ```

@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "snapshot": "node tools/snapshot.mjs"
   },
   "dependencies": {
     "@react-email/render": "^1.3.2",

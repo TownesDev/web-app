@@ -16,7 +16,11 @@ import {
   Image,
   MapPin,
   Star,
-  CheckSquare
+  CheckSquare,
+  Server,
+  Zap,
+  Key,
+  CreditCard,
 } from "lucide-react";
 
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
@@ -86,38 +90,52 @@ export const structure: StructureResolver = (S) =>
       S.divider(),
 
       // Business Management Section
-      ...S.documentTypeListItems().filter((listItem) =>
-        [
-          "client",
-          "plan",
-          "kickoffChecklist",
-          "monthlyRhythm",
-          "incident",
-          "offboarding",
-          "emailTemplate",
-        ].includes(listItem.getId() || "")
-      ).map((item) => {
-        // Add custom icons based on document type
-        const id = item.getId()
-        switch (id) {
-          case 'client':
-            return item.icon(Users)
-          case 'plan':
-            return item.icon(Briefcase)
-          case 'kickoffChecklist':
-            return item.icon(CheckSquare)
-          case 'monthlyRhythm':
-            return item.icon(Calendar)
-          case 'incident':
-            return item.icon(AlertTriangle)
-          case 'offboarding':
-            return item.icon(UserX)
-          case 'emailTemplate':
-            return item.icon(Mail)
-          default:
-            return item
-        }
-      }),
+      ...S.documentTypeListItems()
+        .filter((listItem) =>
+          [
+            "client",
+            "plan",
+            "serviceAsset",
+            "feature",
+            "entitlement",
+            "retainer",
+            "kickoffChecklist",
+            "monthlyRhythm",
+            "incident",
+            "offboarding",
+            "emailTemplate",
+          ].includes(listItem.getId() || "")
+        )
+        .map((item) => {
+          // Add custom icons based on document type
+          const id = item.getId();
+          switch (id) {
+            case "client":
+              return item.icon(Users);
+            case "plan":
+              return item.icon(Briefcase);
+            case "serviceAsset":
+              return item.icon(Server);
+            case "feature":
+              return item.icon(Zap);
+            case "entitlement":
+              return item.icon(Key);
+            case "retainer":
+              return item.icon(CreditCard);
+            case "kickoffChecklist":
+              return item.icon(CheckSquare);
+            case "monthlyRhythm":
+              return item.icon(Calendar);
+            case "incident":
+              return item.icon(AlertTriangle);
+            case "offboarding":
+              return item.icon(UserX);
+            case "emailTemplate":
+              return item.icon(Mail);
+            default:
+              return item;
+          }
+        }),
 
       // Users Section
       S.listItem()
