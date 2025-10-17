@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
-import { runQuery } from "@/lib/client";
+import { runQuery, sanityWrite } from "@/lib/client";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-06-20",
+  apiVersion: "2025-09-30.clover",
 });
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
@@ -16,8 +16,11 @@ export async function POST(request: NextRequest) {
 
   try {
     event = stripe.webhooks.constructEvent(body, sig, endpointSecret);
-  } catch (err: any) {
-    console.error(`Webhook signature verification failed.`, err.message);
+  } catch (err: unknown) {
+    console.error(
+      `Webhook signature verification failed.`,
+      err instanceof Error ? err.message : String(err)
+    );
     return NextResponse.json({ error: "Webhook error" }, { status: 400 });
   }
 
@@ -66,54 +69,177 @@ async function handleFeaturePurchase(session: Stripe.Checkout.Session) {
   const { featureId, assetId, clientId } = session.metadata!;
 
   // Create entitlement
-  await runQuery(
-    `create({
-      _type: "entitlement",
-      client: { _type: "reference", _ref: $clientId },
-      asset: { _type: "reference", _ref: $assetId },
-      feature: { _type: "reference", _ref: $featureId },
-      status: "active",
-      activatedAt: $activatedAt,
-      stripePaymentIntentId: $paymentIntentId
-    })`,
+  await sanityWrite.mutate([
     {
-      clientId,
-      assetId,
-      featureId,
-      activatedAt: new Date().toISOString(),
-      paymentIntentId: session.payment_intent as string,
-    }
-  );
+      create: {
+        _type: "entitlement",
+        client: { _type: "reference", _ref: clientId },
+        asset: { _type: "reference", _ref: assetId },
+        feature: { _type: "reference", _ref: featureId },
+        status: "active",
+        activatedAt: new Date().toISOString(),
+        stripePaymentIntentId: session.payment_intent as string,
+      },
+    },
+  ]);
 }
 
 async function handlePlanSubscription(session: Stripe.Checkout.Session) {
-  const { planId } = session.metadata!;
+  const { planId, clientId, assetId } = session.metadata!;
 
-  // For now, just log - we'll handle client.selectedPlan updates
-  // when we have the client ID from the session
-  console.log("Plan subscription created:", { planId, sessionId: session.id });
+  if (!planId || !clientId) {
+    console.error("Missing planId or clientId in subscription metadata");
+    return;
+  }
+
+  try {
+    // Get subscription details from Stripe
+    const subscription = await stripe.subscriptions.retrieve(
+      session.subscription as string
+    );
+
+    // Check if retainer already exists (idempotency)
+    const existingRetainer = await runQuery(
+      `*[_type=="retainer" && stripeSubId==$stripeSubId][0]`,
+      { stripeSubId: subscription.id }
+    );
+
+    if (existingRetainer) {
+      console.log("Retainer already exists for subscription:", subscription.id);
+      return;
+    }
+
+    // Get plan details
+    const plan = await runQuery(
+      `*[_type=="plan" && _id==$planId][0]{
+        _id,
+        name,
+        hoursIncluded
+      }`,
+      { planId }
+    );
+
+    if (!plan) {
+      console.error("Plan not found:", planId);
+      return;
+    }
+
+    // Create retainer
+    const retainerData = {
+      _type: "retainer",
+      client: { _type: "reference", _ref: clientId },
+      plan: { _type: "reference", _ref: planId },
+      stripeSubId: subscription.id,
+      status:
+        subscription.status === "active"
+          ? "active"
+          : subscription.status === "canceled"
+            ? "canceled"
+            : "past_due",
+      periodStart: new Date(
+        (
+          subscription as unknown as Stripe.Subscription & {
+            current_period_start: number;
+            current_period_end: number;
+          }
+        )["current_period_start"] * 1000
+      ).toISOString(),
+      periodEnd: new Date(
+        (
+          subscription as unknown as Stripe.Subscription & {
+            current_period_start: number;
+            current_period_end: number;
+          }
+        )["current_period_end"] * 1000
+      ).toISOString(),
+      hoursIncluded: plan.hoursIncluded || 0,
+      hoursUsed: 0,
+      ...(assetId && { asset: { _type: "reference", _ref: assetId } }),
+    };
+
+    await sanityWrite.mutate([
+      {
+        create: retainerData,
+      },
+    ]);
+
+    console.log("Retainer created for subscription:", subscription.id);
+  } catch (error) {
+    console.error("Error creating retainer:", error);
+  }
 }
 
 async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
   // Update invoice status in Sanity
   if (invoice.metadata?.invoiceId) {
-    await runQuery(
+    const existingInvoice = await runQuery(
       `*[_type=="invoice" && _id==$invoiceId][0]{
         _id
       }`,
       { invoiceId: invoice.metadata.invoiceId }
-    ).then((existingInvoice) => {
-      if (existingInvoice) {
-        return runQuery(`patch($invoiceId, { status: "paid" })`, {
-          invoiceId: invoice.metadata!.invoiceId,
-        });
-      }
-    });
+    );
+
+    if (existingInvoice) {
+      await sanityWrite.mutate([
+        {
+          patch: {
+            id: invoice.metadata.invoiceId,
+            set: {
+              status: "paid",
+            },
+          },
+        },
+      ]);
+    }
   }
 }
 
 async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
-  // Update client plan or retainer status
-  // This would need client identification from subscription metadata
-  console.log("Subscription updated:", subscription.id, subscription.status);
+  try {
+    // Update retainer with new subscription details
+    const result = await runQuery(
+      `*[_type=="retainer" && stripeSubId==$stripeSubId][0]`,
+      { stripeSubId: subscription.id }
+    );
+
+    if (result) {
+      await sanityWrite.mutate([
+        {
+          patch: {
+            id: result._id,
+            set: {
+              status:
+                subscription.status === "active"
+                  ? "active"
+                  : subscription.status === "canceled"
+                    ? "canceled"
+                    : "past_due",
+              periodStart: new Date(
+                (
+                  subscription as unknown as Stripe.Subscription & {
+                    current_period_start: number;
+                    current_period_end: number;
+                  }
+                )["current_period_start"] * 1000
+              ).toISOString(),
+              periodEnd: new Date(
+                (
+                  subscription as unknown as Stripe.Subscription & {
+                    current_period_start: number;
+                    current_period_end: number;
+                  }
+                )["current_period_end"] * 1000
+              ).toISOString(),
+            },
+          },
+        },
+      ]);
+
+      console.log("Retainer updated for subscription:", subscription.id);
+    } else {
+      console.warn("No retainer found for subscription:", subscription.id);
+    }
+  } catch (error) {
+    console.error("Error updating retainer:", error);
+  }
 }

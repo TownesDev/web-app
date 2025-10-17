@@ -1,8 +1,31 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+## Environment Variables
 
-First, run the development server:
+Create a `.env.local` file in the root directory with the following variables:
+
+### Required
+
+- `NEXT_PUBLIC_SANITY_PROJECT_ID` - Your Sanity project ID
+- `NEXT_PUBLIC_SANITY_DATASET` - Your Sanity dataset (usually "production")
+- `SANITY_READ_TOKEN` - Sanity read token for server-side queries
+- `SANITY_AUTH_TOKEN` - Sanity auth token for mutations
+- `NEXT_PUBLIC_SANITY_API_VERSION` - Sanity API version (e.g., "2024-01-01")
+
+### Stripe Configuration (for payments)
+
+- `STRIPE_SECRET_KEY` - Your Stripe secret key (starts with `sk_test_` for sandbox)
+- `STRIPE_PUBLISHABLE_KEY` - Your Stripe publishable key (starts with `pk_test_` for sandbox)
+- `STRIPE_WEBHOOK_SECRET` - Stripe webhook endpoint secret for verifying webhook signatures
+
+### Email Configuration
+
+- `NEXT_PUBLIC_RESEND_API_KEY` - Resend API key for sending emails
+- `RESEND_API_KEY` - Server-side Resend API key
+
+### URLs
+
+- `NEXT_PUBLIC_BASE_URL` - Your application's base URL (e.g., `http://localhost:3000` for development)
 
 ```bash
 npm run dev

@@ -8,6 +8,9 @@ interface Plan {
   price: string;
   features: string[];
   description: string;
+  stripeProductId?: string;
+  stripePriceId?: string;
+  hoursIncluded?: number;
 }
 
 async function getPlans(): Promise<Plan[]> {
@@ -41,6 +44,8 @@ export default async function PlansPage() {
               features={plan.features}
               description={plan.description}
               isPopular={index === 1} // Make the middle plan "popular"
+              planId={plan._id}
+              stripePriceId={plan.stripePriceId}
             />
           ))}
         </div>
