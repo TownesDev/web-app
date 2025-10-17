@@ -26,3 +26,10 @@ export async function runQuery(
 ) {
   return sanity.fetch(query, params);
 }
+
+export async function runQueryFresh(
+  query: string,
+  params?: { [key: string]: unknown }
+) {
+  return sanityWrite.fetch(query, params);
+}

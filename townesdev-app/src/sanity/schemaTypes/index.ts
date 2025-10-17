@@ -487,34 +487,61 @@ export const emailTemplate: SchemaTypeDefinition = {
       type: "string",
       description:
         "Name of the email template (e.g., Retainer Proposal, Welcome Activation)",
+      validation: (Rule) => Rule.required(),
     },
     {
       name: "subject",
       title: "Subject Line",
       type: "string",
       description: "Email subject line",
-    },
-    {
-      name: "body",
-      title: "Email Body (Text)",
-      type: "text",
-      rows: 10,
-      description:
-        "The plain text email content. Use placeholders like {{clientName}}, {{planName}}, {{startDate}}, {{slaStartTime}}, {{maintenanceWindow}}, {{status}} to dynamically insert client information.",
+      validation: (Rule) => Rule.required(),
     },
     {
       name: "htmlBody",
-      title: "Email Body (HTML)",
+      title: "Email Body",
       type: "array",
-      of: [{ type: "block" }],
+      of: [
+        {
+          type: "block",
+          styles: [
+            { title: "Normal", value: "normal" },
+            { title: "H1", value: "h1" },
+            { title: "H2", value: "h2" },
+            { title: "H3", value: "h3" },
+            { title: "Quote", value: "blockquote" },
+          ],
+          marks: {
+            decorators: [
+              { title: "Strong", value: "strong" },
+              { title: "Emphasis", value: "em" },
+            ],
+          },
+        },
+      ],
       description:
-        "Optional rich text HTML version of the email. If provided, this will be sent as HTML email. Use placeholders like {{clientName}} in the text.",
+        "Rich text email content with formatting. Use placeholders like {{clientName}}, {{planName}}, {{startDate}}, {{slaStartTime}}, {{maintenanceWindow}}, {{status}} to dynamically insert client information.",
+      validation: (Rule) => Rule.required(),
     },
     {
       name: "purpose",
       title: "Purpose",
       type: "text",
       description: "When and why this template is used",
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: "createdAt",
+      title: "Created At",
+      type: "datetime",
+      description: "When this template was created",
+      readOnly: true,
+    },
+    {
+      name: "lastModified",
+      title: "Last Modified",
+      type: "datetime",
+      description: "When this template was last modified",
+      readOnly: true,
     },
   ],
 };
