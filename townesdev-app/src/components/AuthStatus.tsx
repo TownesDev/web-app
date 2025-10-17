@@ -6,6 +6,7 @@ interface SessionUser {
   id: string;
   email: string;
   name: string;
+  role?: string;
 }
 
 export function AuthStatus() {
@@ -73,6 +74,17 @@ export function AuthStatus() {
 
   return (
     <div className="flex items-center space-x-4">
+      {user.role === "admin" || user.role === "staff" ? (
+        <>
+          <a
+            href="/admin"
+            className="text-nile-blue-800 dark:text-nile-blue-200 hover:text-nile-blue-900 dark:hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
+          >
+            Admin Portal
+          </a>
+          <span className="text-gray-400">|</span>
+        </>
+      ) : null}
       <a
         href="/app"
         className="text-nile-blue-800 dark:text-nile-blue-200 hover:text-nile-blue-900 dark:hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
