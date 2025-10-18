@@ -24,7 +24,7 @@ interface AdminClientsTableProps {
   clients: Client[];
 }
 
-type StatusFilter = "all" | "active" | "inactive" | "pending";
+type StatusFilter = "all" | "Active" | "Inactive" | "Cancelled";
 
 export default function AdminClientsTable({ clients }: AdminClientsTableProps) {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
@@ -35,12 +35,12 @@ export default function AdminClientsTable({ clients }: AdminClientsTableProps) {
 
     return clients.filter((client) => {
       switch (statusFilter) {
-        case "active":
-          return client.status === "active";
-        case "inactive":
-          return client.status === "inactive";
-        case "pending":
-          return client.status === "pending";
+        case "Active":
+          return client.status === "Active";
+        case "Inactive":
+          return client.status === "Inactive";
+        case "Cancelled":
+          return client.status === "Cancelled";
         default:
           return true;
       }
@@ -49,12 +49,12 @@ export default function AdminClientsTable({ clients }: AdminClientsTableProps) {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "active":
+      case "Active":
         return "bg-green-100 text-green-800";
-      case "inactive":
+      case "Inactive":
         return "bg-red-100 text-red-800";
-      case "pending":
-        return "bg-yellow-100 text-yellow-800";
+      case "Cancelled":
+        return "bg-gray-100 text-gray-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
@@ -77,9 +77,9 @@ export default function AdminClientsTable({ clients }: AdminClientsTableProps) {
           className="rounded-md border border-gray-300 px-3 py-1 text-sm focus:border-nile-blue-500 focus:outline-none focus:ring-1 focus:ring-nile-blue-500"
         >
           <option value="all">All Statuses</option>
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-          <option value="pending">Pending</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+          <option value="Cancelled">Cancelled</option>
         </select>
         <span className="text-sm text-gray-500">
           Showing {filteredClients.length} of {clients.length} clients

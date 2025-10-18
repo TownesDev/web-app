@@ -243,7 +243,11 @@ export const kickoffChecklist: SchemaTypeDefinition = {
       subtitle: "_createdAt",
       client: "client",
     },
-    prepare(selection: any) {
+    prepare(selection: {
+      title?: string;
+      subtitle?: string;
+      client?: { name?: string };
+    }) {
       const { title, subtitle, client } = selection;
       return {
         title: title ? `Kickoff: ${title}` : "Kickoff Checklist",
@@ -319,7 +323,11 @@ export const monthlyRhythm: SchemaTypeDefinition = {
       subtitle: "month",
       client: "client",
     },
-    prepare(selection: any) {
+    prepare(selection: {
+      title?: string;
+      subtitle?: string;
+      client?: { name?: string };
+    }) {
       const { title, subtitle, client } = selection;
       return {
         title: title ? `${subtitle}: ${title}` : `Monthly Rhythm - ${subtitle}`,
@@ -388,6 +396,39 @@ export const incident: SchemaTypeDefinition = {
   name: "incident",
   title: "Incident",
   type: "document",
+  preview: {
+    select: {
+      title: "title",
+      client: "client.name",
+      severity: "severity",
+      status: "status",
+      assignee: "assignee",
+      reportedAt: "reportedAt",
+    },
+    prepare(selection: {
+      title?: string;
+      client?: string;
+      severity?: string;
+      status?: string;
+      assignee?: string;
+      reportedAt?: string;
+    }) {
+      const { title, client, severity, status, assignee, reportedAt } =
+        selection;
+      const subtitle = client
+        ? `${client} • ${severity} • ${status}`
+        : `${severity} • ${status}`;
+      const assigneeText = assignee ? `Assigned to: ${assignee}` : "Unassigned";
+
+      return {
+        title: title || "Untitled Incident",
+        subtitle: `${subtitle} • ${assigneeText}`,
+        description: reportedAt
+          ? `Reported: ${new Date(reportedAt).toLocaleDateString()}`
+          : "",
+      };
+    },
+  },
   fields: [
     {
       name: "client",
@@ -469,6 +510,12 @@ export const incident: SchemaTypeDefinition = {
       },
       initialValue: "open",
       description: "Current status of the incident",
+    },
+    {
+      name: "assignee",
+      title: "Assignee",
+      type: "string",
+      description: "Person assigned to handle this incident",
     },
   ],
 };
@@ -978,7 +1025,13 @@ export const invoice: SchemaTypeDefinition = {
       currency: "currency",
       status: "status",
     },
-    prepare(selection: any) {
+    prepare(selection: {
+      title?: string;
+      subtitle?: string;
+      totalAmount?: number;
+      currency?: string;
+      status?: string;
+    }) {
       const { title, subtitle, totalAmount, currency, status } = selection;
       return {
         title: title || "Invoice",

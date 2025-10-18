@@ -113,6 +113,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **UI/UX Enhancements**: Vertical button layout, disabled states for resolved incidents, toast notifications
   - **Error Handling**: Comprehensive error states, validation, and user feedback
   - **Accessibility**: Proper ARIA labels, keyboard navigation, and screen reader support
+- **Admin Incident Management System**: Complete incident oversight for staff/admin users
+  - **Admin Incidents Page**: `/admin/incidents` with comprehensive incident table and filtering
+  - **AdminIncidentsTable Component**: Advanced table with Client | Title | Severity | Status | Timestamps | Assignee columns
+  - **Inline Assignee Editing**: Click-to-edit assignee field with save/cancel functionality and API persistence
+  - **Advanced Filtering**: Severity and status dropdown filters with result counts
+  - **API Endpoint**: `PUT /api/admin/incidents/[id]` for assignee updates with RBAC protection
+  - **Schema Enhancement**: Added `assignee` field to incident schema with preview configuration
+  - **GROQ Query**: `qAllIncidents` for fetching all incidents with client name joins
+  - **Query Function**: `getAllIncidents()` in `src/queries/incidents.ts` for admin data fetching
+- **Enhanced Admin Dashboard**: Comprehensive overview with metrics and quick access
+  - **Quick Stats Cards**: Active clients, open incidents, in-progress incidents, and critical issues counts
+  - **Recent Incidents Preview**: Latest 5 incidents with status indicators and client information
+  - **Navigation Links**: Direct access to incidents management and clients overview
+  - **Improved Layout**: Multi-section dashboard replacing single clients table
+  - **Brand Compliance**: Nile-blue color scheme and consistent styling
+- **Sanity Schema Updates**: Enhanced incident management in CMS
+  - **Incident Preview**: Rich preview showing client, title, severity, status, assignee, and report date
+  - **Assignee Field**: String field for tracking incident assignment in incident schema
+  - **TypeScript Fixes**: Resolved `any` type issues in schema prepare functions
+- **Client Status Filtering Fix**: Corrected case sensitivity mismatch in admin interfaces
+  - **Dashboard Calculation**: Fixed active clients count to match schema values ("Active" vs "active")
+  - **AdminClientsTable**: Updated filter options and logic to use "Active", "Inactive", "Cancelled"
+  - **Status Color Mapping**: Updated color coding for cancelled client status
 
 ### Changed
 
