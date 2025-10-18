@@ -106,6 +106,13 @@ export const qIncidentsByClient = /* groq */ `
   }
 `;
 
+export const qAllIncidents = /* groq */ `
+  *[_type=="incident"]|order(reportedAt desc){
+    _id, title, severity, description, reportedAt, resolvedAt, status, hoursUsed, outOfScope, assignee,
+    client->{name}
+  }
+`;
+
 export const qInvoicesByClient = /* groq */ `
   *[_type=="invoice" && client._ref==$clientId]|order(issueDate desc){
     _id, invoiceNumber, totalAmount, currency, status, issueDate, dueDate, previewUrl
