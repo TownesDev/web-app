@@ -101,6 +101,13 @@ export const qMonthlyRhythmByClient = /* groq */ `
     }
 `;
 
+export const qMonthlyRhythmForClientMonth = /* groq */ `
+  *[_type == "monthlyRhythm" && client->_id == $clientId && month == $month][0]{
+    _id, month, hoursUsed, hoursIncluded,
+    week1Patch, week2Observability, week3Hardening, week4Report
+  }
+`;
+
 export const qIncidentsByClient = /* groq */ `
   *[_type=="incident" && client._ref==$clientId]|order(reportedAt desc){
     _id, title, severity, description, reportedAt, resolvedAt, status, hoursUsed, outOfScope
