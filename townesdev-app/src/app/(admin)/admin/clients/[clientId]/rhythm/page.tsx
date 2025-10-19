@@ -1,7 +1,6 @@
-import { getMonthlyRhythmForClientMonth } from "@/queries/monthlyRhythm";
-import MonthlyRhythmEditor from "@/components/admin/MonthlyRhythmEditor";
 import { runQuery } from "@/lib/client";
 import { qMonthlyRhythmForClientMonth } from "@/sanity/lib/queries";
+import MonthlyRhythmEditor from "@/components/admin/MonthlyRhythmEditor";
 
 function monthLabel(d = new Date()) {
   return d.toLocaleString("en-US", { month: "long", year: "numeric" }); // e.g., "October 2025"
