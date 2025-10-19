@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Fallback to plain text when HTML generation fails
   - Environment variable `EMAIL_FROM` for verified sender configuration
   - Documentation in README.md with usage examples and API reference
+  - **Welcome Email on Subscription**: Automatic email sending on new Stripe subscriptions
+    - Webhook handler sends "Welcome Activation" email to new clients
+    - Includes plan details, start date, SLA start time, and maintenance window
+    - Error logging and graceful failure handling (doesn't break subscription creation)
+    - Variable interpolation for personalized client communications
 
 - **RBAC System**: Role-Based Access Control with types, guards, and utilities in `src/lib/rbac/`
   - Support for admin, staff, client, and user roles

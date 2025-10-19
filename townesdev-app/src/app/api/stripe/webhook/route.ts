@@ -170,9 +170,11 @@ async function handlePlanSubscription(session: Stripe.Checkout.Session) {
 
     // Send welcome email to client
     try {
+      console.log(`Sending welcome email to client ${clientId} for plan ${planId}`);
       await sendWelcomeEmail(clientId, planId);
+      console.log(`Welcome email sent successfully to client ${clientId}`);
     } catch (emailError) {
-      console.error("Failed to send welcome email:", emailError);
+      console.error(`Failed to send welcome email to client ${clientId}:`, emailError);
       // Don't fail the webhook if email fails
     }
   } catch (error) {
@@ -280,14 +282,14 @@ async function sendWelcomeEmail(clientId: string, planId: string) {
     ]);
 
     if (!client || !plan || !client.email) {
-      console.warn("Missing client, plan, or email for welcome email");
+      console.warn(`Missing client (${!!client}), plan (${!!plan}), or email (${client?.email}) for welcome email to client ${clientId}`);
       return;
     }
 
     // Get email template
     const template = await getEmailTemplateByName("Welcome Activation");
     if (!template) {
-      console.warn("Welcome Activation email template not found");
+      console.warn(`Welcome Activation email template not found for client ${clientId}`);
       return;
     }
 
@@ -322,7 +324,7 @@ async function sendWelcomeEmail(clientId: string, planId: string) {
     };
 
     const result = await resend.emails.send(emailPayload);
-    console.log("Welcome email sent successfully:", String(result));
+    console.log(`Welcome email sent successfully to ${client.email}:`, String(result));
   } catch (error) {
     console.error("Error sending welcome email:", error);
     throw error; // Re-throw to be caught by caller
