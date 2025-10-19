@@ -93,7 +93,7 @@ export const qUserById = /* groq */ `
   }
 `;
 
-export const qMonthlyRhythmByClient = /* groq */ `
+export const qMonthlyRhythmByClient = `
   *[_type=="monthlyRhythm" && client._ref==$clientId]
     | order(coalesce(monthDate, _createdAt) desc){
       _id, month, monthDate, hoursUsed, hoursIncluded,
@@ -101,7 +101,7 @@ export const qMonthlyRhythmByClient = /* groq */ `
     }
 `;
 
-export const qMonthlyRhythmForClientMonth = /* groq */ `
+export const qMonthlyRhythmForClientMonth = `
   *[_type == "monthlyRhythm" && client._ref == $clientId && month == $month][0]{
     _id, month, hoursUsed, hoursIncluded,
     week1Patch, week2Observability, week3Hardening, week4Report
