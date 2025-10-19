@@ -351,6 +351,17 @@ export const monthlyRhythm: SchemaTypeDefinition = {
       description: "The month this rhythm covers (e.g., January 2024)",
     },
     {
+      name: "monthDate",
+      title: "Month Date",
+      type: "datetime",
+      description: "Date for stable sorting (first day of the month)",
+      hidden: true,
+      initialValue: () => {
+        const now = new Date();
+        return new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+      },
+    },
+    {
       name: "week1Patch",
       title: "Week 1 - Patch and Review",
       type: "text",

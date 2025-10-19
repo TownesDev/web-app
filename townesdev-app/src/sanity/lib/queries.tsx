@@ -94,10 +94,11 @@ export const qUserById = /* groq */ `
 `;
 
 export const qMonthlyRhythmByClient = /* groq */ `
-  *[_type=="monthlyRhythm" && client._ref==$clientId]|order(month desc){
-    _id, month, hoursUsed, hoursIncluded,
-    week1Patch, week2Observability, week3Hardening, week4Report
-  }
+  *[_type=="monthlyRhythm" && client._ref==$clientId]
+    | order(coalesce(monthDate, _createdAt) desc){
+      _id, month, monthDate, hoursUsed, hoursIncluded,
+      week1Patch, week2Observability, week3Hardening, week4Report
+    }
 `;
 
 export const qIncidentsByClient = /* groq */ `
