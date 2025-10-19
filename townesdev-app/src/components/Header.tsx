@@ -98,6 +98,12 @@ export default function Header({ variant }: HeaderProps) {
             >
               Email Templates
             </Link>
+            <Link
+              href="/admin/email-test"
+              className="text-nile-blue-200 hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
+            >
+              Test Emails
+            </Link>
             <span className="text-nile-blue-300 font-body text-sm">
               Settings
             </span>

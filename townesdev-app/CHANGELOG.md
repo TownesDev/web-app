@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Email API Integration**: Template-based email sending system with Sanity CMS
+  - `POST /api/email` endpoint for sending emails by template name
+  - Portable Text to HTML/text conversion with variable interpolation
+  - Resend integration with verified sender support
+  - Query helper `getEmailTemplateByName()` for fetching templates from Sanity
+  - Email utilities for rendering and variable merging (`src/lib/email.ts`)
+  - Resend client configuration (`src/lib/resendClient.ts`)
+  - Fallback to plain text when HTML generation fails
+  - Environment variable `EMAIL_FROM` for verified sender configuration
+  - Documentation in README.md with usage examples and API reference
+
 - **RBAC System**: Role-Based Access Control with types, guards, and utilities in `src/lib/rbac/`
   - Support for admin, staff, client, and user roles
   - Capability-based permissions (clients:read/write, content:read/write, etc.)

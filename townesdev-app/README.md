@@ -20,22 +20,68 @@ Create a `.env.local` file in the root directory with the following variables:
 
 ### Email Configuration
 
-- `NEXT_PUBLIC_RESEND_API_KEY` - Resend API key for sending emails
-- `RESEND_API_KEY` - Server-side Resend API key
+- `RESEND_API_KEY` - Server-side Resend API key (do not use NEXT*PUBLIC* prefix)
+- `EMAIL_FROM` - Verified sender email address (e.g., "TownesDev <noreply@townes.dev>")
 
 ### URLs
 
 - `NEXT_PUBLIC_BASE_URL` - Your application's base URL (e.g., `http://localhost:3000` for development)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Email API
+
+The application includes a template-based email API that integrates with Sanity CMS.
+
+### POST /api/email
+
+Send emails using templates stored in Sanity.
+
+**Request Body:**
+
+```json
+{
+  "templateName": "Welcome Activation",
+  "to": "user@example.com",
+  "vars": {
+    "clientName": "John Doe",
+    "planName": "Gold",
+    "startDate": "2025-01-15",
+    "maintenanceWindow": "First Tuesday, 9–11 AM CT"
+  }
+}
 ```
+
+**Response:**
+
+```json
+{
+  "id": "email-message-id",
+  "ok": true
+}
+```
+
+**Notes:**
+
+- Templates are managed in Sanity Studio with `name`, `subject`, and `htmlBody` (Portable Text) fields
+- Variables are interpolated using `{{variableName}}` syntax in both subject and body
+- Falls back to plain text if HTML generation fails
+- Uses verified sender from `EMAIL_FROM` environment variable
+
+**Example cURL:**
+
+```bash
+curl -X POST http://localhost:3000/api/email \
+  -H "Content-Type: application/json" \
+  -d '{
+    "templateName": "Welcome Activation",
+    "to": "test@example.com",
+    "vars": {
+      "clientName": "Test User",
+      "planName": "Silver"
+    }
+  }'
+```
+
+## Getting Started
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 

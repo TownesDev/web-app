@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { runQuery, sanityWrite } from "@/lib/client";
+import { getEmailTemplateByName } from "../../../../queries/emailTemplates";
+import { ptToHtml, ptToPlainText, mergeVars } from "../../../../lib/email";
+import { resend, EMAIL_FROM } from "../../../../lib/resendClient";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-09-30.clover",
@@ -164,6 +167,14 @@ async function handlePlanSubscription(session: Stripe.Checkout.Session) {
     ]);
 
     console.log("Retainer created for subscription:", subscription.id);
+
+    // Send welcome email to client
+    try {
+      await sendWelcomeEmail(clientId, planId);
+    } catch (emailError) {
+      console.error("Failed to send welcome email:", emailError);
+      // Don't fail the webhook if email fails
+    }
   } catch (error) {
     console.error("Error creating retainer:", error);
   }
@@ -241,5 +252,79 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
     }
   } catch (error) {
     console.error("Error updating retainer:", error);
+  }
+}
+
+async function sendWelcomeEmail(clientId: string, planId: string) {
+  try {
+    // Get client and plan details
+    const [client, plan] = await Promise.all([
+      runQuery(
+        `*[_type=="client" && _id==$clientId][0]{
+          _id,
+          name,
+          email,
+          startDate,
+          slaStartTime,
+          maintenanceWindow
+        }`,
+        { clientId }
+      ),
+      runQuery(
+        `*[_type=="plan" && _id==$planId][0]{
+          _id,
+          name
+        }`,
+        { planId }
+      ),
+    ]);
+
+    if (!client || !plan || !client.email) {
+      console.warn("Missing client, plan, or email for welcome email");
+      return;
+    }
+
+    // Get email template
+    const template = await getEmailTemplateByName("Welcome Activation");
+    if (!template) {
+      console.warn("Welcome Activation email template not found");
+      return;
+    }
+
+    // Prepare variables for template
+    const vars = {
+      clientName: client.name || "Valued Client",
+      planName: plan.name || "Your Plan",
+      startDate: client.startDate
+        ? new Date(client.startDate).toLocaleDateString()
+        : "As soon as possible",
+      slaStartTime: client.slaStartTime
+        ? new Date(client.slaStartTime).toLocaleString()
+        : "To be determined",
+      maintenanceWindow: client.maintenanceWindow || "To be scheduled",
+    };
+
+    // Render email content
+    const subject = mergeVars(template.subject || "", vars);
+    const htmlRaw = ptToHtml(template.htmlBody);
+    const textRaw = ptToPlainText(template.htmlBody);
+
+    const html = mergeVars(htmlRaw, vars);
+    const text = mergeVars(textRaw, vars);
+
+    // Send email
+    const emailPayload = {
+      from: EMAIL_FROM,
+      to: [client.email],
+      subject,
+      text: text || "Welcome to TownesDev!",
+      ...(html && { html }),
+    };
+
+    const result = await resend.emails.send(emailPayload);
+    console.log("Welcome email sent successfully:", String(result));
+  } catch (error) {
+    console.error("Error sending welcome email:", error);
+    throw error; // Re-throw to be caught by caller
   }
 }
