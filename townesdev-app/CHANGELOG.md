@@ -136,6 +136,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Dashboard Calculation**: Fixed active clients count to match schema values ("Active" vs "active")
   - **AdminClientsTable**: Updated filter options and logic to use "Active", "Inactive", "Cancelled"
   - **Status Color Mapping**: Updated color coding for cancelled client status
+- **Monthly Rhythm Timeline**: Complete client portal feature for viewing maintenance cycles
+  - **RhythmTimeline Component**: Expandable accordion UI showing monthly maintenance entries
+  - **Schema Enhancement**: Added `monthDate` field to `monthlyRhythm` schema for stable sorting
+  - **Query Updates**: Modified `qMonthlyRhythmByClient` to sort newest months first using `coalesce(monthDate, _createdAt) desc`
+  - **Query Helper**: Created `getMonthlyRhythmByClient()` function in `src/queries/monthlyRhythm.ts`
+  - **Hours Tracking**: Visual progress bars showing hours used vs included from client plan
+  - **Overage Indicators**: Red badges when hours exceed retainer limits with exact overage amounts
+  - **Week Breakdown**: Expandable sections showing Week 1-4 content (Patch & Review, Observability, Hardening, Report)
+  - **Portal Integration**: Updated `/app/rhythm` page with authentication and client-specific data fetching
+  - **Empty State**: Proper handling when no rhythm entries exist with descriptive messaging
 
 ### Changed
 
