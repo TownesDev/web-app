@@ -150,6 +150,12 @@ export default function AdminClientsTable({ clients }: AdminClientsTableProps) {
                     >
                       View Details
                     </Link>
+                    <Link
+                      href={`/admin/clients/${client._id}/rhythm`}
+                      className="text-nile-blue-600 hover:text-nile-blue-900 mr-4"
+                    >
+                      Rhythm
+                    </Link>
                     {/* Edit button - only show if user has write capability */}
                     <span className="text-gray-300 cursor-not-allowed">
                       Edit

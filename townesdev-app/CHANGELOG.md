@@ -136,6 +136,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Dashboard Calculation**: Fixed active clients count to match schema values ("Active" vs "active")
   - **AdminClientsTable**: Updated filter options and logic to use "Active", "Inactive", "Cancelled"
   - **Status Color Mapping**: Updated color coding for cancelled client status
+- **Monthly Rhythm Timeline**: Complete client portal feature for viewing maintenance cycles
+  - **RhythmTimeline Component**: Expandable accordion UI showing monthly maintenance entries
+  - **Schema Enhancement**: Added `monthDate` field to `monthlyRhythm` schema for stable sorting
+  - **Query Updates**: Modified `qMonthlyRhythmByClient` to sort newest months first using `coalesce(monthDate, _createdAt) desc`
+  - **Query Helper**: Created `getMonthlyRhythmByClient()` function in `src/queries/monthlyRhythm.ts`
+  - **Hours Tracking**: Visual progress bars showing hours used vs included from client plan
+  - **Overage Indicators**: Red badges when hours exceed retainer limits with exact overage amounts
+  - **Week Breakdown**: Expandable sections showing Week 1-4 content (Patch & Review, Observability, Hardening, Report)
+  - **Portal Integration**: Updated `/app/rhythm` page with authentication and client-specific data fetching
+  - **Empty State**: Proper handling when no rhythm entries exist with descriptive messaging
 
 ### Changed
 
@@ -165,6 +175,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Quick links section with navigation to /app/invoices, /app/incidents, /app/rhythm.
 - Placeholder pages for incidents and rhythm.
 - Dedicated invoices page at /app/invoices.
+- **Admin Monthly Rhythm Editor**: Complete CRUD interface for managing client monthly rhythm entries
+  - **Admin Route**: `/admin/clients/[id]/rhythm` page for editing monthly rhythm per client
+  - **Query Enhancement**: Added `qMonthlyRhythmForClientMonth` query for fetching specific month entries
+  - **Server Actions**: Created `createMonthlyRhythm` and `updateMonthlyRhythm` server actions with Sanity write operations
+  - **MonthlyRhythmEditor Component**: Form component with month selection, hours tracking, and week-by-week content editing
+  - **Form Validation**: Required month field, non-negative hours validation, and proper error handling
+  - **Toast Notifications**: Success/error feedback using sonner for save operations
+  - **Create-or-Edit Logic**: Automatically handles both creating new entries and updating existing ones
+  - **RBAC Integration**: Protected under existing admin route structure with staff authentication
+- **Admin Portal Monthly Rhythm Integration**: Connected rhythm editor to admin dashboard and client management
+  - **Clients Table Enhancement**: Added "Rhythm" link in AdminClientsTable Actions column for quick access to rhythm editing
+  - **Dashboard Rhythm Overview**: Added "Recent Monthly Rhythms" section showing latest 5 rhythm entries across all clients
+  - **Rhythm Activity Stats**: Added "Active Rhythms" stat card showing current month rhythm entries
+  - **Quick Access Links**: Direct links from dashboard rhythm preview to individual client rhythm editors
+  - **Navigation Integration**: Seamless workflow from client table → rhythm editor with proper breadcrumbs
 
 ### Remaining Tasks
 

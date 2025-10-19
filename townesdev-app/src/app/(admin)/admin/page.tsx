@@ -6,9 +6,16 @@
 import { requireCapability } from "@/lib/rbac/guards";
 import { getAllClients } from "@/queries/clients";
 import { getAllIncidents } from "@/queries/incidents";
+import { getRecentMonthlyRhythms } from "@/queries/monthlyRhythm";
 import AdminClientsTable from "@/components/admin/AdminClientsTable";
 import Link from "next/link";
-import { AlertTriangle, Users, TrendingUp, Clock } from "lucide-react";
+import {
+  AlertTriangle,
+  Users,
+  TrendingUp,
+  Clock,
+  Calendar,
+} from "lucide-react";
 
 interface Client {
   _id: string;
@@ -34,6 +41,18 @@ interface Incident {
   };
 }
 
+interface MonthlyRhythm {
+  _id: string;
+  month: string;
+  hoursUsed?: number;
+  hoursIncluded?: number;
+  _updatedAt?: string;
+  client: {
+    _id: string;
+    name: string;
+  };
+}
+
 export default async function AdminPage() {
   // Require clients:read capability (staff/admin only)
   await requireCapability("clients:read");
@@ -43,6 +62,9 @@ export default async function AdminPage() {
     getAllClients() as Promise<Client[]>,
     getAllIncidents() as Promise<Incident[]>,
   ]);
+
+  // Fetch recent monthly rhythms
+  const recentRhythms = (await getRecentMonthlyRhythms(5)) as MonthlyRhythm[];
 
   // Calculate quick stats
   const activeClients = clients.filter(
@@ -58,6 +80,16 @@ export default async function AdminPage() {
     (incident) => incident.severity === "critical"
   ).length;
 
+  // Calculate monthly rhythm stats
+  const totalRhythmEntries = recentRhythms.length;
+  const activeRhythmsThisMonth = recentRhythms.filter((rhythm) => {
+    const rhythmMonth = rhythm.month.toLowerCase();
+    const currentMonth = new Date()
+      .toLocaleString("en-US", { month: "long", year: "numeric" })
+      .toLowerCase();
+    return rhythmMonth === currentMonth;
+  }).length;
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
@@ -70,7 +102,7 @@ export default async function AdminPage() {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <div className="flex items-center">
             <div className="p-2 bg-nile-blue-100 rounded-lg">
@@ -128,6 +160,22 @@ export default async function AdminPage() {
               </p>
               <p className="text-2xl font-bold text-red-900">
                 {criticalIncidents}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="flex items-center">
+            <div className="p-2 bg-green-100 rounded-lg">
+              <Calendar className="h-6 w-6 text-green-600" />
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-600">
+                Active Rhythms
+              </p>
+              <p className="text-2xl font-bold text-green-900">
+                {activeRhythmsThisMonth}
               </p>
             </div>
           </div>
@@ -210,6 +258,80 @@ export default async function AdminPage() {
                       ? new Date(incident.reportedAt).toLocaleDateString()
                       : "—"}
                   </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Recent Monthly Rhythms */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 className="text-xl font-semibold font-heading text-nile-blue-900 mb-2">
+              Recent Monthly Rhythms
+            </h2>
+            <p className="text-sm text-gray-600">
+              Latest monthly maintenance updates across all clients
+            </p>
+          </div>
+          <Link
+            href="/admin/clients"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-nile-blue-600 hover:bg-nile-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-nile-blue-500"
+          >
+            Manage Rhythms
+          </Link>
+        </div>
+
+        {recentRhythms.length === 0 ? (
+          <div className="text-center py-8">
+            <Calendar className="mx-auto h-12 w-12 text-gray-400" />
+            <h3 className="mt-2 text-sm font-medium text-gray-900">
+              No rhythm entries yet
+            </h3>
+            <p className="mt-1 text-sm text-gray-500">
+              Monthly rhythm entries will appear here once created.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {recentRhythms.map((rhythm) => (
+              <div
+                key={rhythm._id}
+                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg"
+              >
+                <div className="flex items-center space-x-4">
+                  <div className="p-2 bg-nile-blue-100 rounded-lg">
+                    <Calendar className="h-5 w-5 text-nile-blue-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">
+                      {rhythm.month}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      {rhythm.client.name}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <div className="text-right">
+                    <p className="text-sm text-gray-900">
+                      {rhythm.hoursUsed || 0} / {rhythm.hoursIncluded || 0}{" "}
+                      hours
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {rhythm._updatedAt
+                        ? new Date(rhythm._updatedAt).toLocaleDateString()
+                        : "—"}
+                    </p>
+                  </div>
+                  <Link
+                    href={`/admin/clients/${rhythm.client._id}/rhythm`}
+                    className="text-nile-blue-600 hover:text-nile-blue-900 text-sm font-medium"
+                  >
+                    Edit
+                  </Link>
                 </div>
               </div>
             ))}
