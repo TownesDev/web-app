@@ -2,16 +2,26 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { createMonthlyRhythm, updateMonthlyRhythm } from "@/sanity/actions/monthlyRhythm";
+import {
+  createMonthlyRhythm,
+  updateMonthlyRhythm,
+} from "@/sanity/actions/monthlyRhythm";
 
 export default function MonthlyRhythmEditor({
-  clientId, month, initialValue
+  clientId,
+  month,
+  initialValue,
 }: {
   clientId: string;
   month: string;
   initialValue?: {
-    _id: string; hoursIncluded?: number; hoursUsed?: number;
-    week1Patch?: string; week2Observability?: string; week3Hardening?: string; week4Report?: string;
+    _id: string;
+    hoursIncluded?: number;
+    hoursUsed?: number;
+    week1Patch?: string;
+    week2Observability?: string;
+    week3Hardening?: string;
+    week4Report?: string;
   } | null;
 }) {
   const [form, setForm] = useState({
@@ -50,7 +60,9 @@ export default function MonthlyRhythmEditor({
         <form onSubmit={onSubmit} className="space-y-6">
           {/* Month */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Month</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Month
+            </label>
             <input
               className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-nile-blue-500 focus:ring-nile-blue-500 p-2 border"
               value={form.month}
@@ -62,29 +74,49 @@ export default function MonthlyRhythmEditor({
           {/* Hours */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Hours Included</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Hours Included
+              </label>
               <input
-                type="number" min={0} step="0.1"
+                type="number"
+                min={0}
+                step="0.1"
                 className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-nile-blue-500 focus:ring-nile-blue-500 p-2 border"
                 value={form.hoursIncluded}
-                onChange={(e) => setForm({ ...form, hoursIncluded: parseFloat(e.target.value || "0") })}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    hoursIncluded: parseFloat(e.target.value || "0"),
+                  })
+                }
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Hours Used</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Hours Used
+              </label>
               <input
-                type="number" min={0} step="0.1"
+                type="number"
+                min={0}
+                step="0.1"
                 className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-nile-blue-500 focus:ring-nile-blue-500 p-2 border"
                 value={form.hoursUsed}
-                onChange={(e) => setForm({ ...form, hoursUsed: parseFloat(e.target.value || "0") })}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    hoursUsed: parseFloat(e.target.value || "0"),
+                  })
+                }
               />
             </div>
           </div>
 
           {/* Weeks */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Week 1 – Patch & Review</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Week 1 – Patch & Review
+            </label>
             <textarea
               className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-nile-blue-500 focus:ring-nile-blue-500 p-2 border min-h-28"
               value={form.week1Patch}
@@ -93,29 +125,41 @@ export default function MonthlyRhythmEditor({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Week 2 – Observability</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Week 2 – Observability
+            </label>
             <textarea
               className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-nile-blue-500 focus:ring-nile-blue-500 p-2 border min-h-28"
               value={form.week2Observability}
-              onChange={(e) => setForm({ ...form, week2Observability: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, week2Observability: e.target.value })
+              }
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Week 3 – Hardening</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Week 3 – Hardening
+            </label>
             <textarea
               className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-nile-blue-500 focus:ring-nile-blue-500 p-2 border min-h-28"
               value={form.week3Hardening}
-              onChange={(e) => setForm({ ...form, week3Hardening: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, week3Hardening: e.target.value })
+              }
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Week 4 – Report</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Week 4 – Report
+            </label>
             <textarea
               className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-nile-blue-500 focus:ring-nile-blue-500 p-2 border min-h-28"
               value={form.week4Report}
-              onChange={(e) => setForm({ ...form, week4Report: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, week4Report: e.target.value })
+              }
             />
           </div>
 

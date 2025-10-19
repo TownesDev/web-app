@@ -9,7 +9,13 @@ import { getAllIncidents } from "@/queries/incidents";
 import { getRecentMonthlyRhythms } from "@/queries/monthlyRhythm";
 import AdminClientsTable from "@/components/admin/AdminClientsTable";
 import Link from "next/link";
-import { AlertTriangle, Users, TrendingUp, Clock, Calendar } from "lucide-react";
+import {
+  AlertTriangle,
+  Users,
+  TrendingUp,
+  Clock,
+  Calendar,
+} from "lucide-react";
 
 interface Client {
   _id: string;
@@ -42,6 +48,7 @@ interface MonthlyRhythm {
   hoursIncluded?: number;
   _updatedAt?: string;
   client: {
+    _id: string;
     name: string;
   };
 }
@@ -57,7 +64,7 @@ export default async function AdminPage() {
   ]);
 
   // Fetch recent monthly rhythms
-  const recentRhythms = await getRecentMonthlyRhythms(5) as MonthlyRhythm[];
+  const recentRhythms = (await getRecentMonthlyRhythms(5)) as MonthlyRhythm[];
 
   // Calculate quick stats
   const activeClients = clients.filter(
@@ -77,7 +84,9 @@ export default async function AdminPage() {
   const totalRhythmEntries = recentRhythms.length;
   const activeRhythmsThisMonth = recentRhythms.filter((rhythm) => {
     const rhythmMonth = rhythm.month.toLowerCase();
-    const currentMonth = new Date().toLocaleString("en-US", { month: "long", year: "numeric" }).toLowerCase();
+    const currentMonth = new Date()
+      .toLocaleString("en-US", { month: "long", year: "numeric" })
+      .toLowerCase();
     return rhythmMonth === currentMonth;
   }).length;
 
@@ -308,7 +317,8 @@ export default async function AdminPage() {
                 <div className="flex items-center space-x-4">
                   <div className="text-right">
                     <p className="text-sm text-gray-900">
-                      {rhythm.hoursUsed || 0} / {rhythm.hoursIncluded || 0} hours
+                      {rhythm.hoursUsed || 0} / {rhythm.hoursIncluded || 0}{" "}
+                      hours
                     </p>
                     <p className="text-xs text-gray-500">
                       {rhythm._updatedAt

@@ -9,5 +9,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   const clientId = params.id;
   const month = monthLabel();
   const doc = await getMonthlyRhythmForClientMonth(clientId, month);
-  return <MonthlyRhythmEditor clientId={clientId} month={month} initialValue={doc} />;
+  return (
+    <MonthlyRhythmEditor clientId={clientId} month={month} initialValue={doc} />
+  );
 }

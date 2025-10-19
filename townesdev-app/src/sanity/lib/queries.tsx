@@ -102,7 +102,7 @@ export const qMonthlyRhythmByClient = /* groq */ `
 `;
 
 export const qMonthlyRhythmForClientMonth = /* groq */ `
-  *[_type == "monthlyRhythm" && client->_id == $clientId && month == $month][0]{
+  *[_type == "monthlyRhythm" && client._ref == $clientId && month == $month][0]{
     _id, month, hoursUsed, hoursIncluded,
     week1Patch, week2Observability, week3Hardening, week4Report
   }

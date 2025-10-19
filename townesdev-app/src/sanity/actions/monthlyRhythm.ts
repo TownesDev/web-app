@@ -25,14 +25,17 @@ export async function createMonthlyRhythm(input: {
   });
 }
 
-export async function updateMonthlyRhythm(id: string, fields: Partial<{
-  month: string;
-  hoursIncluded: number;
-  hoursUsed: number;
-  week1Patch: string;
-  week2Observability: string;
-  week3Hardening: string;
-  week4Report: string;
-}>) {
+export async function updateMonthlyRhythm(
+  id: string,
+  fields: Partial<{
+    month: string;
+    hoursIncluded: number;
+    hoursUsed: number;
+    week1Patch: string;
+    week2Observability: string;
+    week3Hardening: string;
+    week4Report: string;
+  }>
+) {
   return sanityWrite.patch(id).set(fields).commit();
 }
