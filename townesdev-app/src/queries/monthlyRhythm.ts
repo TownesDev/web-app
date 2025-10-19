@@ -19,3 +19,17 @@ export async function getMonthlyRhythmByClient(clientId: string) {
 export async function getMonthlyRhythmForClientMonth(clientId: string, month: string) {
   return runQuery(qMonthlyRhythmForClientMonth, { clientId, month });
 }
+
+/**
+ * Get recent monthly rhythm entries across all clients for admin dashboard
+ */
+export async function getRecentMonthlyRhythms(limit: number = 10) {
+  return runQuery(/* groq */ `
+    *[_type=="monthlyRhythm"]|order(_updatedAt desc)[0...${limit}]{
+      _id, month, hoursUsed, hoursIncluded,
+      week1Patch, week2Observability, week3Hardening, week4Report,
+      _updatedAt,
+      client->{name}
+    }
+  `);
+}
