@@ -48,70 +48,11 @@ export default function Header({ variant }: HeaderProps) {
   const getQuickNav = () => {
     switch (variant) {
       case "portal":
-        return (
-          <nav className="hidden md:flex items-center space-x-6 ml-8">
-            <Link
-              href="/app"
-              className="text-nile-blue-200 hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
-            >
-              Dashboard
-            </Link>
-            <Link
-              href="/app/plans"
-              className="text-nile-blue-200 hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
-            >
-              Plans & Billing
-            </Link>
-            <Link
-              href="/app/invoices"
-              className="text-nile-blue-200 hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
-            >
-              Invoices
-            </Link>
-            <Link
-              href="/app/incidents"
-              className="text-nile-blue-200 hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
-            >
-              Support
-            </Link>
-          </nav>
-        );
+        // Navigation moved to ClientSidebar
+        return null;
       case "admin":
-        return (
-          <nav className="hidden md:flex items-center space-x-6 ml-8">
-            <Link
-              href="/admin"
-              className="text-nile-blue-200 hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
-            >
-              Clients
-            </Link>
-            <Link
-              href="/studio"
-              target="_blank"
-              className="text-nile-blue-200 hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
-            >
-              Content
-            </Link>
-            <Link
-              href="/admin/email-templates"
-              className="text-nile-blue-200 hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
-            >
-              Email Templates
-            </Link>
-            <Link
-              href="/admin/email-test"
-              className="text-nile-blue-200 hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
-            >
-              Test Emails
-            </Link>
-            <Link
-              href="/admin/settings"
-              className="text-nile-blue-200 hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
-            >
-              Settings
-            </Link>
-          </nav>
-        );
+        // Navigation moved to AdminSidebar
+        return null;
       default:
         return null;
     }
