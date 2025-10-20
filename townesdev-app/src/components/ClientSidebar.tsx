@@ -65,11 +65,19 @@ export default function ClientSidebar() {
       }`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200">
+      <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gradient-to-r from-nile-blue-50 to-white">
         {!isCollapsed && (
-          <h2 className="text-lg font-semibold font-heading text-nile-blue-900">
-            Client Portal
-          </h2>
+          <div className="flex items-center space-x-3">
+            <div className="p-2 bg-nile-blue-100 rounded-lg">
+              <LayoutDashboard className="h-5 w-5 text-nile-blue-600" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold font-heading text-nile-blue-900">
+                Client Portal
+              </h2>
+              <p className="text-xs text-gray-600">Manage your services</p>
+            </div>
+          </div>
         )}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}

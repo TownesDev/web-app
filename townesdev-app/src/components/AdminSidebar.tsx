@@ -71,11 +71,19 @@ export default function AdminSidebar() {
       }`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200">
+      <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gradient-to-r from-sandy-brown-50 to-white">
         {!isCollapsed && (
-          <h2 className="text-lg font-semibold font-heading text-nile-blue-900">
-            Admin Portal
-          </h2>
+          <div className="flex items-center space-x-3">
+            <div className="p-2 bg-sandy-brown-100 rounded-lg">
+              <BarChart3 className="h-5 w-5 text-sandy-brown-600" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold font-heading text-gray-900">
+                Admin Portal
+              </h2>
+              <p className="text-xs text-gray-600">System management</p>
+            </div>
+          </div>
         )}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}

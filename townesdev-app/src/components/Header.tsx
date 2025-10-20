@@ -15,14 +15,14 @@ export default function Header({ variant }: HeaderProps) {
     return "TownesDev";
   };
 
-  const getSubtitle = () => {
+  const getHeaderAccent = () => {
     switch (variant) {
       case "portal":
-        return "Client Portal";
+        return "border-t-4 border-nile-blue-500";
       case "admin":
-        return "Admin Portal";
+        return "border-t-4 border-sandy-brown-500";
       default:
-        return null;
+        return "";
     }
   };
 
@@ -30,13 +30,13 @@ export default function Header({ variant }: HeaderProps) {
     switch (variant) {
       case "portal":
         return (
-          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-nile-blue-100 text-nile-blue-800">
+          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-nile-blue-100 text-nile-blue-800 border border-nile-blue-200">
             Client
           </span>
         );
       case "admin":
         return (
-          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-sandy-brown-100 text-sandy-brown-800">
+          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-sandy-brown-100 text-sandy-brown-800 border border-sandy-brown-200">
             Staff
           </span>
         );
@@ -59,7 +59,7 @@ export default function Header({ variant }: HeaderProps) {
   };
 
   return (
-    <header className="border-b bg-nile-blue-800 flex justify-between items-center shadow-sm p-4">
+    <header className={`border-b bg-nile-blue-800 flex justify-between items-center shadow-sm p-4 ${getHeaderAccent()}`}>
       <div className="flex items-center">
         {/* Logo and Title Section */}
         <Link
@@ -87,11 +87,6 @@ export default function Header({ variant }: HeaderProps) {
               </h1>
               {getSectionBadge()}
             </div>
-            {getSubtitle() && (
-              <p className="text-sm font-body text-nile-blue-200 font-medium">
-                {getSubtitle()}
-              </p>
-            )}
           </div>
         </Link>
 
