@@ -1,4 +1,4 @@
-type PTBlock = {
+export type PTBlock = {
   _type: string;
   style?: string;
   children?: { text?: string }[];

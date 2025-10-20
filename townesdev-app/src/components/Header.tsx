@@ -104,9 +104,12 @@ export default function Header({ variant }: HeaderProps) {
             >
               Test Emails
             </Link>
-            <span className="text-nile-blue-300 font-body text-sm">
+            <Link
+              href="/admin/settings"
+              className="text-nile-blue-200 hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
+            >
               Settings
-            </span>
+            </Link>
           </nav>
         );
       default:

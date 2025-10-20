@@ -4,12 +4,7 @@
  */
 
 import { runQuery } from "../lib/client";
-
-type PTBlock = {
-  _type: string;
-  style?: string;
-  children?: { text?: string }[];
-};
+import { PTBlock } from "../lib/email";
 
 export type EmailTemplateDoc = {
   _id: string;
