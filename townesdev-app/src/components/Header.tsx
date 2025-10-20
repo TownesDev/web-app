@@ -15,17 +15,6 @@ export default function Header({ variant }: HeaderProps) {
     return "TownesDev";
   };
 
-  const getHeaderAccent = () => {
-    switch (variant) {
-      case "portal":
-        return "border-t-4 border-nile-blue-500";
-      case "admin":
-        return "border-t-4 border-sandy-brown-500";
-      default:
-        return "";
-    }
-  };
-
   const getSectionBadge = () => {
     switch (variant) {
       case "portal":
@@ -59,7 +48,7 @@ export default function Header({ variant }: HeaderProps) {
   };
 
   return (
-    <header className={`border-b bg-nile-blue-800 flex justify-between items-center shadow-sm p-4 ${getHeaderAccent()}`}>
+    <header className="border-b bg-nile-blue-800 flex justify-between items-center shadow-sm p-4">
       <div className="flex items-center">
         {/* Logo and Title Section */}
         <Link
