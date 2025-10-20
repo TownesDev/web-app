@@ -15,28 +15,17 @@ export default function Header({ variant }: HeaderProps) {
     return "TownesDev";
   };
 
-  const getSubtitle = () => {
-    switch (variant) {
-      case "portal":
-        return "Client Portal";
-      case "admin":
-        return "Admin Portal";
-      default:
-        return null;
-    }
-  };
-
   const getSectionBadge = () => {
     switch (variant) {
       case "portal":
         return (
-          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-nile-blue-100 text-nile-blue-800">
+          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-nile-blue-100 text-nile-blue-800 border border-nile-blue-200">
             Client
           </span>
         );
       case "admin":
         return (
-          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-sandy-brown-100 text-sandy-brown-800">
+          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-sandy-brown-100 text-sandy-brown-800 border border-sandy-brown-200">
             Staff
           </span>
         );
@@ -48,70 +37,11 @@ export default function Header({ variant }: HeaderProps) {
   const getQuickNav = () => {
     switch (variant) {
       case "portal":
-        return (
-          <nav className="hidden md:flex items-center space-x-6 ml-8">
-            <Link
-              href="/app"
-              className="text-nile-blue-200 hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
-            >
-              Dashboard
-            </Link>
-            <Link
-              href="/app/plans"
-              className="text-nile-blue-200 hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
-            >
-              Plans & Billing
-            </Link>
-            <Link
-              href="/app/invoices"
-              className="text-nile-blue-200 hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
-            >
-              Invoices
-            </Link>
-            <Link
-              href="/app/incidents"
-              className="text-nile-blue-200 hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
-            >
-              Support
-            </Link>
-          </nav>
-        );
+        // Navigation moved to ClientSidebar
+        return null;
       case "admin":
-        return (
-          <nav className="hidden md:flex items-center space-x-6 ml-8">
-            <Link
-              href="/admin"
-              className="text-nile-blue-200 hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
-            >
-              Clients
-            </Link>
-            <Link
-              href="/studio"
-              target="_blank"
-              className="text-nile-blue-200 hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
-            >
-              Content
-            </Link>
-            <Link
-              href="/admin/email-templates"
-              className="text-nile-blue-200 hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
-            >
-              Email Templates
-            </Link>
-            <Link
-              href="/admin/email-test"
-              className="text-nile-blue-200 hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
-            >
-              Test Emails
-            </Link>
-            <Link
-              href="/admin/settings"
-              className="text-nile-blue-200 hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
-            >
-              Settings
-            </Link>
-          </nav>
-        );
+        // Navigation moved to AdminSidebar
+        return null;
       default:
         return null;
     }
@@ -146,11 +76,6 @@ export default function Header({ variant }: HeaderProps) {
               </h1>
               {getSectionBadge()}
             </div>
-            {getSubtitle() && (
-              <p className="text-sm font-body text-nile-blue-200 font-medium">
-                {getSubtitle()}
-              </p>
-            )}
           </div>
         </Link>
 
