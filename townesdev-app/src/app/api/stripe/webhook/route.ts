@@ -99,7 +99,12 @@ async function handleFeaturePurchase(session: Stripe.Checkout.Session) {
 async function handlePlanSubscription(session: Stripe.Checkout.Session) {
   const { planId, clientId, assetId } = session.metadata!;
 
-  console.log("🔍 Processing plan subscription:", { planId, clientId, assetId, subscriptionId: session.subscription });
+  console.log("🔍 Processing plan subscription:", {
+    planId,
+    clientId,
+    assetId,
+    subscriptionId: session.subscription,
+  });
 
   if (!planId || !clientId) {
     console.error("Missing planId or clientId in subscription metadata");
@@ -175,7 +180,10 @@ async function handlePlanSubscription(session: Stripe.Checkout.Session) {
       }
     )["current_period_end"];
 
-    console.log("🔍 Period timestamps:", { periodStartTimestamp, periodEndTimestamp });
+    console.log("🔍 Period timestamps:", {
+      periodStartTimestamp,
+      periodEndTimestamp,
+    });
 
     // Handle case where timestamps might be missing or invalid
     let periodStart: string;
@@ -185,19 +193,28 @@ async function handlePlanSubscription(session: Stripe.Checkout.Session) {
       if (periodStartTimestamp && periodStartTimestamp > 0) {
         periodStart = new Date(periodStartTimestamp * 1000).toISOString();
       } else {
-        console.warn("⚠️ Invalid or missing periodStartTimestamp, using current date");
+        console.warn(
+          "⚠️ Invalid or missing periodStartTimestamp, using current date"
+        );
         periodStart = new Date().toISOString();
       }
 
       if (periodEndTimestamp && periodEndTimestamp > 0) {
         periodEnd = new Date(periodEndTimestamp * 1000).toISOString();
       } else {
-        console.warn("⚠️ Invalid or missing periodEndTimestamp, using date 30 days from now");
-        periodEnd = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+        console.warn(
+          "⚠️ Invalid or missing periodEndTimestamp, using date 30 days from now"
+        );
+        periodEnd = new Date(
+          Date.now() + 30 * 24 * 60 * 60 * 1000
+        ).toISOString();
       }
     } catch (dateError) {
       console.error("❌ Error creating dates:", dateError);
-      console.error("❌ Timestamp values:", { periodStartTimestamp, periodEndTimestamp });
+      console.error("❌ Timestamp values:", {
+        periodStartTimestamp,
+        periodEndTimestamp,
+      });
       return;
     }
 
@@ -257,6 +274,8 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
   // TODO: Extract client/plan info and send welcome email
   // This would require storing clientId and planId in subscription metadata
 }
+
+async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
   // Update invoice status in Sanity
   if (invoice.metadata?.invoiceId) {
     const existingInvoice = await runQuery(
@@ -279,18 +298,6 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
       ]);
     }
   }
-}
-
-async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
-  console.log("🎯 Handling subscription created:", subscription.id);
-
-  // Get client and plan from subscription metadata or customer
-  // This might be more complex - we may need to store metadata on the subscription
-  // For now, let's just log that we received it
-  console.log("📧 Subscription created - ready to send welcome email");
-
-  // TODO: Extract client/plan info and send welcome email
-  // This would require storing clientId and planId in subscription metadata
 }
 
 async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
