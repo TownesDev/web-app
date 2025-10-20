@@ -12,6 +12,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 export async function POST(request: NextRequest) {
+  console.log("🔄 Webhook received:", request.method, request.url);
+
   const body = await request.text();
   const sig = request.headers.get("stripe-signature")!;
 
@@ -19,9 +21,10 @@ export async function POST(request: NextRequest) {
 
   try {
     event = stripe.webhooks.constructEvent(body, sig, endpointSecret);
+    console.log("✅ Webhook event verified:", event.type);
   } catch (err: unknown) {
     console.error(
-      `Webhook signature verification failed.`,
+      `❌ Webhook signature verification failed.`,
       err instanceof Error ? err.message : String(err)
     );
     return NextResponse.json({ error: "Webhook error" }, { status: 400 });
@@ -39,6 +42,12 @@ export async function POST(request: NextRequest) {
           // Handle plan subscription
           await handlePlanSubscription(session);
         }
+        break;
+      }
+
+      case "customer.subscription.created": {
+        const subscription = event.data.object as Stripe.Subscription;
+        await handleSubscriptionCreated(subscription);
         break;
       }
 
@@ -90,8 +99,15 @@ async function handleFeaturePurchase(session: Stripe.Checkout.Session) {
 async function handlePlanSubscription(session: Stripe.Checkout.Session) {
   const { planId, clientId, assetId } = session.metadata!;
 
+  console.log("🔍 Processing plan subscription:", { planId, clientId, assetId, subscriptionId: session.subscription });
+
   if (!planId || !clientId) {
     console.error("Missing planId or clientId in subscription metadata");
+    return;
+  }
+
+  if (!session.subscription) {
+    console.error("No subscription ID in session");
     return;
   }
 
@@ -100,6 +116,23 @@ async function handlePlanSubscription(session: Stripe.Checkout.Session) {
     const subscription = await stripe.subscriptions.retrieve(
       session.subscription as string
     );
+
+    console.log("🔍 Retrieved subscription:", {
+      id: subscription.id,
+      status: subscription.status,
+      current_period_start: (
+        subscription as unknown as Stripe.Subscription & {
+          current_period_start: number;
+          current_period_end: number;
+        }
+      ).current_period_start,
+      current_period_end: (
+        subscription as unknown as Stripe.Subscription & {
+          current_period_start: number;
+          current_period_end: number;
+        }
+      ).current_period_end,
+    });
 
     // Check if retainer already exists (idempotency)
     const existingRetainer = await runQuery(
@@ -128,6 +161,46 @@ async function handlePlanSubscription(session: Stripe.Checkout.Session) {
     }
 
     // Create retainer
+    const periodStartTimestamp = (
+      subscription as unknown as Stripe.Subscription & {
+        current_period_start: number;
+        current_period_end: number;
+      }
+    )["current_period_start"];
+
+    const periodEndTimestamp = (
+      subscription as unknown as Stripe.Subscription & {
+        current_period_start: number;
+        current_period_end: number;
+      }
+    )["current_period_end"];
+
+    console.log("🔍 Period timestamps:", { periodStartTimestamp, periodEndTimestamp });
+
+    // Handle case where timestamps might be missing or invalid
+    let periodStart: string;
+    let periodEnd: string;
+
+    try {
+      if (periodStartTimestamp && periodStartTimestamp > 0) {
+        periodStart = new Date(periodStartTimestamp * 1000).toISOString();
+      } else {
+        console.warn("⚠️ Invalid or missing periodStartTimestamp, using current date");
+        periodStart = new Date().toISOString();
+      }
+
+      if (periodEndTimestamp && periodEndTimestamp > 0) {
+        periodEnd = new Date(periodEndTimestamp * 1000).toISOString();
+      } else {
+        console.warn("⚠️ Invalid or missing periodEndTimestamp, using date 30 days from now");
+        periodEnd = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+      }
+    } catch (dateError) {
+      console.error("❌ Error creating dates:", dateError);
+      console.error("❌ Timestamp values:", { periodStartTimestamp, periodEndTimestamp });
+      return;
+    }
+
     const retainerData = {
       _type: "retainer",
       client: { _type: "reference", _ref: clientId },
@@ -139,22 +212,8 @@ async function handlePlanSubscription(session: Stripe.Checkout.Session) {
           : subscription.status === "canceled"
             ? "canceled"
             : "past_due",
-      periodStart: new Date(
-        (
-          subscription as unknown as Stripe.Subscription & {
-            current_period_start: number;
-            current_period_end: number;
-          }
-        )["current_period_start"] * 1000
-      ).toISOString(),
-      periodEnd: new Date(
-        (
-          subscription as unknown as Stripe.Subscription & {
-            current_period_start: number;
-            current_period_end: number;
-          }
-        )["current_period_end"] * 1000
-      ).toISOString(),
+      periodStart: periodStart,
+      periodEnd: periodEnd,
       hoursIncluded: plan.hoursIncluded || 0,
       hoursUsed: 0,
       ...(assetId && { asset: { _type: "reference", _ref: assetId } }),
@@ -170,11 +229,16 @@ async function handlePlanSubscription(session: Stripe.Checkout.Session) {
 
     // Send welcome email to client
     try {
-      console.log(`Sending welcome email to client ${clientId} for plan ${planId}`);
+      console.log(
+        `📧 Sending welcome email to client ${clientId} for plan ${planId}`
+      );
       await sendWelcomeEmail(clientId, planId);
-      console.log(`Welcome email sent successfully to client ${clientId}`);
+      console.log(`✅ Welcome email sent successfully to client ${clientId}`);
     } catch (emailError) {
-      console.error(`Failed to send welcome email to client ${clientId}:`, emailError);
+      console.error(
+        `❌ Failed to send welcome email to client ${clientId}:`,
+        emailError
+      );
       // Don't fail the webhook if email fails
     }
   } catch (error) {
@@ -182,7 +246,17 @@ async function handlePlanSubscription(session: Stripe.Checkout.Session) {
   }
 }
 
-async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
+async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
+  console.log("🎯 Handling subscription created:", subscription.id);
+
+  // Get client and plan from subscription metadata or customer
+  // This might be more complex - we may need to store metadata on the subscription
+  // For now, let's just log that we received it
+  console.log("📧 Subscription created - ready to send welcome email");
+
+  // TODO: Extract client/plan info and send welcome email
+  // This would require storing clientId and planId in subscription metadata
+}
   // Update invoice status in Sanity
   if (invoice.metadata?.invoiceId) {
     const existingInvoice = await runQuery(
@@ -205,6 +279,18 @@ async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
       ]);
     }
   }
+}
+
+async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
+  console.log("🎯 Handling subscription created:", subscription.id);
+
+  // Get client and plan from subscription metadata or customer
+  // This might be more complex - we may need to store metadata on the subscription
+  // For now, let's just log that we received it
+  console.log("📧 Subscription created - ready to send welcome email");
+
+  // TODO: Extract client/plan info and send welcome email
+  // This would require storing clientId and planId in subscription metadata
 }
 
 async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
@@ -258,6 +344,8 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
 }
 
 async function sendWelcomeEmail(clientId: string, planId: string) {
+  console.log(`🔍 Fetching client and plan data for welcome email...`);
+
   try {
     // Get client and plan details
     const [client, plan] = await Promise.all([
@@ -282,14 +370,18 @@ async function sendWelcomeEmail(clientId: string, planId: string) {
     ]);
 
     if (!client || !plan || !client.email) {
-      console.warn(`Missing client (${!!client}), plan (${!!plan}), or email (${client?.email}) for welcome email to client ${clientId}`);
+      console.warn(
+        `Missing client (${!!client}), plan (${!!plan}), or email (${client?.email}) for welcome email to client ${clientId}`
+      );
       return;
     }
 
     // Get email template
     const template = await getEmailTemplateByName("Welcome Activation");
     if (!template) {
-      console.warn(`Welcome Activation email template not found for client ${clientId}`);
+      console.warn(
+        `Welcome Activation email template not found for client ${clientId}`
+      );
       return;
     }
 
@@ -324,7 +416,10 @@ async function sendWelcomeEmail(clientId: string, planId: string) {
     };
 
     const result = await resend.emails.send(emailPayload);
-    console.log(`Welcome email sent successfully to ${client.email}:`, String(result));
+    console.log(
+      `Welcome email sent successfully to ${client.email}:`,
+      String(result)
+    );
   } catch (error) {
     console.error("Error sending welcome email:", error);
     throw error; // Re-throw to be caught by caller
