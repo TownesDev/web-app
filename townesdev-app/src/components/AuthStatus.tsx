@@ -1,6 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import Link from "next/link";
+import {
+  User,
+  ChevronDown,
+  LayoutDashboard,
+  UserCircle,
+  Shield,
+  Users,
+  LogOut,
+} from "lucide-react";
 
 interface SessionUser {
   id: string;
@@ -12,10 +22,27 @@ interface SessionUser {
 export function AuthStatus() {
   const [user, setUser] = useState<SessionUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Check session on mount
     checkSession();
+  }, []);
+
+  useEffect(() => {
+    // Close dropdown when clicking outside
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const checkSession = async () => {
@@ -43,6 +70,10 @@ export function AuthStatus() {
     } catch (error) {
       console.error("Sign out failed:", error);
     }
+  };
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
   };
 
   if (loading) {
@@ -73,33 +104,83 @@ export function AuthStatus() {
   }
 
   return (
-    <div className="flex items-center space-x-4">
-      {user.role === "admin" || user.role === "staff" ? (
-        <>
-          <a
-            href="/admin"
-            className="text-nile-blue-800 dark:text-nile-blue-200 hover:text-nile-blue-900 dark:hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
-          >
-            Admin Portal
-          </a>
-          <span className="text-gray-400">|</span>
-        </>
-      ) : null}
-      <a
-        href="/app"
-        className="text-nile-blue-800 dark:text-nile-blue-200 hover:text-nile-blue-900 dark:hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
-      >
-        Client Portal
-      </a>
-      <span className="text-nile-blue-800 dark:text-nile-blue-200 font-body text-sm">
-        Welcome, {user.name}
-      </span>
+    <div className="relative" ref={dropdownRef}>
+      {/* User Menu Button */}
       <button
-        onClick={handleSignOut}
-        className="text-nile-blue-700 dark:text-nile-blue-300 hover:text-red-600 dark:hover:text-red-400 font-body text-sm font-medium transition-colors"
+        onClick={toggleDropdown}
+        className="flex items-center space-x-2 text-nile-blue-800 dark:text-nile-blue-200 hover:text-nile-blue-900 dark:hover:text-nile-blue-100 font-body text-sm font-medium transition-colors"
       >
-        Sign Out
+        {/* Placeholder Avatar */}
+        <div className="w-8 h-8 bg-nile-blue-100 rounded-full flex items-center justify-center">
+          <User className="w-4 h-4 text-nile-blue-600" />
+        </div>
+        <span>Welcome, {user.name}</span>
+        <ChevronDown
+          className={`w-4 h-4 transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
+        />
       </button>
+
+      {/* Dropdown Menu */}
+      {dropdownOpen && (
+        <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+          {/* Dashboard */}
+          <Link
+            href="/app"
+            className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-nile-blue-50 hover:text-nile-blue-900 transition-colors"
+            onClick={() => setDropdownOpen(false)}
+          >
+            <LayoutDashboard className="w-4 h-4" />
+            <span>Dashboard</span>
+          </Link>
+
+          {/* Profile */}
+          <Link
+            href="/app/profile"
+            className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-nile-blue-50 hover:text-nile-blue-900 transition-colors"
+            onClick={() => setDropdownOpen(false)}
+          >
+            <UserCircle className="w-4 h-4" />
+            <span>Profile</span>
+          </Link>
+
+          {/* Admin Portal (only for admin/staff) */}
+          {(user.role === "admin" || user.role === "staff") && (
+            <Link
+              href="/admin"
+              className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-nile-blue-50 hover:text-nile-blue-900 transition-colors"
+              onClick={() => setDropdownOpen(false)}
+            >
+              <Shield className="w-4 h-4" />
+              <span>Switch to Admin Portal</span>
+            </Link>
+          )}
+
+          {/* Client Portal */}
+          <Link
+            href="/app"
+            className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-nile-blue-50 hover:text-nile-blue-900 transition-colors"
+            onClick={() => setDropdownOpen(false)}
+          >
+            <Users className="w-4 h-4" />
+            <span>Switch to Client Portal</span>
+          </Link>
+
+          {/* Divider */}
+          <div className="border-t border-gray-200 my-2"></div>
+
+          {/* Sign Out */}
+          <button
+            onClick={() => {
+              handleSignOut();
+              setDropdownOpen(false);
+            }}
+            className="flex items-center space-x-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors w-full text-left"
+          >
+            <LogOut className="w-4 h-4" />
+            <span>Sign Out</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 }
