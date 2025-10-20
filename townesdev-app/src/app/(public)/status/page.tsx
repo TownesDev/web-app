@@ -109,9 +109,7 @@ export default function StatusPage() {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-600">Duration</span>
-                <span className="text-sm font-medium text-gray-900">
-                  N/A
-                </span>
+                <span className="text-sm font-medium text-gray-900">N/A</span>
               </div>
             </div>
           </div>
@@ -125,14 +123,17 @@ export default function StatusPage() {
             </h3>
             <div className="text-sm text-gray-600 space-y-2">
               <p>
-                This page provides real-time information about the operational status of TownesDev services.
-                We monitor our systems 24/7 to ensure reliable service delivery.
+                This page provides real-time information about the operational
+                status of TownesDev services. We monitor our systems 24/7 to
+                ensure reliable service delivery.
               </p>
               <p>
-                <strong>Uptime metrics:</strong> Calculated based on service availability and response times.
+                <strong>Uptime metrics:</strong> Calculated based on service
+                availability and response times.
               </p>
               <p>
-                <strong>Incident reporting:</strong> Any service disruptions will be reported here with details about impact and resolution.
+                <strong>Incident reporting:</strong> Any service disruptions
+                will be reported here with details about impact and resolution.
               </p>
             </div>
           </div>
