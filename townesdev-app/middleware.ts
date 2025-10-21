@@ -6,9 +6,22 @@
 
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { verifyToken } from './src/lib/auth'
+import { jwtVerify } from 'jose'
 
-export function middleware(request: NextRequest) {
+async function verifyToken(token: string) {
+  try {
+    const secret = new TextEncoder().encode(
+      process.env.JWT_SECRET || 'your-secret-key'
+    )
+    const { payload } = await jwtVerify(token, secret)
+    const { id, email, name } = payload as Record<string, any>
+    return { id, email, name }
+  } catch (err) {
+    return null
+  }
+}
+
+export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
 
   // Protect admin and portal routes
@@ -30,8 +43,8 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/auth/signin', request.url))
   }
 
-  // Verify token
-  const payload = verifyToken(token)
+  // Verify token (use WebCrypto-friendly jose in Edge runtime)
+  const payload = await verifyToken(token)
   if (!payload) {
     return NextResponse.redirect(new URL('/auth/signin', request.url))
   }
