@@ -76,9 +76,11 @@ export function SignUpForm() {
       setTimeout(() => {
         window.location.href = '/auth/signin'
       }, 1500)
-    } catch (err: any) {
+    } catch (err: unknown) {
       const errorMessage =
-        err?.message || 'An error occurred during sign up. Please try again.'
+        err instanceof Error
+          ? err.message
+          : 'An error occurred during sign up. Please try again.'
       setError(errorMessage)
     } finally {
       setLoading(false)

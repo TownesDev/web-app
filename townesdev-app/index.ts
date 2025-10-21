@@ -210,7 +210,11 @@ export const kickoffChecklist: SchemaTypeDefinition = {
       subtitle: '_createdAt',
       client: 'client',
     },
-    prepare(selection: any) {
+    prepare(selection: {
+      title?: string
+      subtitle?: string
+      client?: { name?: string }
+    }) {
       const { title, subtitle, client } = selection
       return {
         title: title ? `Kickoff: ${title}` : 'Kickoff Checklist',
@@ -286,7 +290,11 @@ export const monthlyRhythm: SchemaTypeDefinition = {
       subtitle: 'month',
       client: 'client',
     },
-    prepare(selection: any) {
+    prepare(selection: {
+      title?: string
+      subtitle?: string
+      client?: { name?: string }
+    }) {
       const { title, subtitle, client } = selection
       return {
         title: title ? `${subtitle}: ${title}` : `Monthly Rhythm - ${subtitle}`,
@@ -896,7 +904,13 @@ export const invoice: SchemaTypeDefinition = {
       currency: 'currency',
       status: 'status',
     },
-    prepare(selection: any) {
+    prepare(selection: {
+      title?: string
+      subtitle?: string
+      totalAmount?: number
+      currency?: string
+      status?: string
+    }) {
       const { title, subtitle, totalAmount, currency, status } = selection
       return {
         title: title || 'Invoice',

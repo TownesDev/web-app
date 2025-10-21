@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { runQuery } from '@/lib/client'
 import { qEntitlementsByAsset } from '@/sanity/lib/queries'
 
+interface Entitlement {
+  feature: {
+    configKey: string
+  }
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -30,7 +36,7 @@ export async function GET(
 
     // Build feature flags object
     const flags: Record<string, boolean> = {}
-    entitlements.forEach((entitlement: any) => {
+    entitlements.forEach((entitlement: Entitlement) => {
       flags[entitlement.feature.configKey] = true
     })
 

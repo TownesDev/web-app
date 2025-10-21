@@ -4,6 +4,13 @@ interface InvoicePageProps {
   params: Promise<{ id: string }>
 }
 
+interface LineItem {
+  description: string
+  quantity: number
+  unitPrice: number
+  amount: number
+}
+
 async function getInvoice(id: string) {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/invoices?id=${id}`,
@@ -153,7 +160,7 @@ export default async function InvoicePage({ params }: InvoicePageProps) {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {invoice.lineItems?.map((item: any, index: number) => (
+                  {invoice.lineItems?.map((item: LineItem, index: number) => (
                     <tr key={index}>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {item.description}

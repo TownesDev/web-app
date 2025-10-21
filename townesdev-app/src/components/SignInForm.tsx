@@ -71,10 +71,12 @@ export function SignInForm() {
       setTimeout(() => {
         window.location.href = '/'
       }, 1500)
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Sign in exception:', err)
       const errorMessage =
-        err?.message || 'An error occurred during sign in. Please try again.'
+        err instanceof Error
+          ? err.message
+          : 'An error occurred during sign in. Please try again.'
       setError(errorMessage)
     } finally {
       setLoading(false)
@@ -169,7 +171,7 @@ export function SignInForm() {
 
       <div className="text-center">
         <p className="text-sm text-comet-600 dark:text-comet-400 font-body">
-          Don't have an account?{' '}
+          Don&apos;t have an account?{' '}
           <a
             href="/auth/signup"
             className="text-nile-blue-600 hover:text-nile-blue-700 font-medium"

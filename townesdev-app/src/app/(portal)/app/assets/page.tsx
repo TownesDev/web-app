@@ -3,6 +3,14 @@ import { runQuery } from '@/lib/client'
 import { qAssetsByClient } from '@/sanity/lib/queries'
 import Link from 'next/link'
 
+interface Asset {
+  _id: string
+  name: string
+  type: string
+  externalIds: string[]
+  notes?: string
+}
+
 export default async function AssetsPage() {
   const client = await getCurrentClient()
 
@@ -30,7 +38,7 @@ export default async function AssetsPage() {
         </div>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {assets.map((asset: any) => (
+          {assets.map((asset: Asset) => (
             <div
               key={asset._id}
               className="bg-white rounded-lg shadow-sm border border-gray-200 p-6"
