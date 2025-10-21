@@ -124,7 +124,9 @@ export function AuthStatus() {
         <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
           {/* Dashboard - context aware */}
           <Link
-            href={user.role === 'admin' || user.role === 'staff' ? '/admin' : '/app'}
+            href={
+              user.role === 'admin' || user.role === 'staff' ? '/admin' : '/app'
+            }
             className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-nile-blue-50 hover:text-nile-blue-900 transition-colors"
             onClick={() => setDropdownOpen(false)}
           >
@@ -145,7 +147,11 @@ export function AuthStatus() {
           {/* Portal Toggle (only for admin/staff) */}
           {(user.role === 'admin' || user.role === 'staff') && (
             <Link
-              href={window.location.pathname.startsWith('/admin') ? '/app' : '/admin'}
+              href={
+                window.location.pathname.startsWith('/admin')
+                  ? '/app'
+                  : '/admin'
+              }
               className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-nile-blue-50 hover:text-nile-blue-900 transition-colors"
               onClick={() => setDropdownOpen(false)}
             >
