@@ -8,7 +8,6 @@ import {
   LayoutDashboard,
   UserCircle,
   Shield,
-  Users,
   LogOut,
 } from 'lucide-react'
 
@@ -123,9 +122,9 @@ export function AuthStatus() {
       {/* Dropdown Menu */}
       {dropdownOpen && (
         <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-          {/* Dashboard */}
+          {/* Dashboard - context aware */}
           <Link
-            href="/app"
+            href={user.role === 'admin' || user.role === 'staff' ? '/admin' : '/app'}
             className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-nile-blue-50 hover:text-nile-blue-900 transition-colors"
             onClick={() => setDropdownOpen(false)}
           >
@@ -143,27 +142,21 @@ export function AuthStatus() {
             <span>Profile</span>
           </Link>
 
-          {/* Admin Portal (only for admin/staff) */}
+          {/* Portal Toggle (only for admin/staff) */}
           {(user.role === 'admin' || user.role === 'staff') && (
             <Link
-              href="/admin"
+              href={window.location.pathname.startsWith('/admin') ? '/app' : '/admin'}
               className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-nile-blue-50 hover:text-nile-blue-900 transition-colors"
               onClick={() => setDropdownOpen(false)}
             >
               <Shield className="w-4 h-4" />
-              <span>Switch to Admin Portal</span>
+              <span>
+                {window.location.pathname.startsWith('/admin')
+                  ? 'Switch to Client Portal'
+                  : 'Switch to Admin Portal'}
+              </span>
             </Link>
           )}
-
-          {/* Client Portal */}
-          <Link
-            href="/app"
-            className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-nile-blue-50 hover:text-nile-blue-900 transition-colors"
-            onClick={() => setDropdownOpen(false)}
-          >
-            <Users className="w-4 h-4" />
-            <span>Switch to Client Portal</span>
-          </Link>
 
           {/* Divider */}
           <div className="border-t border-gray-200 my-2"></div>

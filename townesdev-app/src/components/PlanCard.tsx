@@ -9,7 +9,6 @@ interface PlanCardProps {
   description: string
   isPopular?: boolean
   planId?: string
-  stripePriceId?: string
 }
 
 export function PlanCard({
@@ -19,26 +18,50 @@ export function PlanCard({
   description,
   isPopular = false,
   planId,
-  stripePriceId,
 }: PlanCardProps) {
   const [isLoading, setIsLoading] = useState(false)
 
+  // Convert technical errors to user-friendly messages
+  const getUserFriendlyError = (error: string): string => {
+    if (error.includes('Authentication required')) {
+      return 'Please log in to continue with your purchase'
+    }
+    if (error.includes('No client account found')) {
+      return 'Your account setup is incomplete. Please contact support'
+    }
+    if (error.includes('Plan not found')) {
+      return 'This plan is no longer available'
+    }
+    if (error.includes('Invalid plan price')) {
+      return 'This plan has an invalid price configuration'
+    }
+    if (error.includes('Card was declined')) {
+      return 'Your card was declined. Please try a different payment method'
+    }
+    if (error.includes('Too many requests')) {
+      return 'Too many requests. Please wait a moment and try again'
+    }
+    if (error.includes('Payment service')) {
+      return 'Payment service is temporarily unavailable. Please try again later'
+    }
+    return error // Return original error if no mapping found
+  }
+
   const handleCheckout = async () => {
-    if (!planId || !stripePriceId) {
-      console.error('Missing planId or stripePriceId')
+    if (!planId) {
+      console.error('Missing planId')
       return
     }
 
     setIsLoading(true)
     try {
-      const response = await fetch('/api/stripe/checkout', {
+      const response = await fetch('/api/checkout/plan', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           planId,
-          priceId: stripePriceId,
         }),
       })
 
@@ -49,7 +72,32 @@ export function PlanCard({
       }
 
       if (!response.ok) {
-        throw new Error('Checkout failed')
+        // Log the actual error response for debugging
+        let errorData: { error?: string; [key: string]: unknown } = {
+          error: 'Unknown error',
+        }
+        try {
+          errorData = await response.json()
+        } catch (parseError) {
+          console.error('❌ Failed to parse error response:', parseError)
+          errorData = {
+            error: `HTTP ${response.status}: ${response.statusText}`,
+          }
+        }
+
+        console.error('❌ Checkout API error:', {
+          status: response.status,
+          statusText: response.statusText,
+          url: response.url,
+          error: errorData.error || errorData,
+          timestamp: new Date().toISOString(),
+        })
+
+        // Show user-friendly error message
+        const userMessage = getUserFriendlyError(
+          errorData.error || `HTTP ${response.status} error`
+        )
+        throw new Error(`Checkout failed: ${userMessage}`)
       }
 
       const { url } = await response.json()
@@ -106,7 +154,7 @@ export function PlanCard({
 
       <button
         onClick={handleCheckout}
-        disabled={isLoading || !stripePriceId}
+        disabled={isLoading || !planId}
         className={`w-full py-3 px-4 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
           isPopular
             ? 'bg-blue-600 hover:bg-blue-700 text-white'

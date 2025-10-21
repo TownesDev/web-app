@@ -163,7 +163,6 @@ export default async function Home() {
                 description={plan.description}
                 isPopular={index === 1} // Make the middle plan "popular"
                 planId={plan._id}
-                stripePriceId={plan.stripePriceId}
               />
             ))}
           </div>

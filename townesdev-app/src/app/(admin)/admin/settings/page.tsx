@@ -23,7 +23,7 @@ export default async function SettingsPage() {
   const config = (await runQueryFresh(qOperationConfig)) as OperationConfig
 
   // Build Sanity Studio edit URL
-  const editUrl = `${process.env.NEXT_PUBLIC_SANITY_STUDIO_URL}/desk/operationConfig`
+  const editUrl = `/studio/desk/operationConfig`
 
   return (
     <div className="container mx-auto px-4 py-8">

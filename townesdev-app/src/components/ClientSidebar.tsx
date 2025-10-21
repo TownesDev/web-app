@@ -12,6 +12,7 @@ import {
   Menu,
   X,
   Bot,
+  CreditCard,
 } from 'lucide-react'
 
 interface NavItem {
@@ -25,6 +26,11 @@ const navItems: NavItem[] = [
     href: '/app',
     label: 'Dashboard',
     icon: LayoutDashboard,
+  },
+  {
+    href: '/app/plans',
+    label: 'Retainer Plans',
+    icon: CreditCard,
   },
   {
     href: '/app/assets',
