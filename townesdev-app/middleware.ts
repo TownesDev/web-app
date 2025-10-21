@@ -1,7 +1,7 @@
 /**
- * Middleware for protecting admin routes
- * Ensures only authenticated users can access admin areas
- * Role/capability checks are handled in individual page components
+ * Middleware for protecting admin and portal routes
+ * Ensures only authenticated users can access protected areas
+ * Role/capability checks are handled in individual page components and layouts
  */
 
 import { NextResponse } from 'next/server'
@@ -9,13 +9,18 @@ import type { NextRequest } from 'next/server'
 import { verifyToken } from './src/lib/auth'
 
 export function middleware(request: NextRequest) {
-  // Only protect admin routes
-  if (!request.nextUrl.pathname.startsWith('/admin')) {
+  const pathname = request.nextUrl.pathname
+
+  // Protect admin and portal routes
+  const isProtectedRoute =
+    pathname.startsWith('/admin') || pathname.startsWith('/app')
+
+  if (!isProtectedRoute) {
     return NextResponse.next()
   }
 
   // Allow access to studio (content editors need this)
-  if (request.nextUrl.pathname.startsWith('/admin/studio')) {
+  if (pathname.startsWith('/admin/studio')) {
     return NextResponse.next()
   }
 
@@ -51,5 +56,6 @@ export const config = {
      * - public files with extensions
      */
     '/admin/:path*',
+    '/app/:path*',
   ],
 }
