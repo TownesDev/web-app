@@ -18,6 +18,11 @@ export const ROLE_CAPABILITIES: Record<UserRole, Capability[]> = {
     "content:write",
     "system:read",
     "system:write",
+    "bot:tenants:provision",
+    "bot:tenants:manage",
+    "bot:assets:register",
+    "bot:assets:manage",
+    "bot:features:toggle",
   ],
   staff: [
     "clients:read",
@@ -26,6 +31,8 @@ export const ROLE_CAPABILITIES: Record<UserRole, Capability[]> = {
     "invoices:write",
     "content:read",
     "content:write",
+    "bot:assets:manage",
+    "bot:features:toggle",
   ],
   client: [
     "clients:read", // Can read their own client data

@@ -11,6 +11,7 @@ import {
   LogOut,
   Menu,
   X,
+  Bot,
 } from "lucide-react";
 
 interface NavItem {
@@ -24,6 +25,11 @@ const navItems: NavItem[] = [
     href: "/app",
     label: "Dashboard",
     icon: LayoutDashboard,
+  },
+  {
+    href: "/app/assets",
+    label: "Discord Assets",
+    icon: Bot,
   },
   {
     href: "/app/invoices",
