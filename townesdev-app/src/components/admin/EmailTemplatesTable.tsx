@@ -1,25 +1,25 @@
-"use client";
+'use client'
 
 /**
  * Email Templates Table Component
  * Displays email templates with Name | Subject | Purpose | Actions columns
  */
 
-import Link from "next/link";
-import { useState } from "react";
-import EmailPreviewModal from "./EmailPreviewModal";
-import { toast } from "sonner";
+import Link from 'next/link'
+import { useState } from 'react'
+import EmailPreviewModal from './EmailPreviewModal'
+import { toast } from 'sonner'
 
 interface EmailTemplate {
-  _id: string;
-  name: string;
-  subject: string;
-  purpose: string;
-  htmlBody?: unknown;
+  _id: string
+  name: string
+  subject: string
+  purpose: string
+  htmlBody?: unknown
 }
 
 interface EmailTemplatesTableProps {
-  templates: EmailTemplate[];
+  templates: EmailTemplate[]
 }
 
 export default function EmailTemplatesTable({
@@ -27,55 +27,55 @@ export default function EmailTemplatesTable({
 }: EmailTemplatesTableProps) {
   const [previewTemplate, setPreviewTemplate] = useState<EmailTemplate | null>(
     null
-  );
+  )
   const [deleteTemplate, setDeleteTemplate] = useState<EmailTemplate | null>(
     null
-  );
-  const [isDeleting, setIsDeleting] = useState(false);
+  )
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const openPreview = (template: EmailTemplate) => {
-    setPreviewTemplate(template);
-  };
+    setPreviewTemplate(template)
+  }
 
   const closePreview = () => {
-    setPreviewTemplate(null);
-  };
+    setPreviewTemplate(null)
+  }
 
   const openDeleteConfirm = (template: EmailTemplate) => {
-    setDeleteTemplate(template);
-  };
+    setDeleteTemplate(template)
+  }
 
   const closeDeleteConfirm = () => {
-    setDeleteTemplate(null);
-  };
+    setDeleteTemplate(null)
+  }
 
   const handleDelete = async () => {
-    if (!deleteTemplate) return;
+    if (!deleteTemplate) return
 
-    setIsDeleting(true);
+    setIsDeleting(true)
     try {
       const response = await fetch(
         `/api/admin/email-templates/${deleteTemplate._id}`,
         {
-          method: "DELETE",
+          method: 'DELETE',
         }
-      );
+      )
 
       if (!response.ok) {
-        throw new Error("Failed to delete template");
+        throw new Error('Failed to delete template')
       }
 
-      toast.success("Email template deleted successfully!");
+      toast.success('Email template deleted successfully!')
       // Refresh the page to show updated list
-      window.location.reload();
+      window.location.reload()
     } catch (error) {
-      console.error("Error deleting template:", error);
-      toast.error("Failed to delete template. Please try again.");
+      console.error('Error deleting template:', error)
+      toast.error('Failed to delete template. Please try again.')
     } finally {
-      setIsDeleting(false);
-      closeDeleteConfirm();
+      setIsDeleting(false)
+      closeDeleteConfirm()
     }
-  };
+  }
 
   return (
     <>
@@ -197,7 +197,7 @@ export default function EmailTemplatesTable({
                   </h3>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">
-                      Are you sure you want to delete the template{" "}
+                      Are you sure you want to delete the template{' '}
                       <strong>&quot;{deleteTemplate.name}&quot;</strong>? This
                       action cannot be undone.
                     </p>
@@ -218,12 +218,12 @@ export default function EmailTemplatesTable({
                 className="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 disabled:opacity-50"
                 disabled={isDeleting}
               >
-                {isDeleting ? "Deleting..." : "Delete"}
+                {isDeleting ? 'Deleting...' : 'Delete'}
               </button>
             </div>
           </div>
         </div>
       )}
     </>
-  );
+  )
 }

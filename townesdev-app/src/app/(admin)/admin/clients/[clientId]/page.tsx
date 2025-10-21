@@ -3,28 +3,28 @@
  * Displays detailed information for a specific client including bot management
  */
 
-import { requireCapability } from "../../../../../lib/rbac/guards";
-import { runQuery } from "../../../../../lib/client";
-import { qClientById } from "../../../../../sanity/lib/queries";
-import Link from "next/link";
-import { BotManagementSection } from "../../../../../components/BotManagementSection";
+import { requireCapability } from '../../../../../lib/rbac/guards'
+import { runQuery } from '../../../../../lib/client'
+import { qClientById } from '../../../../../sanity/lib/queries'
+import Link from 'next/link'
+import { BotManagementSection } from '../../../../../components/BotManagementSection'
 
 interface ClientDetailPageProps {
   params: {
-    clientId: string;
-  };
+    clientId: string
+  }
 }
 
 export default async function ClientDetailPage({
   params,
 }: ClientDetailPageProps) {
-  const { clientId } = params;
+  const { clientId } = params
 
   // Require clients:read capability
-  await requireCapability("clients:read");
+  await requireCapability('clients:read')
 
   // Fetch client details
-  const client = await runQuery(qClientById, { id: clientId });
+  const client = await runQuery(qClientById, { id: clientId })
 
   if (!client) {
     return (
@@ -44,7 +44,7 @@ export default async function ClientDetailPage({
           </Link>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -70,9 +70,9 @@ export default async function ClientDetailPage({
           <div className="text-right">
             <span
               className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                client.status === "Active"
-                  ? "bg-green-100 text-green-800"
-                  : "bg-gray-100 text-gray-800"
+                client.status === 'Active'
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-gray-100 text-gray-800'
               }`}
             >
               {client.status}
@@ -89,5 +89,5 @@ export default async function ClientDetailPage({
       {/* Bot Management Section */}
       <BotManagementSection clientId={clientId} client={client} />
     </div>
-  );
+  )
 }

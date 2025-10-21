@@ -1,43 +1,43 @@
-"use client";
+'use client'
 
-import Link from "next/link";
+import Link from 'next/link'
 
-type FooterVariant = "public" | "portal" | "admin";
+type FooterVariant = 'public' | 'portal' | 'admin'
 
 interface FooterProps {
-  variant: FooterVariant;
+  variant: FooterVariant
 }
 
 export default function Footer({ variant }: FooterProps) {
   const getFooterText = () => {
     switch (variant) {
-      case "public":
-        return "© " + new Date().getFullYear() + " TownesDev";
-      case "portal":
-        return "© " + new Date().getFullYear() + " TownesDev Client Portal";
-      case "admin":
-        return "© " + new Date().getFullYear() + " TownesDev Admin";
+      case 'public':
+        return '© ' + new Date().getFullYear() + ' TownesDev'
+      case 'portal':
+        return '© ' + new Date().getFullYear() + ' TownesDev Client Portal'
+      case 'admin':
+        return '© ' + new Date().getFullYear() + ' TownesDev Admin'
       default:
-        return "© " + new Date().getFullYear() + " TownesDev";
+        return '© ' + new Date().getFullYear() + ' TownesDev'
     }
-  };
+  }
 
   const getFooterBg = () => {
     switch (variant) {
-      case "public":
-        return "bg-picton-blue-50";
-      case "portal":
-        return "bg-comet-50";
-      case "admin":
-        return "bg-picton-blue-50";
+      case 'public':
+        return 'bg-picton-blue-50'
+      case 'portal':
+        return 'bg-comet-50'
+      case 'admin':
+        return 'bg-picton-blue-50'
       default:
-        return "bg-picton-blue-50";
+        return 'bg-picton-blue-50'
     }
-  };
+  }
 
   const getFooterNav = () => {
     switch (variant) {
-      case "public":
+      case 'public':
         return (
           <nav className="flex flex-wrap justify-center items-center space-x-6 mt-4">
             <Link
@@ -59,11 +59,11 @@ export default function Footer({ variant }: FooterProps) {
               Brand
             </Link>
           </nav>
-        );
+        )
       default:
-        return null;
+        return null
     }
-  };
+  }
 
   return (
     <footer
@@ -74,5 +74,5 @@ export default function Footer({ variant }: FooterProps) {
       </span>
       {getFooterNav()}
     </footer>
-  );
+  )
 }

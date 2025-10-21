@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
-import { requireCapability } from "@/lib/rbac/guards";
-import { getClient } from "@/lib/bot";
-import { sanityWrite, runQuery } from "@/lib/client";
+import { NextRequest, NextResponse } from 'next/server'
+import { requireCapability } from '@/lib/rbac/guards'
+import { getClient } from '@/lib/bot'
+import { sanityWrite, runQuery } from '@/lib/client'
 
 // Bot Platform API configuration
-const BOT_API_URL = process.env.BOT_API_URL;
+const BOT_API_URL = process.env.BOT_API_URL
 
 export async function POST(
   request: NextRequest,
@@ -12,42 +12,42 @@ export async function POST(
 ) {
   try {
     // Require bot feature toggle capability
-    await requireCapability("bot:features:toggle");
+    await requireCapability('bot:features:toggle')
 
-    const { guildId, key } = await params;
-    const { clientId, action, config } = await request.json();
+    const { guildId, key } = await params
+    const { clientId, action, config } = await request.json()
 
     if (!clientId) {
       return NextResponse.json(
-        { success: false, error: "Client ID is required" },
+        { success: false, error: 'Client ID is required' },
         { status: 400 }
-      );
+      )
     }
 
-    if (!["enable", "disable"].includes(action)) {
+    if (!['enable', 'disable'].includes(action)) {
       return NextResponse.json(
         { success: false, error: 'Action must be "enable" or "disable"' },
         { status: 400 }
-      );
+      )
     }
 
     // Verify client exists and has bot tenant
-    const client = await getClient(clientId);
+    const client = await getClient(clientId)
     if (!client) {
       return NextResponse.json(
-        { success: false, error: "Client not found" },
+        { success: false, error: 'Client not found' },
         { status: 404 }
-      );
+      )
     }
 
     if (!client.botTenantId || !client.botApiKey) {
       return NextResponse.json(
         {
           success: false,
-          error: "Client does not have bot tenant provisioned",
+          error: 'Client does not have bot tenant provisioned',
         },
         { status: 400 }
-      );
+      )
     }
 
     // Find the service asset for this guild
@@ -59,13 +59,13 @@ export async function POST(
         type
       }`,
       { clientId }
-    );
+    )
 
     if (!asset) {
       return NextResponse.json(
-        { success: false, error: "Service asset not found for this guild" },
+        { success: false, error: 'Service asset not found for this guild' },
         { status: 404 }
-      );
+      )
     }
 
     // Find existing entitlement
@@ -79,7 +79,7 @@ export async function POST(
         assetId: asset._id,
         featureKey: key,
       }
-    );
+    )
 
     // Get feature details
     const feature = await runQuery(
@@ -89,60 +89,60 @@ export async function POST(
         sku
       }`,
       { key }
-    );
+    )
 
     if (!feature) {
       return NextResponse.json(
-        { success: false, error: "Feature not found" },
+        { success: false, error: 'Feature not found' },
         { status: 404 }
-      );
+      )
     }
 
     // Call Bot Platform API to toggle feature
-    const endpoint = action === "enable" ? "enable" : "disable";
+    const endpoint = action === 'enable' ? 'enable' : 'disable'
     const botResponse = await fetch(
       `${BOT_API_URL}/assets/${guildId}/features/${key}/${endpoint}`,
       {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          "X-API-Key": client.botApiKey,
+          'Content-Type': 'application/json',
+          'X-API-Key': client.botApiKey,
         },
         body: JSON.stringify({
           config: config || {},
         }),
       }
-    );
+    )
 
     if (!botResponse.ok) {
-      const errorData = await botResponse.json();
-      console.error("Bot platform feature toggle failed:", errorData);
+      const errorData = await botResponse.json()
+      console.error('Bot platform feature toggle failed:', errorData)
       return NextResponse.json(
-        { success: false, error: "Failed to toggle feature" },
+        { success: false, error: 'Failed to toggle feature' },
         { status: 500 }
-      );
+      )
     }
 
-    const botData = await botResponse.json();
+    const botData = await botResponse.json()
 
     // Update or create entitlement
     const entitlementData = {
-      _type: "entitlement",
+      _type: 'entitlement',
       client: {
-        _type: "reference",
+        _type: 'reference',
         _ref: clientId,
       },
       asset: {
-        _type: "reference",
+        _type: 'reference',
         _ref: asset._id,
       },
       feature: {
-        _type: "reference",
+        _type: 'reference',
         _ref: feature._id,
       },
-      status: action === "enable" ? "active" : "revoked",
+      status: action === 'enable' ? 'active' : 'revoked',
       activatedAt: new Date().toISOString(),
-    };
+    }
 
     if (existingEntitlement) {
       // Update existing entitlement
@@ -152,10 +152,10 @@ export async function POST(
           status: entitlementData.status,
           activatedAt: entitlementData.activatedAt,
         })
-        .commit();
+        .commit()
     } else {
       // Create new entitlement
-      await sanityWrite.create(entitlementData);
+      await sanityWrite.create(entitlementData)
     }
 
     return NextResponse.json({
@@ -165,14 +165,14 @@ export async function POST(
         featureKey: key,
         action,
         status:
-          botData.status || (action === "enable" ? "enabled" : "disabled"),
+          botData.status || (action === 'enable' ? 'enabled' : 'disabled'),
       },
-    });
+    })
   } catch (error) {
-    console.error("Bot feature toggle error:", error);
+    console.error('Bot feature toggle error:', error)
     return NextResponse.json(
-      { success: false, error: "Internal server error" },
+      { success: false, error: 'Internal server error' },
       { status: 500 }
-    );
+    )
   }
 }

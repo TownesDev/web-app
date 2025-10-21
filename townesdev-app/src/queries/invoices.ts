@@ -1,13 +1,16 @@
-import { runQuery } from "../lib/client";
-import { qInvoicesByClient } from "../sanity/lib/queries";
+import { runQuery } from '../lib/client'
+import { qInvoicesByClient, qAllInvoices } from '../sanity/lib/queries'
 
 /**
  * Get invoices for a specific client, sorted by issueDate desc.
  */
-// First get the client's _id from their session or auth token
-
-// It will return all invoices for that client
-// Then call this function with that clientId
 export async function getInvoicesByClient(clientId: string) {
-  return runQuery(qInvoicesByClient, { clientId });
+  return runQuery(qInvoicesByClient, { clientId })
+}
+
+/**
+ * Get all invoices for admin view, sorted by issueDate desc.
+ */
+export async function getAllInvoices() {
+  return runQuery(qAllInvoices)
 }

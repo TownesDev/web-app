@@ -3,7 +3,7 @@
  * Displayed when user lacks required capabilities
  */
 
-import Link from "next/link";
+import Link from 'next/link'
 
 export default function ForbiddenPage() {
   return (
@@ -37,5 +37,5 @@ export default function ForbiddenPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

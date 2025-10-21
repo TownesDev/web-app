@@ -1,16 +1,16 @@
-import { getCurrentClient } from "../../../../lib/auth";
-import { getIncidentsByClient } from "../../../../queries/incidents";
-import IncidentManager from "../../../../components/IncidentManager";
-import { notFound } from "next/navigation";
+import { getCurrentClient } from '../../../../lib/auth'
+import { getIncidentsByClient } from '../../../../queries/incidents'
+import IncidentManager from '../../../../components/IncidentManager'
+import { notFound } from 'next/navigation'
 
 export default async function IncidentsPage() {
-  const client = await getCurrentClient();
+  const client = await getCurrentClient()
 
   if (!client) {
-    notFound();
+    notFound()
   }
 
-  const incidents = await getIncidentsByClient(client._id);
+  const incidents = await getIncidentsByClient(client._id)
 
   return (
     <div className="py-8 px-4">
@@ -18,5 +18,5 @@ export default async function IncidentsPage() {
         <IncidentManager initialIncidents={incidents} />
       </div>
     </div>
-  );
+  )
 }

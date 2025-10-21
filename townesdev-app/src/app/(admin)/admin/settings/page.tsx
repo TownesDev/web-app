@@ -3,27 +3,27 @@
  * Displays operation configuration settings for admin users
  */
 
-import { requireCapability } from "@/lib/rbac/guards";
-import { runQueryFresh } from "@/lib/client";
-import { qOperationConfig } from "@/sanity/lib/queries";
-import Link from "next/link";
-import { Settings, Edit } from "lucide-react";
+import { requireCapability } from '@/lib/rbac/guards'
+import { runQueryFresh } from '@/lib/client'
+import { qOperationConfig } from '@/sanity/lib/queries'
+import Link from 'next/link'
+import { Settings, Edit } from 'lucide-react'
 
 interface OperationConfig {
-  overageRate: string;
-  emergencyRate: string;
-  reactivationFee: string;
+  overageRate: string
+  emergencyRate: string
+  reactivationFee: string
 }
 
 export default async function SettingsPage() {
   // Require admin capability for settings management
-  await requireCapability("content:write");
+  await requireCapability('content:write')
 
   // Fetch operation configuration
-  const config = (await runQueryFresh(qOperationConfig)) as OperationConfig;
+  const config = (await runQueryFresh(qOperationConfig)) as OperationConfig
 
   // Build Sanity Studio edit URL
-  const editUrl = `${process.env.NEXT_PUBLIC_SANITY_STUDIO_URL}/desk/operationConfig`;
+  const editUrl = `${process.env.NEXT_PUBLIC_SANITY_STUDIO_URL}/desk/operationConfig`
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -67,7 +67,7 @@ export default async function SettingsPage() {
             </div>
           </div>
           <div className="text-2xl font-bold text-nile-blue-900">
-            {config?.overageRate || "Not set"}
+            {config?.overageRate || 'Not set'}
           </div>
         </div>
 
@@ -87,7 +87,7 @@ export default async function SettingsPage() {
             </div>
           </div>
           <div className="text-2xl font-bold text-nile-blue-900">
-            {config?.emergencyRate || "Not set"}
+            {config?.emergencyRate || 'Not set'}
           </div>
         </div>
 
@@ -107,7 +107,7 @@ export default async function SettingsPage() {
             </div>
           </div>
           <div className="text-2xl font-bold text-nile-blue-900">
-            {config?.reactivationFee || "Not set"}
+            {config?.reactivationFee || 'Not set'}
           </div>
         </div>
       </div>
@@ -140,5 +140,5 @@ export default async function SettingsPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

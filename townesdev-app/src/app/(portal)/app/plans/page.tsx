@@ -1,30 +1,30 @@
-import { getSession } from "../../../../lib/session";
-import { getClientByUserId } from "../../../../lib/stripe";
-import { sanity } from "../../../../lib/client";
-import { redirect } from "next/navigation";
-import { BillingPortalButton } from "./BillingPortalButton";
+import { getSession } from '../../../../lib/session'
+import { getClientByUserId } from '../../../../lib/stripe'
+import { sanity } from '../../../../lib/client'
+import { redirect } from 'next/navigation'
+import { BillingPortalButton } from './BillingPortalButton'
 
 interface Retainer {
-  _id: string;
-  status: string;
-  periodStart: string;
-  periodEnd: string;
-  hoursIncluded: number;
-  hoursUsed: number;
+  _id: string
+  status: string
+  periodStart: string
+  periodEnd: string
+  hoursIncluded: number
+  hoursUsed: number
   plan?: {
-    _id: string;
-    name: string;
-    price: string;
-    features: string[];
-  };
+    _id: string
+    name: string
+    price: string
+    features: string[]
+  }
   asset?: {
-    _id: string;
-    title: string;
-  };
+    _id: string
+    title: string
+  }
 }
 
 async function getClientRetainers(clientId: string): Promise<Retainer[]> {
-  console.log("Querying retainers for clientId:", clientId);
+  console.log('Querying retainers for clientId:', clientId)
   const retainers = await sanity.fetch(
     `*[_type=="retainer" && client._ref==$clientId]{
       _id,
@@ -45,25 +45,25 @@ async function getClientRetainers(clientId: string): Promise<Retainer[]> {
       }
     }`,
     { clientId }
-  );
-  console.log("Found retainers:", retainers);
-  return retainers;
+  )
+  console.log('Found retainers:', retainers)
+  return retainers
 }
 
 export default async function ClientPlansPage() {
-  const session = await getSession();
+  const session = await getSession()
   if (!session) {
-    redirect("/auth/signin");
+    redirect('/auth/signin')
   }
 
-  const client = await getClientByUserId(session.id);
+  const client = await getClientByUserId(session.id)
   if (!client) {
-    console.log("No client found for user:", session.id);
-    redirect("/auth/signin");
+    console.log('No client found for user:', session.id)
+    redirect('/auth/signin')
   }
 
-  console.log("Found client:", client);
-  const retainers = await getClientRetainers(client._id);
+  console.log('Found client:', client)
+  const retainers = await getClientRetainers(client._id)
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
@@ -117,7 +117,7 @@ export default async function ClientPlansPage() {
                   <div className="flex justify-between items-start mb-3">
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">
-                        {retainer.plan?.name || "Unknown Plan"}
+                        {retainer.plan?.name || 'Unknown Plan'}
                       </h3>
                       {retainer.asset && (
                         <p className="text-sm text-gray-600">
@@ -127,11 +127,11 @@ export default async function ClientPlansPage() {
                     </div>
                     <span
                       className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        retainer.status === "active"
-                          ? "bg-green-100 text-green-800"
-                          : retainer.status === "canceled"
-                            ? "bg-red-100 text-red-800"
-                            : "bg-yellow-100 text-yellow-800"
+                        retainer.status === 'active'
+                          ? 'bg-green-100 text-green-800'
+                          : retainer.status === 'canceled'
+                            ? 'bg-red-100 text-red-800'
+                            : 'bg-yellow-100 text-yellow-800'
                       }`}
                     >
                       {retainer.status}
@@ -171,5 +171,5 @@ export default async function ClientPlansPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

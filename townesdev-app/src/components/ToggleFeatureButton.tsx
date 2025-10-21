@@ -1,13 +1,13 @@
-"use client";
+'use client'
 
-import { useState } from "react";
+import { useState } from 'react'
 
 interface ToggleFeatureButtonProps {
-  featureKey: string;
-  guildId: string;
-  clientId: string;
-  isEnabled: boolean;
-  onToggle?: (enabled: boolean) => void;
+  featureKey: string
+  guildId: string
+  clientId: string
+  isEnabled: boolean
+  onToggle?: (enabled: boolean) => void
 }
 
 export function ToggleFeatureButton({
@@ -17,41 +17,41 @@ export function ToggleFeatureButton({
   isEnabled,
   onToggle,
 }: ToggleFeatureButtonProps) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [currentState, setCurrentState] = useState(isEnabled);
+  const [isLoading, setIsLoading] = useState(false)
+  const [currentState, setCurrentState] = useState(isEnabled)
 
   const handleToggle = async () => {
-    setIsLoading(true);
+    setIsLoading(true)
     try {
-      const action = currentState ? "disable" : "enable";
+      const action = currentState ? 'disable' : 'enable'
       const response = await fetch(
         `/api/bot/features/${guildId}/${featureKey}/toggle`,
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             clientId,
             action,
           }),
         }
-      );
+      )
 
       if (!response.ok) {
-        throw new Error("Failed to toggle feature");
+        throw new Error('Failed to toggle feature')
       }
 
-      const newState = action === "enable";
-      setCurrentState(newState);
-      onToggle?.(newState);
+      const newState = action === 'enable'
+      setCurrentState(newState)
+      onToggle?.(newState)
     } catch (error) {
-      console.error("Error toggling feature:", error);
+      console.error('Error toggling feature:', error)
       // Could add toast notification here
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <button
@@ -59,8 +59,8 @@ export function ToggleFeatureButton({
       disabled={isLoading}
       className={`w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white ${
         currentState
-          ? "bg-red-600 hover:bg-red-700 disabled:bg-red-400"
-          : "bg-green-600 hover:bg-green-700 disabled:bg-green-400"
+          ? 'bg-red-600 hover:bg-red-700 disabled:bg-red-400'
+          : 'bg-green-600 hover:bg-green-700 disabled:bg-green-400'
       } disabled:cursor-not-allowed`}
     >
       {isLoading ? (
@@ -88,10 +88,10 @@ export function ToggleFeatureButton({
           Updating...
         </span>
       ) : currentState ? (
-        "Disable Feature"
+        'Disable Feature'
       ) : (
-        "Enable Feature"
+        'Enable Feature'
       )}
     </button>
-  );
+  )
 }

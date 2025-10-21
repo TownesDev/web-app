@@ -3,7 +3,7 @@
  * Helper functions for bot platform integration
  */
 
-import { runQuery, sanityWrite } from "@/lib/client";
+import { runQuery, sanityWrite } from '@/lib/client'
 
 /**
  * Get client by ID with bot platform fields
@@ -21,7 +21,7 @@ export async function getClient(clientId: string) {
       selectedPlan
     }`,
     { clientId }
-  );
+  )
 }
 
 /**
@@ -30,9 +30,9 @@ export async function getClient(clientId: string) {
 export async function updateClientBotData(
   clientId: string,
   botData: {
-    botTenantId?: string;
-    botApiKey?: string;
+    botTenantId?: string
+    botApiKey?: string
   }
 ) {
-  return await sanityWrite.patch(clientId).set(botData).commit();
+  return await sanityWrite.patch(clientId).set(botData).commit()
 }

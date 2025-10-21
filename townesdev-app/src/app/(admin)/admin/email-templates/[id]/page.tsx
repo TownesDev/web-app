@@ -3,28 +3,28 @@
  * Edit individual email template details
  */
 
-import { requireCapability } from "../../../../../lib/rbac/guards";
-import { runQueryFresh } from "../../../../../lib/client";
-import { notFound } from "next/navigation";
-import EmailTemplateForm from "../../../../../components/admin/EmailTemplateForm";
+import { requireCapability } from '../../../../../lib/rbac/guards'
+import { runQueryFresh } from '../../../../../lib/client'
+import { notFound } from 'next/navigation'
+import EmailTemplateForm from '../../../../../components/admin/EmailTemplateForm'
 
 interface EmailTemplate {
-  _id: string;
-  name: string;
-  subject: string;
-  htmlBody?: any[];
-  purpose: string;
+  _id: string
+  name: string
+  subject: string
+  htmlBody?: any[]
+  purpose: string
 }
 
 export default async function EmailTemplateEditPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: string }>
 }) {
   // Require admin capability for email templates management
-  await requireCapability("content:write");
+  await requireCapability('content:write')
 
-  const { id } = await params;
+  const { id } = await params
 
   // Fetch the specific email template
   const template = (await runQueryFresh(
@@ -36,10 +36,10 @@ export default async function EmailTemplateEditPage({
       purpose
     }`,
     { id }
-  )) as EmailTemplate;
+  )) as EmailTemplate
 
   if (!template) {
-    notFound();
+    notFound()
   }
 
   return (
@@ -67,5 +67,5 @@ export default async function EmailTemplateEditPage({
         <EmailTemplateForm template={template} />
       </div>
     </div>
-  );
+  )
 }

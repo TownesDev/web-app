@@ -1,57 +1,57 @@
-"use client";
+'use client'
 
-import { useState } from "react";
+import { useState } from 'react'
 
 interface Client {
-  _id: string;
-  name: string;
-  email: string;
-  status: string;
-  botTenantId?: string;
-  botApiKey?: string;
+  _id: string
+  name: string
+  email: string
+  status: string
+  botTenantId?: string
+  botApiKey?: string
   selectedPlan?: {
-    name: string;
-  };
+    name: string
+  }
 }
 
 interface TenantProvisioningProps {
-  clientId: string;
-  client: Client;
+  clientId: string
+  client: Client
 }
 
 export function TenantProvisioning({
   clientId,
   client,
 }: TenantProvisioningProps) {
-  const [isProvisioning, setIsProvisioning] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [isProvisioning, setIsProvisioning] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleProvisionTenant = async () => {
-    setIsProvisioning(true);
-    setError(null);
+    setIsProvisioning(true)
+    setError(null)
 
     try {
-      const response = await fetch("/api/bot/tenants/provision", {
-        method: "POST",
+      const response = await fetch('/api/bot/tenants/provision', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ clientId }),
-      });
+      })
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to provision tenant");
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to provision tenant')
       }
 
       // Refresh the page to show updated client data
-      window.location.reload();
+      window.location.reload()
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
-      setIsProvisioning(false);
+      setIsProvisioning(false)
     }
-  };
+  }
 
   if (client.botTenantId) {
     return (
@@ -67,12 +67,12 @@ export function TenantProvisioning({
             <strong>Tenant ID:</strong> {client.botTenantId}
           </div>
           <div className="text-sm text-gray-600 mt-1">
-            <strong>API Key:</strong>{" "}
-            {client.botApiKey ? "••••••••" : "Not available"}
+            <strong>API Key:</strong>{' '}
+            {client.botApiKey ? '••••••••' : 'Not available'}
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -125,9 +125,9 @@ export function TenantProvisioning({
             Provisioning...
           </>
         ) : (
-          "Provision Bot Tenant"
+          'Provision Bot Tenant'
         )}
       </button>
     </div>
-  );
+  )
 }

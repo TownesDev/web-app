@@ -4,5 +4,3 @@
 - Minimum size: 48px height.
 - Never distort, recolor, or crop the lighthouse beam.
 - Use light version on dark backgrounds and vice versa.
-
-

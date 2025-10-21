@@ -3,92 +3,86 @@
  * Displays overview dashboard with clients and incidents for staff users
  */
 
-import { requireCapability } from "@/lib/rbac/guards";
-import { getAllClients } from "@/queries/clients";
-import { getAllIncidents } from "@/queries/incidents";
-import { getRecentMonthlyRhythms } from "@/queries/monthlyRhythm";
-import AdminClientsTable from "@/components/admin/AdminClientsTable";
-import Link from "next/link";
-import {
-  AlertTriangle,
-  Users,
-  TrendingUp,
-  Clock,
-  Calendar,
-} from "lucide-react";
+import { requireCapability } from '@/lib/rbac/guards'
+import { getAllClients } from '@/queries/clients'
+import { getAllIncidents } from '@/queries/incidents'
+import { getRecentMonthlyRhythms } from '@/queries/monthlyRhythm'
+import AdminClientsTable from '@/components/admin/AdminClientsTable'
+import Link from 'next/link'
+import { AlertTriangle, Users, TrendingUp, Clock, Calendar } from 'lucide-react'
 
 interface Client {
-  _id: string;
-  name: string;
-  email: string;
-  status: string;
+  _id: string
+  name: string
+  email: string
+  status: string
   selectedPlan?: {
-    name: string;
-    price: string;
-  };
+    name: string
+    price: string
+  }
 }
 
 interface Incident {
-  _id: string;
-  title: string;
-  severity: "low" | "medium" | "high" | "critical";
-  status: "open" | "in_progress" | "resolved" | "closed";
-  reportedAt?: string;
-  resolvedAt?: string;
-  assignee?: string;
+  _id: string
+  title: string
+  severity: 'low' | 'medium' | 'high' | 'critical'
+  status: 'open' | 'in_progress' | 'resolved' | 'closed'
+  reportedAt?: string
+  resolvedAt?: string
+  assignee?: string
   client: {
-    name: string;
-  };
+    name: string
+  }
 }
 
 interface MonthlyRhythm {
-  _id: string;
-  month: string;
-  hoursUsed?: number;
-  hoursIncluded?: number;
-  _updatedAt?: string;
+  _id: string
+  month: string
+  hoursUsed?: number
+  hoursIncluded?: number
+  _updatedAt?: string
   client: {
-    _id: string;
-    name: string;
-  };
+    _id: string
+    name: string
+  }
 }
 
 export default async function AdminPage() {
   // Require clients:read capability (staff/admin only)
-  await requireCapability("clients:read");
+  await requireCapability('clients:read')
 
   // Fetch all clients and incidents
   const [clients, incidents] = await Promise.all([
     getAllClients() as Promise<Client[]>,
     getAllIncidents() as Promise<Incident[]>,
-  ]);
+  ])
 
   // Fetch recent monthly rhythms
-  const recentRhythms = (await getRecentMonthlyRhythms(5)) as MonthlyRhythm[];
+  const recentRhythms = (await getRecentMonthlyRhythms(5)) as MonthlyRhythm[]
 
   // Calculate quick stats
   const activeClients = clients.filter(
-    (client) => client.status === "Active"
-  ).length;
+    (client) => client.status === 'Active'
+  ).length
   const openIncidents = incidents.filter(
-    (incident) => incident.status === "open"
-  ).length;
+    (incident) => incident.status === 'open'
+  ).length
   const inProgressIncidents = incidents.filter(
-    (incident) => incident.status === "in_progress"
-  ).length;
+    (incident) => incident.status === 'in_progress'
+  ).length
   const criticalIncidents = incidents.filter(
-    (incident) => incident.severity === "critical"
-  ).length;
+    (incident) => incident.severity === 'critical'
+  ).length
 
   // Calculate monthly rhythm stats
-  const totalRhythmEntries = recentRhythms.length;
+  const totalRhythmEntries = recentRhythms.length
   const activeRhythmsThisMonth = recentRhythms.filter((rhythm) => {
-    const rhythmMonth = rhythm.month.toLowerCase();
+    const rhythmMonth = rhythm.month.toLowerCase()
     const currentMonth = new Date()
-      .toLocaleString("en-US", { month: "long", year: "numeric" })
-      .toLowerCase();
-    return rhythmMonth === currentMonth;
-  }).length;
+      .toLocaleString('en-US', { month: 'long', year: 'numeric' })
+      .toLowerCase()
+    return rhythmMonth === currentMonth
+  }).length
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -221,13 +215,13 @@ export default async function AdminPage() {
                 <div className="flex items-center space-x-4">
                   <div
                     className={`w-3 h-3 rounded-full ${
-                      incident.severity === "critical"
-                        ? "bg-red-500"
-                        : incident.severity === "high"
-                          ? "bg-orange-500"
-                          : incident.severity === "medium"
-                            ? "bg-yellow-500"
-                            : "bg-green-500"
+                      incident.severity === 'critical'
+                        ? 'bg-red-500'
+                        : incident.severity === 'high'
+                          ? 'bg-orange-500'
+                          : incident.severity === 'medium'
+                            ? 'bg-yellow-500'
+                            : 'bg-green-500'
                     }`}
                   />
                   <div>
@@ -242,21 +236,21 @@ export default async function AdminPage() {
                 <div className="flex items-center space-x-4">
                   <span
                     className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      incident.status === "open"
-                        ? "bg-blue-100 text-blue-800"
-                        : incident.status === "in_progress"
-                          ? "bg-nile-blue-100 text-nile-blue-800"
-                          : incident.status === "resolved"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-gray-100 text-gray-800"
+                      incident.status === 'open'
+                        ? 'bg-blue-100 text-blue-800'
+                        : incident.status === 'in_progress'
+                          ? 'bg-nile-blue-100 text-nile-blue-800'
+                          : incident.status === 'resolved'
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-gray-100 text-gray-800'
                     }`}
                   >
-                    {incident.status.replace("_", " ")}
+                    {incident.status.replace('_', ' ')}
                   </span>
                   <span className="text-sm text-gray-500">
                     {incident.reportedAt
                       ? new Date(incident.reportedAt).toLocaleDateString()
-                      : "—"}
+                      : '—'}
                   </span>
                 </div>
               </div>
@@ -317,13 +311,13 @@ export default async function AdminPage() {
                 <div className="flex items-center space-x-4">
                   <div className="text-right">
                     <p className="text-sm text-gray-900">
-                      {rhythm.hoursUsed || 0} / {rhythm.hoursIncluded || 0}{" "}
+                      {rhythm.hoursUsed || 0} / {rhythm.hoursIncluded || 0}{' '}
                       hours
                     </p>
                     <p className="text-xs text-gray-500">
                       {rhythm._updatedAt
                         ? new Date(rhythm._updatedAt).toLocaleDateString()
-                        : "—"}
+                        : '—'}
                     </p>
                   </div>
                   <Link
@@ -361,5 +355,5 @@ export default async function AdminPage() {
         <AdminClientsTable clients={clients} />
       </div>
     </div>
-  );
+  )
 }

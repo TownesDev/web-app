@@ -3,16 +3,16 @@
  * Displays incidents table for staff users
  */
 
-import { requireCapability } from "@/lib/rbac/guards";
-import { getAllIncidents } from "@/queries/incidents";
-import AdminIncidentsTable from "@/components/admin/AdminIncidentsTable";
+import { requireCapability } from '@/lib/rbac/guards'
+import { getAllIncidents } from '@/queries/incidents'
+import AdminIncidentsTable from '@/components/admin/AdminIncidentsTable'
 
 export default async function AdminIncidentsPage() {
   // Require system:read capability (staff/admin only)
-  await requireCapability("system:read");
+  await requireCapability('system:read')
 
   // Fetch all incidents
-  const incidents = await getAllIncidents();
+  const incidents = await getAllIncidents()
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -38,5 +38,5 @@ export default async function AdminIncidentsPage() {
         <AdminIncidentsTable incidents={incidents} />
       </div>
     </div>
-  );
+  )
 }

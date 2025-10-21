@@ -1,23 +1,23 @@
-import { runQuery } from "@/lib/client";
-import { TenantProvisioning } from "./TenantProvisioning";
-import { GuildManagement } from "./GuildManagement";
-import { FeatureManagement } from "./FeatureManagement";
+import { runQuery } from '@/lib/client'
+import { TenantProvisioning } from './TenantProvisioning'
+import { GuildManagement } from './GuildManagement'
+import { FeatureManagement } from './FeatureManagement'
 
 interface Client {
-  _id: string;
-  name: string;
-  email: string;
-  status: string;
-  botTenantId?: string;
-  botApiKey?: string;
+  _id: string
+  name: string
+  email: string
+  status: string
+  botTenantId?: string
+  botApiKey?: string
   selectedPlan?: {
-    name: string;
-  };
+    name: string
+  }
 }
 
 interface BotManagementSectionProps {
-  clientId: string;
-  client: Client;
+  clientId: string
+  client: Client
 }
 
 export async function BotManagementSection({
@@ -35,7 +35,7 @@ export async function BotManagementSection({
       _createdAt
     }`,
     { clientId }
-  );
+  )
 
   // Fetch client's entitlements
   const entitlements = await runQuery(
@@ -48,7 +48,7 @@ export async function BotManagementSection({
       stripePaymentIntentId
     }`,
     { clientId }
-  );
+  )
 
   return (
     <div className="space-y-8">
@@ -88,5 +88,5 @@ export async function BotManagementSection({
         </div>
       )}
     </div>
-  );
+  )
 }

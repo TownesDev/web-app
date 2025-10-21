@@ -1,21 +1,21 @@
-"use client";
+'use client'
 
 interface Plan {
-  name: string;
-  price: string;
-  features: string[];
-  description?: string;
-  content?: string;
+  name: string
+  price: string
+  features: string[]
+  description?: string
+  content?: string
 }
 
 interface PlanModalProps {
-  plan: Plan | null;
-  isOpen: boolean;
-  onClose: () => void;
+  plan: Plan | null
+  isOpen: boolean
+  onClose: () => void
 }
 
 export default function PlanModal({ plan, isOpen, onClose }: PlanModalProps) {
-  if (!isOpen || !plan) return null;
+  if (!isOpen || !plan) return null
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -59,5 +59,5 @@ export default function PlanModal({ plan, isOpen, onClose }: PlanModalProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -16,7 +16,7 @@ The brand represents craftsmanship, clarity, and authenticity — where every pr
 - **Usage Rules:**
   - Maintain clear space equal to the lighthouse width.
   - Do not distort, recolor, or apply shadows to the icon.
-  - Use the *light version* on dark backgrounds, and *dark version* on light backgrounds.
+  - Use the _light version_ on dark backgrounds, and _dark version_ on light backgrounds.
 
 ---
 
@@ -29,12 +29,12 @@ The brand represents craftsmanship, clarity, and authenticity — where every pr
 | Accent    | Cool Gray  | `#D8DDE2` |
 | Light     | White      | `#FFFFFF` |
 
-**Psychology:**  
+**Psychology:**
 
-- Deep Navy → trust, focus, craftsmanship  
-- Slate Blue → clarity, professionalism  
-- Cool Gray → balance, neutrality  
-- White → simplicity, transparency  
+- Deep Navy → trust, focus, craftsmanship
+- Slate Blue → clarity, professionalism
+- Cool Gray → balance, neutrality
+- White → simplicity, transparency
 
 ---
 
@@ -46,8 +46,8 @@ The brand represents craftsmanship, clarity, and authenticity — where every pr
 | Secondary | Space Grotesk  | Branding, logotype, hero text     |
 | Monospace | JetBrains Mono | Code snippets and technical docs  |
 
-- Use **all caps** for main headings (TOWNESDEV, PROJECT TITLES).  
-- Use **sentence case** for explanatory text.  
+- Use **all caps** for main headings (TOWNESDEV, PROJECT TITLES).
+- Use **sentence case** for explanatory text.
 - Keep spacing generous — structure is a visual principle.
 
 ---
@@ -67,13 +67,13 @@ The brand represents craftsmanship, clarity, and authenticity — where every pr
 
 ### 🧱 Visual Aesthetic
 
-**Motifs:**  
+**Motifs:**
 
 - Nautical minimalism (lighthouse, beams, subtle grids)
 - Blueprint and structure imagery
 - Balance between hard geometry and soft light
 
-**Layout Principles:**  
+**Layout Principles:**
 
 - Prefer symmetry and alignment.
 - Use grids (4px or 8px base).
@@ -127,9 +127,9 @@ Alternate form:
 
 ### 💡 Quick Brand Reminders
 
-- Structure everything like code — consistent, modular, maintainable.  
-- Simplicity *is* identity.  
-- Never use “fluff” words in writing — communicate purpose and precision.  
+- Structure everything like code — consistent, modular, maintainable.
+- Simplicity _is_ identity.
+- Never use “fluff” words in writing — communicate purpose and precision.
 - Every asset should feel like part of a connected “town” of ideas.
 
 ---

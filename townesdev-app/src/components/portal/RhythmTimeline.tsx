@@ -1,65 +1,65 @@
-"use client";
+'use client'
 
 /**
  * RhythmTimeline Component
  * Displays monthly rhythm entries with expandable week sections and hours tracking
  */
 
-import { useState } from "react";
-import { ChevronDown, ChevronRight, Clock, AlertTriangle } from "lucide-react";
+import { useState } from 'react'
+import { ChevronDown, ChevronRight, Clock, AlertTriangle } from 'lucide-react'
 
 interface MonthlyRhythm {
-  _id: string;
-  month: string;
-  monthDate?: string;
-  hoursUsed?: number;
-  hoursIncluded?: number;
-  week1Patch?: string;
-  week2Observability?: string;
-  week3Hardening?: string;
-  week4Report?: string;
+  _id: string
+  month: string
+  monthDate?: string
+  hoursUsed?: number
+  hoursIncluded?: number
+  week1Patch?: string
+  week2Observability?: string
+  week3Hardening?: string
+  week4Report?: string
 }
 
 interface RhythmTimelineProps {
-  items: MonthlyRhythm[];
-  retainerHoursIncluded?: number;
+  items: MonthlyRhythm[]
+  retainerHoursIncluded?: number
 }
 
 export default function RhythmTimeline({
   items,
   retainerHoursIncluded,
 }: RhythmTimelineProps) {
-  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
 
   const toggleExpanded = (id: string) => {
-    const newExpanded = new Set(expandedItems);
+    const newExpanded = new Set(expandedItems)
     if (newExpanded.has(id)) {
-      newExpanded.delete(id);
+      newExpanded.delete(id)
     } else {
-      newExpanded.add(id);
+      newExpanded.add(id)
     }
-    setExpandedItems(newExpanded);
-  };
+    setExpandedItems(newExpanded)
+  }
 
   const calculateHours = (item: MonthlyRhythm) => {
-    const included = item.hoursIncluded || retainerHoursIncluded || 0;
-    const used = item.hoursUsed || 0;
-    const percentage = included > 0 ? (used / included) * 100 : 0;
-    const overage = used - included;
+    const included = item.hoursIncluded || retainerHoursIncluded || 0
+    const used = item.hoursUsed || 0
+    const percentage = included > 0 ? (used / included) * 100 : 0
+    const overage = used - included
 
-    return { included, used, percentage, overage };
-  };
+    return { included, used, percentage, overage }
+  }
 
   const getProgressColor = (percentage: number) => {
-    if (percentage >= 100) return "bg-red-500";
-    if (percentage >= 80) return "bg-yellow-500";
-    return "bg-nile-blue-500";
-  };
+    if (percentage >= 100) return 'bg-red-500'
+    if (percentage >= 80) return 'bg-yellow-500'
+    return 'bg-nile-blue-500'
+  }
 
   const formatWeekContent = (content?: string) => {
-    if (!content) return "No content available";
-    return content;
-  };
+    if (!content) return 'No content available'
+    return content
+  }
 
   if (items.length === 0) {
     return (
@@ -72,14 +72,14 @@ export default function RhythmTimeline({
           Your monthly check-ins will appear here.
         </p>
       </div>
-    );
+    )
   }
 
   return (
     <div className="space-y-4">
       {items.map((item) => {
-        const { included, used, percentage, overage } = calculateHours(item);
-        const isExpanded = expandedItems.has(item._id);
+        const { included, used, percentage, overage } = calculateHours(item)
+        const isExpanded = expandedItems.has(item._id)
 
         return (
           <div
@@ -93,8 +93,8 @@ export default function RhythmTimeline({
               role="button"
               tabIndex={0}
               onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  toggleExpanded(item._id);
+                if (e.key === 'Enter' || e.key === ' ') {
+                  toggleExpanded(item._id)
                 }
               }}
               aria-expanded={isExpanded}
@@ -189,8 +189,8 @@ export default function RhythmTimeline({
               </div>
             )}
           </div>
-        );
+        )
       })}
     </div>
-  );
+  )
 }

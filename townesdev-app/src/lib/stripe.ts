@@ -1,23 +1,23 @@
-import Stripe from "stripe";
-import { runQuery } from "./client";
-import { sanityWrite } from "./client";
+import Stripe from 'stripe'
+import { runQuery } from './client'
+import { sanityWrite } from './client'
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-09-30.clover",
-});
+  apiVersion: '2025-09-30.clover',
+})
 
 /**
  * Get or create a Stripe customer for a client
  */
 export async function getOrCreateCustomer(client: {
-  _id: string;
-  name: string;
-  email: string;
-  stripeCustomerId?: string;
+  _id: string
+  name: string
+  email: string
+  stripeCustomerId?: string
 }): Promise<string> {
   // If client already has a Stripe customer ID, return it
   if (client.stripeCustomerId) {
-    return client.stripeCustomerId;
+    return client.stripeCustomerId
   }
 
   // Create new Stripe customer
@@ -27,15 +27,15 @@ export async function getOrCreateCustomer(client: {
     metadata: {
       clientId: client._id,
     },
-  });
+  })
 
   // Update client with Stripe customer ID
   console.log(
-    "Updating client",
+    'Updating client',
     client._id,
-    "with stripeCustomerId",
+    'with stripeCustomerId',
     customer.id
-  );
+  )
   await sanityWrite.mutate([
     {
       patch: {
@@ -45,9 +45,9 @@ export async function getOrCreateCustomer(client: {
         },
       },
     },
-  ]);
+  ])
 
-  return customer.id;
+  return customer.id
 }
 
 /**
@@ -63,7 +63,7 @@ export async function getClientByUserId(userId: string) {
       selectedPlan
     }`,
     { userId }
-  );
+  )
 }
 
 /**
@@ -80,5 +80,5 @@ export async function getPlanById(planId: string) {
       description
     }`,
     { planId }
-  );
+  )
 }

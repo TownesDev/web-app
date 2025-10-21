@@ -1,8 +1,8 @@
-import { ReactNode } from "react";
-import "../globals.css";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-import AdminSidebar from "../../components/AdminSidebar";
+import { ReactNode } from 'react'
+import '../globals.css'
+import Header from '../../components/Header'
+import Footer from '../../components/Footer'
+import AdminSidebar from '../../components/AdminSidebar'
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
@@ -14,5 +14,5 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       </div>
       <Footer variant="admin" />
     </div>
-  );
+  )
 }

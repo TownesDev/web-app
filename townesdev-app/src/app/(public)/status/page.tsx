@@ -3,7 +3,7 @@
  * Displays system status with uptime and recent incidents
  */
 
-import { Activity, AlertTriangle, CheckCircle } from "lucide-react";
+import { Activity, AlertTriangle, CheckCircle } from 'lucide-react'
 
 export default function StatusPage() {
   return (
@@ -140,5 +140,5 @@ export default function StatusPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

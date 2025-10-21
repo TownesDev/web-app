@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 /**
  * Admin Incidents Table Component
@@ -7,118 +7,118 @@
  * Supports inline editing of assignee field
  */
 
-import { useState, useMemo } from "react";
+import { useState, useMemo } from 'react'
 
 interface Incident {
-  _id: string;
-  title: string;
-  severity: "low" | "medium" | "high" | "critical";
-  status: "open" | "in_progress" | "resolved" | "closed";
-  reportedAt?: string;
-  resolvedAt?: string;
-  assignee?: string;
+  _id: string
+  title: string
+  severity: 'low' | 'medium' | 'high' | 'critical'
+  status: 'open' | 'in_progress' | 'resolved' | 'closed'
+  reportedAt?: string
+  resolvedAt?: string
+  assignee?: string
   client: {
-    name: string;
-  };
+    name: string
+  }
 }
 
 interface AdminIncidentsTableProps {
-  incidents: Incident[];
+  incidents: Incident[]
 }
 
-type SeverityFilter = "all" | "low" | "medium" | "high" | "critical";
-type StatusFilter = "all" | "open" | "in_progress" | "resolved" | "closed";
+type SeverityFilter = 'all' | 'low' | 'medium' | 'high' | 'critical'
+type StatusFilter = 'all' | 'open' | 'in_progress' | 'resolved' | 'closed'
 
 export default function AdminIncidentsTable({
   incidents,
 }: AdminIncidentsTableProps) {
-  const [severityFilter, setSeverityFilter] = useState<SeverityFilter>("all");
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
-  const [editingAssignee, setEditingAssignee] = useState<string | null>(null);
-  const [assigneeValue, setAssigneeValue] = useState("");
+  const [severityFilter, setSeverityFilter] = useState<SeverityFilter>('all')
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
+  const [editingAssignee, setEditingAssignee] = useState<string | null>(null)
+  const [assigneeValue, setAssigneeValue] = useState('')
 
   // Filter incidents based on severity and status
   const filteredIncidents = useMemo(() => {
     return incidents.filter((incident) => {
       const severityMatch =
-        severityFilter === "all" || incident.severity === severityFilter;
+        severityFilter === 'all' || incident.severity === severityFilter
       const statusMatch =
-        statusFilter === "all" || incident.status === statusFilter;
-      return severityMatch && statusMatch;
-    });
-  }, [incidents, severityFilter, statusFilter]);
+        statusFilter === 'all' || incident.status === statusFilter
+      return severityMatch && statusMatch
+    })
+  }, [incidents, severityFilter, statusFilter])
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case "low":
-        return "bg-green-100 text-green-800";
-      case "medium":
-        return "bg-yellow-100 text-yellow-800";
-      case "high":
-        return "bg-orange-100 text-orange-800";
-      case "critical":
-        return "bg-red-100 text-red-800";
+      case 'low':
+        return 'bg-green-100 text-green-800'
+      case 'medium':
+        return 'bg-yellow-100 text-yellow-800'
+      case 'high':
+        return 'bg-orange-100 text-orange-800'
+      case 'critical':
+        return 'bg-red-100 text-red-800'
       default:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800'
     }
-  };
+  }
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "open":
-        return "bg-blue-100 text-blue-800";
-      case "in_progress":
-        return "bg-nile-blue-100 text-nile-blue-800";
-      case "resolved":
-        return "bg-green-100 text-green-800";
-      case "closed":
-        return "bg-gray-100 text-gray-800";
+      case 'open':
+        return 'bg-blue-100 text-blue-800'
+      case 'in_progress':
+        return 'bg-nile-blue-100 text-nile-blue-800'
+      case 'resolved':
+        return 'bg-green-100 text-green-800'
+      case 'closed':
+        return 'bg-gray-100 text-gray-800'
       default:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800'
     }
-  };
+  }
 
   const formatDate = (dateString?: string) => {
-    if (!dateString) return "—";
-    return new Date(dateString).toLocaleDateString();
-  };
+    if (!dateString) return '—'
+    return new Date(dateString).toLocaleDateString()
+  }
 
   const handleEditAssignee = (incidentId: string, currentAssignee?: string) => {
-    setEditingAssignee(incidentId);
-    setAssigneeValue(currentAssignee || "");
-  };
+    setEditingAssignee(incidentId)
+    setAssigneeValue(currentAssignee || '')
+  }
 
   const handleSaveAssignee = async () => {
-    if (!editingAssignee) return;
+    if (!editingAssignee) return
 
     try {
       const response = await fetch(`/api/admin/incidents/${editingAssignee}`, {
-        method: "PUT",
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ assignee: assigneeValue }),
-      });
+      })
 
       if (!response.ok) {
-        throw new Error("Failed to update assignee");
+        throw new Error('Failed to update assignee')
       }
 
       // Refresh the page to show updated data
-      window.location.reload();
+      window.location.reload()
     } catch (error) {
-      console.error("Error updating assignee:", error);
-      alert("Failed to update assignee. Please try again.");
+      console.error('Error updating assignee:', error)
+      alert('Failed to update assignee. Please try again.')
     } finally {
-      setEditingAssignee(null);
-      setAssigneeValue("");
+      setEditingAssignee(null)
+      setAssigneeValue('')
     }
-  };
+  }
 
   const handleCancelEdit = () => {
-    setEditingAssignee(null);
-    setAssigneeValue("");
-  };
+    setEditingAssignee(null)
+    setAssigneeValue('')
+  }
 
   return (
     <div className="space-y-4">
@@ -232,7 +232,7 @@ export default function AdminIncidentsTable({
                     <span
                       className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(incident.status)}`}
                     >
-                      {incident.status.replace("_", " ")}
+                      {incident.status.replace('_', ' ')}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -255,10 +255,10 @@ export default function AdminIncidentsTable({
                           className="text-sm border border-gray-300 rounded px-2 py-1 focus:border-nile-blue-500 focus:outline-none focus:ring-1 focus:ring-nile-blue-500"
                           placeholder="Enter assignee name"
                           onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              handleSaveAssignee();
-                            } else if (e.key === "Escape") {
-                              handleCancelEdit();
+                            if (e.key === 'Enter') {
+                              handleSaveAssignee()
+                            } else if (e.key === 'Escape') {
+                              handleCancelEdit()
                             }
                           }}
                           autoFocus
@@ -287,13 +287,13 @@ export default function AdminIncidentsTable({
                         role="button"
                         tabIndex={0}
                         onKeyDown={(e) => {
-                          if (e.key === "Enter" || e.key === " ") {
-                            handleEditAssignee(incident._id, incident.assignee);
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            handleEditAssignee(incident._id, incident.assignee)
                           }
                         }}
                         aria-label={`Edit assignee for ${incident.title}`}
                       >
-                        {incident.assignee || "—"}
+                        {incident.assignee || '—'}
                       </div>
                     )}
                   </td>
@@ -304,5 +304,5 @@ export default function AdminIncidentsTable({
         </table>
       </div>
     </div>
-  );
+  )
 }

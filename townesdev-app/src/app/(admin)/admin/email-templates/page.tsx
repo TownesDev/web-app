@@ -3,18 +3,18 @@
  * Displays email templates table for staff users
  */
 
-import { requireCapability } from "../../../../lib/rbac/guards";
-import { runQueryFresh } from "../../../../lib/client";
-import { qEmailTemplates } from "../../../../sanity/lib/queries";
-import EmailTemplatesTable from "../../../../components/admin/EmailTemplatesTable";
-import Link from "next/link";
+import { requireCapability } from '../../../../lib/rbac/guards'
+import { runQueryFresh } from '../../../../lib/client'
+import { qEmailTemplates } from '../../../../sanity/lib/queries'
+import EmailTemplatesTable from '../../../../components/admin/EmailTemplatesTable'
+import Link from 'next/link'
 
 export default async function EmailTemplatesPage() {
   // Require admin capability for email templates management
-  await requireCapability("content:write");
+  await requireCapability('content:write')
 
   // Fetch all email templates
-  const templates = await runQueryFresh(qEmailTemplates);
+  const templates = await runQueryFresh(qEmailTemplates)
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -61,5 +61,5 @@ export default async function EmailTemplatesPage() {
         <EmailTemplatesTable templates={templates} />
       </div>
     </div>
-  );
+  )
 }

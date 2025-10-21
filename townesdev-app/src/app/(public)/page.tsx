@@ -1,26 +1,26 @@
-import Image from "next/image";
-import { PlanCard } from "../../components/PlanCard";
-import { sanity } from "../../lib/client";
-import { qPlans } from "../../sanity/lib/queries";
+import Image from 'next/image'
+import { PlanCard } from '../../components/PlanCard'
+import { sanity } from '../../lib/client'
+import { qPlans } from '../../sanity/lib/queries'
 
 interface Plan {
-  _id: string;
-  name: string;
-  price: string;
-  features: string[];
-  description: string;
-  stripeProductId?: string;
-  stripePriceId?: string;
-  hoursIncluded?: number;
+  _id: string
+  name: string
+  price: string
+  features: string[]
+  description: string
+  stripeProductId?: string
+  stripePriceId?: string
+  hoursIncluded?: number
 }
 
 async function getPlans(): Promise<Plan[]> {
-  const plans = await sanity.fetch(qPlans);
-  return plans;
+  const plans = await sanity.fetch(qPlans)
+  return plans
 }
 
 export default async function Home() {
-  const plans = await getPlans();
+  const plans = await getPlans()
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-nile-blue-50 to-white">
@@ -197,5 +197,5 @@ export default async function Home() {
         </div>
       </section>
     </div>
-  );
+  )
 }

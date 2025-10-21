@@ -1,15 +1,15 @@
-"use client";
+'use client'
 
-import React, { useState } from "react";
+import React, { useState } from 'react'
 
 interface PlanCardProps {
-  name: string;
-  price: string;
-  features: string[];
-  description: string;
-  isPopular?: boolean;
-  planId?: string;
-  stripePriceId?: string;
+  name: string
+  price: string
+  features: string[]
+  description: string
+  isPopular?: boolean
+  planId?: string
+  stripePriceId?: string
 }
 
 export function PlanCard({
@@ -21,53 +21,53 @@ export function PlanCard({
   planId,
   stripePriceId,
 }: PlanCardProps) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleCheckout = async () => {
     if (!planId || !stripePriceId) {
-      console.error("Missing planId or stripePriceId");
-      return;
+      console.error('Missing planId or stripePriceId')
+      return
     }
 
-    setIsLoading(true);
+    setIsLoading(true)
     try {
-      const response = await fetch("/api/stripe/checkout", {
-        method: "POST",
+      const response = await fetch('/api/stripe/checkout', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           planId,
           priceId: stripePriceId,
         }),
-      });
+      })
 
       if (response.status === 401) {
         // User not authenticated, redirect to signup with plan info
-        window.location.href = `/auth/signup?plan=${planId}`;
-        return;
+        window.location.href = `/auth/signup?plan=${planId}`
+        return
       }
 
       if (!response.ok) {
-        throw new Error("Checkout failed");
+        throw new Error('Checkout failed')
       }
 
-      const { url } = await response.json();
+      const { url } = await response.json()
 
       if (url) {
-        window.location.href = url;
+        window.location.href = url
       } else {
-        console.error("No checkout URL received");
+        console.error('No checkout URL received')
       }
     } catch (error) {
-      console.error("Checkout error:", error);
+      console.error('Checkout error:', error)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
   return (
     <div
-      className={`bg-white rounded-lg shadow-lg p-6 border-2 flex flex-col ${isPopular ? "border-blue-500 relative" : "border-gray-200"}`}
+      className={`bg-white rounded-lg shadow-lg p-6 border-2 flex flex-col ${isPopular ? 'border-blue-500 relative' : 'border-gray-200'}`}
     >
       {isPopular && (
         <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
@@ -109,12 +109,12 @@ export function PlanCard({
         disabled={isLoading || !stripePriceId}
         className={`w-full py-3 px-4 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
           isPopular
-            ? "bg-blue-600 hover:bg-blue-700 text-white"
-            : "bg-gray-100 hover:bg-gray-200 text-gray-900"
+            ? 'bg-blue-600 hover:bg-blue-700 text-white'
+            : 'bg-gray-100 hover:bg-gray-200 text-gray-900'
         }`}
       >
-        {isLoading ? "Processing..." : "Get Started"}
+        {isLoading ? 'Processing...' : 'Get Started'}
       </button>
     </div>
-  );
+  )
 }

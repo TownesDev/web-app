@@ -1,7 +1,7 @@
-import { ReactNode } from "react";
-import "../globals.css";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
+import { ReactNode } from 'react'
+import '../globals.css'
+import Header from '../../components/Header'
+import Footer from '../../components/Footer'
 
 export default function PublicLayout({ children }: { children: ReactNode }) {
   return (
@@ -10,5 +10,5 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
       <main className="flex-grow">{children}</main>
       <Footer variant="public" />
     </div>
-  );
+  )
 }

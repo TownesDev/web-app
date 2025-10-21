@@ -7,27 +7,27 @@
  * https://github.com/sanity-io/next-sanity
  */
 
-import { NextStudio } from "next-sanity/studio";
-import config from "../../../../../sanity.config";
-import { getSEOConfig } from "../../../../sanity/lib/seo";
+import { NextStudio } from 'next-sanity/studio'
+import config from '../../../../../sanity.config'
+import { getSEOConfig } from '../../../../sanity/lib/seo'
 
-export const dynamic = "force-static";
+export const dynamic = 'force-static'
 
-export { viewport } from "next-sanity/studio";
+export { viewport } from 'next-sanity/studio'
 
 export async function generateMetadata() {
-  const seoConfig = await getSEOConfig();
+  const seoConfig = await getSEOConfig()
 
   return {
     title: seoConfig?.siteTitle
       ? `${seoConfig.siteTitle} - Admin`
-      : "Sanity Studio",
+      : 'Sanity Studio',
     icons: {
-      icon: seoConfig?.favicon?.asset?.url || "/favicon.ico",
+      icon: seoConfig?.favicon?.asset?.url || '/favicon.ico',
     },
-  };
+  }
 }
 
 export default function StudioPage() {
-  return <NextStudio config={config} unstable_globalStyles />;
+  return <NextStudio config={config} unstable_globalStyles />
 }

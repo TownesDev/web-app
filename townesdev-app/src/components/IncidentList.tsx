@@ -1,61 +1,61 @@
-"use client";
+'use client'
 
 interface Incident {
-  _id: string;
-  title: string;
-  severity: "low" | "medium" | "high" | "critical";
-  description?: string;
-  reportedAt: string;
-  resolvedAt?: string;
-  status: "open" | "in_progress" | "resolved" | "closed";
-  hoursUsed?: number;
-  outOfScope?: boolean;
+  _id: string
+  title: string
+  severity: 'low' | 'medium' | 'high' | 'critical'
+  description?: string
+  reportedAt: string
+  resolvedAt?: string
+  status: 'open' | 'in_progress' | 'resolved' | 'closed'
+  hoursUsed?: number
+  outOfScope?: boolean
 }
 
 interface IncidentListProps {
-  incidents: Incident[];
-  onStatusUpdate?: (id: string, title: string) => void;
-  onDelete?: (id: string, title: string) => void;
+  incidents: Incident[]
+  onStatusUpdate?: (id: string, title: string) => void
+  onDelete?: (id: string, title: string) => void
 }
 
 function getSeverityColor(severity: string) {
   switch (severity) {
-    case "critical":
-      return "bg-red-100 text-red-800";
-    case "high":
-      return "bg-orange-100 text-orange-800";
-    case "medium":
-      return "bg-yellow-100 text-yellow-800";
-    case "low":
-      return "bg-green-100 text-green-800";
+    case 'critical':
+      return 'bg-red-100 text-red-800'
+    case 'high':
+      return 'bg-orange-100 text-orange-800'
+    case 'medium':
+      return 'bg-yellow-100 text-yellow-800'
+    case 'low':
+      return 'bg-green-100 text-green-800'
     default:
-      return "bg-gray-100 text-gray-800";
+      return 'bg-gray-100 text-gray-800'
   }
 }
 
 function getStatusColor(status: string) {
   switch (status) {
-    case "open":
-      return "bg-blue-100 text-blue-800";
-    case "in_progress":
-      return "bg-yellow-100 text-yellow-800";
-    case "resolved":
-      return "bg-green-100 text-green-800";
-    case "closed":
-      return "bg-gray-100 text-gray-800";
+    case 'open':
+      return 'bg-blue-100 text-blue-800'
+    case 'in_progress':
+      return 'bg-yellow-100 text-yellow-800'
+    case 'resolved':
+      return 'bg-green-100 text-green-800'
+    case 'closed':
+      return 'bg-gray-100 text-gray-800'
     default:
-      return "bg-gray-100 text-gray-800";
+      return 'bg-gray-100 text-gray-800'
   }
 }
 
 function formatDate(dateString: string) {
-  return new Date(dateString).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
 }
 
 export default function IncidentList({
@@ -81,7 +81,7 @@ export default function IncidentList({
           Your support incidents will appear here once they are reported.
         </p>
       </div>
-    );
+    )
   }
 
   return (
@@ -139,7 +139,7 @@ export default function IncidentList({
                   )}`}
                 >
                   {incident.status
-                    .replace("_", " ")
+                    .replace('_', ' ')
                     .replace(/\b\w/g, (l) => l.toUpperCase())}
                 </span>
               </td>
@@ -147,7 +147,7 @@ export default function IncidentList({
                 {formatDate(incident.reportedAt)}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                {incident.resolvedAt ? formatDate(incident.resolvedAt) : "—"}
+                {incident.resolvedAt ? formatDate(incident.resolvedAt) : '—'}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 <div className="flex flex-col space-y-1">
@@ -156,20 +156,20 @@ export default function IncidentList({
                       onStatusUpdate?.(incident._id, incident.title)
                     }
                     disabled={
-                      incident.status === "resolved" ||
-                      incident.status === "closed"
+                      incident.status === 'resolved' ||
+                      incident.status === 'closed'
                     }
                     className={`text-sm ${
-                      incident.status === "resolved" ||
-                      incident.status === "closed"
-                        ? "text-gray-400 cursor-not-allowed"
-                        : "text-green-600 hover:text-green-900"
+                      incident.status === 'resolved' ||
+                      incident.status === 'closed'
+                        ? 'text-gray-400 cursor-not-allowed'
+                        : 'text-green-600 hover:text-green-900'
                     }`}
                     title={
-                      incident.status === "resolved" ||
-                      incident.status === "closed"
-                        ? "Incident already resolved"
-                        : "Mark as resolved"
+                      incident.status === 'resolved' ||
+                      incident.status === 'closed'
+                        ? 'Incident already resolved'
+                        : 'Mark as resolved'
                     }
                   >
                     ✓ Resolve
@@ -188,5 +188,5 @@ export default function IncidentList({
         </tbody>
       </table>
     </div>
-  );
+  )
 }

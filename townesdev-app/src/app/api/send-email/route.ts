@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { toHTML } from '@portabletext/to-html'
 
-const resend = new Resend(process.env.RESEND_API_KEY || process.env.NEXT_PUBLIC_RESEND_API_KEY)
+const resend = new Resend(process.env.RESEND_API_KEY!)
 
 interface ClientData {
   name: string
@@ -20,15 +20,34 @@ interface EmailTemplate {
   htmlBody?: any[] // Portable Text array
 }
 
-function replacePlaceholders(template: string | undefined, clientData: ClientData): string {
+function replacePlaceholders(
+  template: string | undefined,
+  clientData: ClientData
+): string {
   if (!template) return ''
 
   return template
     .replace(/\{\{clientName\}\}/g, clientData.name || 'Unknown Client')
-    .replace(/\{\{planName\}\}/g, clientData.selectedPlan?.name || 'Unknown Plan')
-    .replace(/\{\{startDate\}\}/g, clientData.startDate ? new Date(clientData.startDate).toLocaleDateString() : 'Not set')
-    .replace(/\{\{slaStartTime\}\}/g, clientData.slaStartTime ? new Date(clientData.slaStartTime).toLocaleString() : 'Not set')
-    .replace(/\{\{maintenanceWindow\}\}/g, clientData.maintenanceWindow || 'Not set')
+    .replace(
+      /\{\{planName\}\}/g,
+      clientData.selectedPlan?.name || 'Unknown Plan'
+    )
+    .replace(
+      /\{\{startDate\}\}/g,
+      clientData.startDate
+        ? new Date(clientData.startDate).toLocaleDateString()
+        : 'Not set'
+    )
+    .replace(
+      /\{\{slaStartTime\}\}/g,
+      clientData.slaStartTime
+        ? new Date(clientData.slaStartTime).toLocaleString()
+        : 'Not set'
+    )
+    .replace(
+      /\{\{maintenanceWindow\}\}/g,
+      clientData.maintenanceWindow || 'Not set'
+    )
     .replace(/\{\{status\}\}/g, clientData.status || 'Unknown')
 }
 
@@ -38,12 +57,18 @@ export async function POST(request: NextRequest) {
 
     if (!template || !clientData || !recipientEmail) {
       return NextResponse.json(
-        { error: 'Missing required fields: template, clientData, recipientEmail' },
+        {
+          error:
+            'Missing required fields: template, clientData, recipientEmail',
+        },
         { status: 400 }
       )
     }
 
-    const personalizedSubject = replacePlaceholders(template.subject, clientData)
+    const personalizedSubject = replacePlaceholders(
+      template.subject,
+      clientData
+    )
     const personalizedBody = replacePlaceholders(template.body, clientData)
 
     // Convert Portable Text to HTML if provided
@@ -51,7 +76,10 @@ export async function POST(request: NextRequest) {
     if (template.htmlBody && Array.isArray(template.htmlBody)) {
       try {
         const htmlFromPortableText = toHTML(template.htmlBody)
-        personalizedHtmlBody = replacePlaceholders(htmlFromPortableText, clientData)
+        personalizedHtmlBody = replacePlaceholders(
+          htmlFromPortableText,
+          clientData
+        )
       } catch (error) {
         console.error('Error converting Portable Text to HTML:', error)
         personalizedHtmlBody = undefined
@@ -65,7 +93,10 @@ export async function POST(request: NextRequest) {
     console.log('Raw Template Body:', `"${template.body}"`)
     console.log('Raw Template HTML Body:', template.htmlBody)
     console.log('Text Body:', `"${personalizedBody}"`)
-    console.log('HTML Body:', personalizedHtmlBody ? 'Generated from Portable Text' : 'Not provided')
+    console.log(
+      'HTML Body:',
+      personalizedHtmlBody ? 'Generated from Portable Text' : 'Not provided'
+    )
     console.log('Text Body Length:', personalizedBody?.length || 0)
     console.log('HTML Body Length:', personalizedHtmlBody?.length || 0)
 
@@ -98,9 +129,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: 'Email sent successfully',
-      result
+      result,
     })
-
   } catch (error: any) {
     console.error('❌ Server-side email error:', error)
 
@@ -111,8 +141,8 @@ export async function POST(request: NextRequest) {
         details: {
           message: error?.message,
           statusCode: error?.statusCode,
-          name: error?.name
-        }
+          name: error?.name,
+        },
       },
       { status: 500 }
     )

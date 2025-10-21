@@ -1,7 +1,7 @@
-"use client";
+'use client'
 
-import { useEffect, useState, useRef } from "react";
-import Link from "next/link";
+import { useEffect, useState, useRef } from 'react'
+import Link from 'next/link'
 import {
   User,
   ChevronDown,
@@ -10,25 +10,25 @@ import {
   Shield,
   Users,
   LogOut,
-} from "lucide-react";
+} from 'lucide-react'
 
 interface SessionUser {
-  id: string;
-  email: string;
-  name: string;
-  role?: string;
+  id: string
+  email: string
+  name: string
+  role?: string
 }
 
 export function AuthStatus() {
-  const [user, setUser] = useState<SessionUser | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [user, setUser] = useState<SessionUser | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     // Check session on mount
-    checkSession();
-  }, []);
+    checkSession()
+  }, [])
 
   useEffect(() => {
     // Close dropdown when clicking outside
@@ -37,51 +37,51 @@ export function AuthStatus() {
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node)
       ) {
-        setDropdownOpen(false);
+        setDropdownOpen(false)
       }
-    };
+    }
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   const checkSession = async () => {
     try {
-      const response = await fetch("/api/auth/session");
+      const response = await fetch('/api/auth/session')
       if (response.ok) {
-        const sessionData = await response.json();
-        setUser(sessionData.user);
+        const sessionData = await response.json()
+        setUser(sessionData.user)
       } else {
-        setUser(null);
+        setUser(null)
       }
     } catch (error) {
-      console.error("Session check failed:", error);
-      setUser(null);
+      console.error('Session check failed:', error)
+      setUser(null)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleSignOut = async () => {
     try {
-      await fetch("/api/auth/signout", { method: "POST" });
-      setUser(null);
-      window.location.href = "/";
+      await fetch('/api/auth/signout', { method: 'POST' })
+      setUser(null)
+      window.location.href = '/'
     } catch (error) {
-      console.error("Sign out failed:", error);
+      console.error('Sign out failed:', error)
     }
-  };
+  }
 
   const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
-  };
+    setDropdownOpen(!dropdownOpen)
+  }
 
   if (loading) {
     return (
       <div className="flex items-center space-x-4">
         <div className="animate-pulse bg-gray-300 dark:bg-gray-700 h-8 w-24 rounded"></div>
       </div>
-    );
+    )
   }
 
   if (!user) {
@@ -100,7 +100,7 @@ export function AuthStatus() {
           Sign Up
         </a>
       </div>
-    );
+    )
   }
 
   return (
@@ -116,7 +116,7 @@ export function AuthStatus() {
         </div>
         <span>Welcome, {user.name}</span>
         <ChevronDown
-          className={`w-4 h-4 transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
+          className={`w-4 h-4 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}
         />
       </button>
 
@@ -144,7 +144,7 @@ export function AuthStatus() {
           </Link>
 
           {/* Admin Portal (only for admin/staff) */}
-          {(user.role === "admin" || user.role === "staff") && (
+          {(user.role === 'admin' || user.role === 'staff') && (
             <Link
               href="/admin"
               className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-nile-blue-50 hover:text-nile-blue-900 transition-colors"
@@ -171,8 +171,8 @@ export function AuthStatus() {
           {/* Sign Out */}
           <button
             onClick={() => {
-              handleSignOut();
-              setDropdownOpen(false);
+              handleSignOut()
+              setDropdownOpen(false)
             }}
             className="flex items-center space-x-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors w-full text-left"
           >
@@ -182,5 +182,5 @@ export function AuthStatus() {
         </div>
       )}
     </div>
-  );
+  )
 }
