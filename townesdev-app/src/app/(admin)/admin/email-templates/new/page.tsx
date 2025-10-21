@@ -4,6 +4,7 @@
  */
 
 import { requireCapability } from '../../../../../lib/rbac/guards'
+import Link from 'next/link'
 import EmailTemplateForm from '../../../../../components/admin/EmailTemplateForm'
 
 export default async function CreateEmailTemplatePage() {
@@ -22,12 +23,12 @@ export default async function CreateEmailTemplatePage() {
               Create a new email template for client communications
             </p>
           </div>
-          <a
+          <Link
             href="/admin/email-templates"
             className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
           >
             ← Back to Templates
-          </a>
+          </Link>
         </div>
       </div>
 

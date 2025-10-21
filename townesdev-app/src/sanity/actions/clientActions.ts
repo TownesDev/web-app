@@ -3,6 +3,23 @@ import { sendEmail } from '../plugins/emailSender'
 import { createClient } from '@sanity/client'
 import { toast } from 'sonner'
 
+interface InvoiceDocument {
+  _id: string
+  _type: 'invoice'
+  client: { _ref: string }
+  invoiceNumber: string
+  currency?: string
+  totalAmount?: number
+  dueDate?: string
+  status?: string
+  previewUrl?: string
+}
+
+interface ClientDocument {
+  email?: string
+  name?: string
+}
+
 export const previewInvoice: DocumentActionComponent = (props) => {
   const { draft, published } = props
 
@@ -42,7 +59,9 @@ export const sendStatusUpdateEmail: DocumentActionComponent = (props) => {
         useCdn: false,
         token: process.env.SANITY_WRITE_TOKEN!,
       })
-      const clientDoc = await client.getDocument((doc as any).client._ref)
+      const clientDoc = await client.getDocument(
+        (doc as unknown as InvoiceDocument).client._ref
+      )
 
       if (!clientDoc?.email) {
         toast.error('No email address found for this client', {
@@ -51,7 +70,7 @@ export const sendStatusUpdateEmail: DocumentActionComponent = (props) => {
         return
       }
 
-      const invoiceDoc = doc as any
+      const invoiceDoc = doc as unknown as InvoiceDocument
       const emailTemplate = {
         name: 'Invoice Status Update',
         subject: `Invoice ${invoiceDoc.invoiceNumber} Status Update`,

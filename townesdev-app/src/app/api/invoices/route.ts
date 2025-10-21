@@ -9,8 +9,17 @@ const client = createClient({
   token: process.env.SANITY_WRITE_TOKEN,
 })
 
+interface LineItem {
+  description: string
+  quantity: number
+  unitPrice: number
+  amount: number
+}
+
+type SanityClient = ReturnType<typeof createClient>
+
 // Generate invoice number
-async function generateInvoiceNumber(client: any): Promise<string> {
+async function generateInvoiceNumber(client: SanityClient): Promise<string> {
   const now = new Date()
   const year = now.getFullYear()
   const month = String(now.getMonth() + 1).padStart(2, '0')
@@ -42,7 +51,7 @@ function calculateLineItemAmount(quantity: number, unitPrice: number): number {
 }
 
 // Calculate totals
-function calculateTotals(lineItems: any[], taxRate?: number) {
+function calculateTotals(lineItems: LineItem[], taxRate?: number) {
   const subtotal = lineItems.reduce((sum, item) => sum + item.amount, 0)
   const taxAmount = taxRate
     ? Math.round(((subtotal * taxRate) / 100) * 100) / 100
@@ -81,7 +90,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Process line items and calculate amounts
-    const processedLineItems = lineItems.map((item: any) => ({
+    const processedLineItems = lineItems.map((item: LineItem) => ({
       ...item,
       amount: calculateLineItemAmount(item.quantity, item.unitPrice),
     }))
@@ -134,16 +143,20 @@ export async function POST(request: NextRequest) {
         status: 'draft',
       },
     })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('❌ Error creating invoice:', error)
+
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error'
+    const errorName = error instanceof Error ? error.name : 'UnknownError'
 
     return NextResponse.json(
       {
         error: 'Failed to create invoice',
-        message: error?.message || 'Unknown error',
+        message: errorMessage,
         details: {
-          message: error?.message,
-          name: error?.name,
+          message: errorMessage,
+          name: errorName,
         },
       },
       { status: 500 }
@@ -203,13 +216,16 @@ export async function GET(request: NextRequest) {
       success: true,
       invoice,
     })
-  } catch (error: any) {
-    console.error('❌ Error fetching invoice:', error)
+  } catch (error: unknown) {
+    console.error('❌ Error fetching invoices:', error)
+
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error'
 
     return NextResponse.json(
       {
         error: 'Failed to fetch invoice',
-        message: error?.message || 'Unknown error',
+        message: errorMessage,
       },
       { status: 500 }
     )

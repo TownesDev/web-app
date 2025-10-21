@@ -6,13 +6,17 @@
 import { requireCapability } from '../../../../../lib/rbac/guards'
 import { runQueryFresh } from '../../../../../lib/client'
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 import EmailTemplateForm from '../../../../../components/admin/EmailTemplateForm'
 
 interface EmailTemplate {
   _id: string
   name: string
   subject: string
-  htmlBody?: any[]
+  htmlBody?: Array<{
+    _type: string
+    [key: string]: unknown
+  }>
   purpose: string
 }
 
@@ -54,12 +58,12 @@ export default async function EmailTemplateEditPage({
               Modify the email template details
             </p>
           </div>
-          <a
+          <Link
             href="/admin/email-templates"
             className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
           >
             ← Back to Templates
-          </a>
+          </Link>
         </div>
       </div>
 

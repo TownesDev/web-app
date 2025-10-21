@@ -39,10 +39,10 @@ export async function POST(request: NextRequest) {
         name: user.name,
       },
     })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Sign up error:', error)
 
-    if (error.message === 'User already exists') {
+    if (error instanceof Error && error.message === 'User already exists') {
       return NextResponse.json(
         { error: 'User already exists' },
         { status: 409 }

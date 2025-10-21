@@ -1,4 +1,5 @@
 import { definePlugin } from 'sanity'
+import type { PortableTextBlock } from '@portabletext/types'
 
 // Email sending functionality is handled via API routes
 // No direct Resend client needed in Sanity Studio
@@ -16,7 +17,7 @@ interface EmailTemplate {
   name?: string
   subject: string
   body: string
-  htmlBody?: any[] // Portable Text array
+  htmlBody?: PortableTextBlock[]
 }
 
 function replacePlaceholders(template: string, clientData: ClientData): string {
@@ -45,11 +46,17 @@ function replacePlaceholders(template: string, clientData: ClientData): string {
     .replace(/\{\{status\}\}/g, clientData.status || 'Unknown')
 }
 
+interface EmailResponse {
+  success: boolean
+  message: string
+  result?: unknown
+}
+
 export async function sendEmail(
   template: EmailTemplate,
   clientData: ClientData,
   recipientEmail: string
-): Promise<any> {
+): Promise<EmailResponse> {
   console.log('📧 Client-side Email Debug Info:')
   console.log('To:', recipientEmail)
   console.log('Template:', template.name || 'Unknown')
@@ -80,17 +87,20 @@ export async function sendEmail(
     console.log('API Response:', result)
 
     return result
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('❌ Error sending email:', error)
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error'
+    const errorName = error instanceof Error ? error.name : 'UnknownError'
+    const errorStack = error instanceof Error ? error.stack : undefined
+
     console.error('Error details:', {
-      message: error?.message || 'Unknown error',
-      name: error?.name,
-      stack: error?.stack,
+      message: errorMessage,
+      name: errorName,
+      stack: errorStack,
     })
 
-    throw new Error(
-      `Failed to send email: ${error?.message || 'Unknown error'}`
-    )
+    throw new Error(`Failed to send email: ${errorMessage}`)
   }
 }
 

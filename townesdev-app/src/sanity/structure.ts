@@ -159,9 +159,7 @@ export const structure: StructureResolver = (S) =>
                       const PreviewComponent = React.lazy(
                         () => import('../app/(portal)/app/invoice/[id]/preview')
                       )
-                      return React.createElement(PreviewComponent, {
-                        id: documentId,
-                      } as any)
+                      return React.createElement(PreviewComponent, {})
                     })
                     .title('Preview'),
                 ])

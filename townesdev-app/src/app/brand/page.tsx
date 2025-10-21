@@ -33,7 +33,7 @@ export default function BrandPage() {
             </p>
             <div className="bg-nile-blue-50 border-l-4 border-nile-blue-500 p-6 rounded-r-lg">
               <p className="text-nile-blue-800 font-medium italic">
-                "Where ideas find structure."
+                &ldquo;Where ideas find structure.&rdquo;
               </p>
             </div>
           </div>
@@ -422,7 +422,7 @@ export default function BrandPage() {
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h5 className="font-semibold mb-2">Do's ✅</h5>
+                <h5 className="font-semibold mb-2">Do&apos;s ✅</h5>
                 <ul className="text-sm text-white/80 space-y-1 font-body">
                   <li>• Maintain minimum clear space</li>
                   <li>• Use on appropriate backgrounds</li>
@@ -431,7 +431,7 @@ export default function BrandPage() {
                 </ul>
               </div>
               <div>
-                <h5 className="font-semibold mb-2">Don'ts ❌</h5>
+                <h5 className="font-semibold mb-2">Don&apos;ts ❌</h5>
                 <ul className="text-sm text-white/80 space-y-1 font-body">
                   <li>• Distort or modify the icon</li>
                   <li>• Apply heavy effects</li>
@@ -509,11 +509,12 @@ export default function BrandPage() {
             </h4>
             <div className="space-y-4 text-comet-700 font-body">
               <p>
-                <strong>Instead of:</strong> "We make awesome websites!"
+                <strong>Instead of:</strong> &ldquo;We make awesome
+                websites!&rdquo;
               </p>
               <p>
-                <strong>We say:</strong> "We build structured digital systems
-                that stand the test of time."
+                <strong>We say:</strong> &ldquo;We build structured digital
+                systems that stand the test of time.&rdquo;
               </p>
             </div>
           </div>

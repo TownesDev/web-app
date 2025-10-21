@@ -1,15 +1,43 @@
-import { definePlugin } from 'sanity'
+import {
+  definePlugin,
+  type DocumentActionComponent,
+  type DocumentActionsContext,
+  type DocumentActionProps,
+} from 'sanity'
 import { sendEmail } from './emailSender'
 import { toast } from 'sonner'
+
+interface ClientDocument {
+  status?: string
+}
+
+interface LineItem {
+  description: string
+  quantity: number
+  unitPrice: number
+  amount?: number
+  reference?: unknown
+}
+
+interface EmailTemplate {
+  _id: string
+  name: string
+  subject: string
+  body: string
+  htmlBody?: unknown[]
+}
 
 export const clientAutomation = definePlugin({
   name: 'client-automation',
   document: {
-    actions: (prev, context) => {
+    actions: (
+      prev: DocumentActionComponent[],
+      context: DocumentActionsContext
+    ) => {
       if (context.schemaType === 'client') {
         return [
           ...prev,
-          (props: any) => ({
+          (props: DocumentActionProps) => ({
             label: 'Activate Client & Create Documents',
             onHandle: async () => {
               try {
@@ -93,7 +121,7 @@ export const clientAutomation = definePlugin({
                   // Don't fail the entire process if email fails
                 }
 
-                props.onComplete()
+                props.onComplete?.()
               } catch (error) {
                 console.error('Error creating documents:', error)
                 toast.error('Error creating documents', {
@@ -103,7 +131,7 @@ export const clientAutomation = definePlugin({
             },
             tone: 'positive',
           }),
-          (props: any) => ({
+          (props: DocumentActionProps) => ({
             label: 'View Kickoff Checklist',
             onHandle: async () => {
               const clientData = await context
@@ -120,9 +148,9 @@ export const clientAutomation = definePlugin({
               )
             },
             tone: 'primary',
-            disabled: props.published?.status !== 'Active',
+            disabled: (props.published as ClientDocument)?.status !== 'Active',
           }),
-          (props: any) => ({
+          (props: DocumentActionProps) => ({
             label: 'View Monthly Rhythm',
             onHandle: async () => {
               const clientData = await context
@@ -146,9 +174,9 @@ export const clientAutomation = definePlugin({
               )
             },
             tone: 'primary',
-            disabled: props.published?.status !== 'Active',
+            disabled: (props.published as ClientDocument)?.status !== 'Active',
           }),
-          (props: any) => ({
+          (props: DocumentActionProps) => ({
             label: 'Create Invoice',
             onHandle: async () => {
               try {
@@ -393,7 +421,7 @@ export const clientAutomation = definePlugin({
                   font-weight: 500;
                 `
                 createButton.onclick = async () => {
-                  let lineItems: any[] = []
+                  let lineItems: LineItem[] = []
 
                   if (typeSelect.value === 'retainer') {
                     // Retainer invoice
@@ -533,7 +561,7 @@ export const clientAutomation = definePlugin({
             },
             tone: 'primary',
           }),
-          (props: any) => ({
+          (props: DocumentActionProps) => ({
             label: 'Send Email Template',
             onHandle: async () => {
               try {
@@ -618,7 +646,7 @@ export const clientAutomation = definePlugin({
                 `
 
                 // Add template options
-                emailTemplates.forEach((template: any) => {
+                emailTemplates.forEach((template: EmailTemplate) => {
                   const option = document.createElement('option')
                   option.value = template._id
                   option.textContent = template.name
@@ -687,7 +715,7 @@ export const clientAutomation = definePlugin({
                   }
 
                   const selectedTemplate = emailTemplates.find(
-                    (t: any) => t._id === selectedTemplateId
+                    (t: EmailTemplate) => t._id === selectedTemplateId
                   )
                   if (!selectedTemplate) {
                     toast.error('Template not found')

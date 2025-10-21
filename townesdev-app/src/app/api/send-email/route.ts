@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { toHTML } from '@portabletext/to-html'
+import type { CreateEmailOptions } from 'resend'
+import type { PortableTextBlock } from '@portabletext/types'
 
 const resend = new Resend(process.env.RESEND_API_KEY!)
 
@@ -11,13 +13,6 @@ interface ClientData {
   slaStartTime?: string
   maintenanceWindow?: string
   status?: string
-}
-
-interface EmailTemplate {
-  name?: string
-  subject: string
-  body: string
-  htmlBody?: any[] // Portable Text array
 }
 
 function replacePlaceholders(
@@ -105,20 +100,25 @@ export async function POST(request: NextRequest) {
       throw new Error('Email must have either text content or HTML content')
     }
 
-    const emailOptions: any = {
+    // Build email options with required content
+    const baseOptions = {
       from: 'noreply@townes.dev',
       to: recipientEmail,
       subject: personalizedSubject,
     }
 
-    // Add text body if available
-    if (personalizedBody) {
-      emailOptions.text = personalizedBody
-    }
+    let emailOptions: CreateEmailOptions
 
-    // Add HTML body if provided
-    if (personalizedHtmlBody) {
-      emailOptions.html = personalizedHtmlBody
+    if (personalizedBody && personalizedHtmlBody) {
+      emailOptions = {
+        ...baseOptions,
+        text: personalizedBody,
+        html: personalizedHtmlBody,
+      }
+    } else if (personalizedBody) {
+      emailOptions = { ...baseOptions, text: personalizedBody }
+    } else {
+      emailOptions = { ...baseOptions, html: personalizedHtmlBody! }
     }
 
     const result = await resend.emails.send(emailOptions)
@@ -131,17 +131,25 @@ export async function POST(request: NextRequest) {
       message: 'Email sent successfully',
       result,
     })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('❌ Server-side email error:', error)
+
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error'
+    const errorName = error instanceof Error ? error.name : 'UnknownError'
+    const statusCode =
+      error && typeof error === 'object' && 'statusCode' in error
+        ? (error as { statusCode?: number }).statusCode
+        : undefined
 
     return NextResponse.json(
       {
         error: 'Failed to send email',
-        message: error?.message || 'Unknown error',
+        message: errorMessage,
         details: {
-          message: error?.message,
-          statusCode: error?.statusCode,
-          name: error?.name,
+          message: errorMessage,
+          statusCode,
+          name: errorName,
         },
       },
       { status: 500 }
