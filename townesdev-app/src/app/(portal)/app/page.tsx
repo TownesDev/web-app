@@ -7,7 +7,11 @@ import ClientInfoGrid from '../../../components/ClientInfoGrid'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 
-export default async function ClientDashboard() {
+interface PageProps {
+  searchParams: { [key: string]: string | string[] | undefined }
+}
+
+export default async function ClientDashboard({ searchParams }: PageProps) {
   const client = await getCurrentClient()
 
   if (!client) {
@@ -15,6 +19,8 @@ export default async function ClientDashboard() {
   }
 
   const invoices = await getInvoicesByClient(client._id)
+  const searchParamsData = await searchParams
+  const isWelcome = searchParamsData.welcome === 'true'
 
   // Calculate next maintenance window (simplified - would need more logic)
   const nextMaintenance = client.maintenanceWindow
@@ -27,11 +33,23 @@ export default async function ClientDashboard() {
         {/* Welcome Section */}
         <div className="bg-white shadow rounded-lg p-6">
           <h1 className="font-heading text-3xl font-bold text-nile-blue-900 mb-2">
-            Welcome back, {client.name}
+            {isWelcome
+              ? `Welcome to TownesDev, ${client.name}!`
+              : `Welcome back, ${client.name}`}
           </h1>
           <p className="text-gray-600">
-            Manage your account and view your invoices below.
+            {isWelcome
+              ? "Thank you for subscribing! Your retainer plan is now active. We'll be in touch soon to get started."
+              : 'Manage your account and view your invoices below.'}
           </p>
+          {isWelcome && (
+            <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+              <p className="text-green-800 text-sm">
+                🎉 Your payment was successful! Check your email for a welcome
+                message with next steps.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Plan Card and Maintenance Window */}

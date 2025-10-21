@@ -33,6 +33,7 @@ export async function POST(request: NextRequest) {
   try {
     switch (event.type) {
       case 'checkout.session.completed': {
+        console.log('🎯 Processing checkout.session.completed')
         const session = event.data.object as Stripe.Checkout.Session
 
         if (session.metadata?.featureId) {
@@ -41,35 +42,43 @@ export async function POST(request: NextRequest) {
         } else if (session.metadata?.planId) {
           // Handle plan subscription
           await handlePlanSubscription(session)
+        } else {
+          console.warn(
+            'Checkout session completed without featureId or planId metadata'
+          )
         }
         break
       }
 
       case 'customer.subscription.created': {
+        console.log('🎯 Processing customer.subscription.created')
         const subscription = event.data.object as Stripe.Subscription
         await handleSubscriptionCreated(subscription)
         break
       }
 
       case 'invoice.payment_succeeded': {
+        console.log('🎯 Processing invoice.payment_succeeded')
         const invoice = event.data.object as Stripe.Invoice
         await handleInvoicePaymentSucceeded(invoice)
         break
       }
 
       case 'customer.subscription.updated': {
+        console.log('🎯 Processing customer.subscription.updated')
         const subscription = event.data.object as Stripe.Subscription
         await handleSubscriptionUpdated(subscription)
         break
       }
 
       default:
-        console.log(`Unhandled event type ${event.type}`)
+        console.log(`ℹ️ Unhandled event type: ${event.type}`)
     }
 
+    console.log('✅ Webhook processing completed successfully')
     return NextResponse.json({ received: true })
   } catch (error) {
-    console.error('Webhook processing error:', error)
+    console.error('❌ Webhook processing error:', error)
     return NextResponse.json(
       { error: 'Webhook processing failed' },
       { status: 500 }
@@ -79,6 +88,24 @@ export async function POST(request: NextRequest) {
 
 async function handleFeaturePurchase(session: Stripe.Checkout.Session) {
   const { featureId, assetId, clientId } = session.metadata!
+
+  console.log('🔍 Processing feature purchase:', {
+    featureId,
+    assetId,
+    clientId,
+    paymentIntent: session.payment_intent,
+  })
+
+  // Check if entitlement already exists (idempotency)
+  const existingEntitlement = await runQuery(
+    `*[_type=="entitlement" && client._ref==$clientId && asset._ref==$assetId && feature._ref==$featureId][0]`,
+    { clientId, assetId, featureId }
+  )
+
+  if (existingEntitlement) {
+    console.log('Entitlement already exists for feature purchase:', session.id)
+    return
+  }
 
   // Create entitlement
   await sanityWrite.mutate([
@@ -94,6 +121,8 @@ async function handleFeaturePurchase(session: Stripe.Checkout.Session) {
       },
     },
   ])
+
+  console.log('Entitlement created for feature purchase:', session.id)
 }
 
 async function handlePlanSubscription(session: Stripe.Checkout.Session) {
@@ -276,31 +305,74 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
 }
 
 async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
-  // Update invoice status in Sanity
+  console.log('🔍 Processing invoice payment succeeded:', {
+    invoiceId: invoice.id,
+    metadata: invoice.metadata,
+    status: invoice.status,
+  })
+
+  // Update invoice status in Sanity (with idempotency check)
   if (invoice.metadata?.invoiceId) {
     const existingInvoice = await runQuery(
       `*[_type=="invoice" && _id==$invoiceId][0]{
-        _id
+        _id,
+        status
       }`,
       { invoiceId: invoice.metadata.invoiceId }
     )
 
     if (existingInvoice) {
-      await sanityWrite.mutate([
-        {
-          patch: {
-            id: invoice.metadata.invoiceId,
-            set: {
-              status: 'paid',
+      // Only update if not already paid
+      if (existingInvoice.status !== 'paid') {
+        await sanityWrite.mutate([
+          {
+            patch: {
+              id: invoice.metadata.invoiceId,
+              set: {
+                status: 'paid',
+              },
             },
           },
-        },
-      ])
+        ])
+        console.log(
+          'Invoice status updated to paid:',
+          invoice.metadata.invoiceId
+        )
+      } else {
+        console.log(
+          'Invoice already marked as paid:',
+          invoice.metadata.invoiceId
+        )
+      }
+    } else {
+      console.warn(
+        'Invoice not found for payment update:',
+        invoice.metadata.invoiceId
+      )
     }
+  } else {
+    console.log('No invoiceId in invoice metadata, skipping update')
   }
 }
 
 async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
+  console.log('🔍 Processing subscription updated:', {
+    subscriptionId: subscription.id,
+    status: subscription.status,
+    currentPeriodStart: (
+      subscription as unknown as Stripe.Subscription & {
+        current_period_start: number
+        current_period_end: number
+      }
+    ).current_period_start,
+    currentPeriodEnd: (
+      subscription as unknown as Stripe.Subscription & {
+        current_period_start: number
+        current_period_end: number
+      }
+    ).current_period_end,
+  })
+
   try {
     // Update retainer with new subscription details
     const result = await runQuery(
@@ -309,39 +381,53 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
     )
 
     if (result) {
-      await sanityWrite.mutate([
-        {
-          patch: {
-            id: result._id,
-            set: {
-              status:
-                subscription.status === 'active'
-                  ? 'active'
-                  : subscription.status === 'canceled'
-                    ? 'canceled'
-                    : 'past_due',
-              periodStart: new Date(
-                (
-                  subscription as unknown as Stripe.Subscription & {
-                    current_period_start: number
-                    current_period_end: number
-                  }
-                )['current_period_start'] * 1000
-              ).toISOString(),
-              periodEnd: new Date(
-                (
-                  subscription as unknown as Stripe.Subscription & {
-                    current_period_start: number
-                    current_period_end: number
-                  }
-                )['current_period_end'] * 1000
-              ).toISOString(),
+      const newStatus =
+        subscription.status === 'active'
+          ? 'active'
+          : subscription.status === 'canceled'
+            ? 'canceled'
+            : 'past_due'
+
+      // Only update if status has changed
+      if (result.status !== newStatus) {
+        await sanityWrite.mutate([
+          {
+            patch: {
+              id: result._id,
+              set: {
+                status: newStatus,
+                periodStart: new Date(
+                  (
+                    subscription as unknown as Stripe.Subscription & {
+                      current_period_start: number
+                      current_period_end: number
+                    }
+                  ).current_period_start * 1000
+                ).toISOString(),
+                periodEnd: new Date(
+                  (
+                    subscription as unknown as Stripe.Subscription & {
+                      current_period_start: number
+                      current_period_end: number
+                    }
+                  ).current_period_end * 1000
+                ).toISOString(),
+              },
             },
           },
-        },
-      ])
-
-      console.log('Retainer updated for subscription:', subscription.id)
+        ])
+        console.log(
+          'Retainer updated for subscription:',
+          subscription.id,
+          'new status:',
+          newStatus
+        )
+      } else {
+        console.log(
+          'Retainer status unchanged for subscription:',
+          subscription.id
+        )
+      }
     } else {
       console.warn('No retainer found for subscription:', subscription.id)
     }
