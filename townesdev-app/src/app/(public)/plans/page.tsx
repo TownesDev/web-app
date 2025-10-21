@@ -1,6 +1,7 @@
 import { PlanCard } from '../../../components/PlanCard'
 import { runQuery } from '../../../lib/client'
 import { qPlans } from '../../../sanity/lib/queries'
+import { draftMode } from 'next/headers'
 
 interface Plan {
   _id: string
@@ -14,7 +15,8 @@ interface Plan {
 }
 
 async function getPlans(): Promise<Plan[]> {
-  const plans = await runQuery(qPlans)
+  const { isEnabled } = await draftMode()
+  const plans = await runQuery(qPlans, {}, isEnabled)
   return plans
 }
 

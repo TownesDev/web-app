@@ -43,34 +43,56 @@ export default function InvoiceTable({ invoices, isAdmin }: InvoiceTableProps) {
 
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200">
+      <table className="min-w-full divide-y divide-gray-200" role="table">
+        <caption className="sr-only">
+          {isAdmin ? 'All client invoices' : 'Your invoices'} - showing invoice
+          number, status, amount, and preview links
+        </caption>
         <thead className="bg-gray-50">
           <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Number
+            <th
+              scope="col"
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Invoice Number
             </th>
             {isAdmin && (
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Client
               </th>
             )}
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th
+              scope="col"
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
               Status
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Total
+            <th
+              scope="col"
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Total Amount
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Preview
+            <th
+              scope="col"
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Actions
             </th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {invoices.map((invoice) => (
             <tr key={invoice._id}>
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+              <th
+                scope="row"
+                className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
+              >
                 {invoice.invoiceNumber}
-              </td>
+              </th>
               {isAdmin && (
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {invoice.client?.name || 'Unknown'}
@@ -85,24 +107,30 @@ export default function InvoiceTable({ invoices, isAdmin }: InvoiceTableProps) {
                         ? 'bg-yellow-100 text-yellow-800'
                         : 'bg-gray-100 text-gray-800'
                   }`}
+                  role="status"
+                  aria-label={`Invoice status: ${invoice.status}`}
                 >
                   {invoice.status}
                 </span>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                {invoice.currency} {invoice.totalAmount}
+                <span
+                  aria-label={`Amount: ${invoice.currency} ${invoice.totalAmount}`}
+                >
+                  {invoice.currency} {invoice.totalAmount}
+                </span>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-900">
+              <td className="px-6 py-4 whitespace-nowrap text-sm">
                 <a
                   href={
                     isAdmin
                       ? `/admin/invoice/${invoice._id}`
                       : `/app/invoice/${invoice._id}`
                   }
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
+                  aria-label={`View invoice ${invoice.invoiceNumber} details`}
                 >
-                  View
+                  View Details
                 </a>
               </td>
             </tr>

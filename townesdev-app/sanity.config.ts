@@ -36,13 +36,16 @@ export default defineConfig({
     presentationTool({
       resolve: { locations, mainDocuments },
       previewUrl: {
-        initial: 'http://localhost:3000',
+        origin:
+          typeof window !== 'undefined'
+            ? window.location.origin
+            : 'http://localhost:3000',
         previewMode: {
           enable: '/api/draft-mode/enable',
           disable: '/api/draft-mode/disable',
         },
       },
-      allowOrigins: ['http://localhost:*'],
+      allowOrigins: ['http://localhost:*', 'https://*.vercel-preview.app'],
     }),
   ],
   document: {

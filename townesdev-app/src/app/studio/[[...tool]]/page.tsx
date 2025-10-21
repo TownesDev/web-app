@@ -8,23 +8,15 @@
  */
 
 import { NextStudio } from 'next-sanity/studio'
-import config from '../../../../../sanity.config'
-import { getSEOConfig } from '../../../../sanity/lib/seo'
+import config from '../../../../sanity.config'
 
 export const dynamic = 'force-static'
 
 export { viewport } from 'next-sanity/studio'
 
 export async function generateMetadata() {
-  const seoConfig = await getSEOConfig()
-
   return {
-    title: seoConfig?.siteTitle
-      ? `${seoConfig.siteTitle} - Admin`
-      : 'Sanity Studio',
-    icons: {
-      icon: seoConfig?.favicon?.asset?.url || '/favicon.ico',
-    },
+    title: 'Sanity Studio',
   }
 }
 

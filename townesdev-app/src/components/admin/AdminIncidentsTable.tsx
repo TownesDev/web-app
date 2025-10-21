@@ -175,28 +175,53 @@ export default function AdminIncidentsTable({
 
       {/* Table */}
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
+        <table className="min-w-full divide-y divide-gray-200" role="table">
+          <caption className="sr-only">
+            Admin incidents table - showing client, title, severity, status,
+            reported date, resolved date, and assignee for all incidents
+          </caption>
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Client
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Title
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Severity
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Status
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Reported
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Resolved
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Assignee
               </th>
             </tr>
@@ -211,19 +236,24 @@ export default function AdminIncidentsTable({
             ) : (
               filteredIncidents.map((incident) => (
                 <tr key={incident._id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <th scope="row" className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">
                       {incident.client.name}
                     </div>
-                  </td>
+                  </th>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900 max-w-xs truncate">
+                    <div
+                      className="text-sm text-gray-900 max-w-xs truncate"
+                      title={incident.title}
+                    >
                       {incident.title}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getSeverityColor(incident.severity)}`}
+                      role="status"
+                      aria-label={`Severity: ${incident.severity}`}
                     >
                       {incident.severity}
                     </span>
@@ -231,17 +261,25 @@ export default function AdminIncidentsTable({
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(incident.status)}`}
+                      role="status"
+                      aria-label={`Status: ${incident.status.replace('_', ' ')}`}
                     >
                       {incident.status.replace('_', ' ')}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-500">
+                    <div
+                      className="text-sm text-gray-500"
+                      aria-label={`Reported: ${formatDate(incident.reportedAt)}`}
+                    >
                       {formatDate(incident.reportedAt)}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-500">
+                    <div
+                      className="text-sm text-gray-500"
+                      aria-label={`Resolved: ${formatDate(incident.resolvedAt)}`}
+                    >
                       {formatDate(incident.resolvedAt)}
                     </div>
                   </td>
@@ -262,17 +300,18 @@ export default function AdminIncidentsTable({
                             }
                           }}
                           autoFocus
+                          aria-label={`Edit assignee for ${incident.title}`}
                         />
                         <button
                           onClick={handleSaveAssignee}
-                          className="text-nile-blue-600 hover:text-nile-blue-900 text-sm font-medium"
+                          className="text-nile-blue-600 hover:text-nile-blue-900 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-nile-blue-500 focus:ring-offset-2 rounded px-2 py-1"
                           aria-label="Save assignee"
                         >
                           Save
                         </button>
                         <button
                           onClick={handleCancelEdit}
-                          className="text-gray-500 hover:text-gray-700 text-sm"
+                          className="text-gray-500 hover:text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 rounded px-2 py-1"
                           aria-label="Cancel editing"
                         >
                           Cancel
@@ -280,7 +319,7 @@ export default function AdminIncidentsTable({
                       </div>
                     ) : (
                       <div
-                        className="text-sm text-gray-900 cursor-pointer hover:text-nile-blue-600"
+                        className="text-sm text-gray-900 cursor-pointer hover:text-nile-blue-600 focus:outline-none focus:ring-2 focus:ring-nile-blue-500 focus:ring-offset-2 rounded px-2 py-1"
                         onClick={() =>
                           handleEditAssignee(incident._id, incident.assignee)
                         }
@@ -291,7 +330,7 @@ export default function AdminIncidentsTable({
                             handleEditAssignee(incident._id, incident.assignee)
                           }
                         }}
-                        aria-label={`Edit assignee for ${incident.title}`}
+                        aria-label={`Edit assignee for ${incident.title}: ${incident.assignee || 'unassigned'}`}
                       >
                         {incident.assignee || '—'}
                       </div>

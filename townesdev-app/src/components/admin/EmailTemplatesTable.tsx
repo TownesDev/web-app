@@ -80,7 +80,11 @@ export default function EmailTemplatesTable({
   return (
     <>
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
+        <table className="min-w-full divide-y divide-gray-200" role="table">
+          <caption className="sr-only">
+            Email templates table - showing template name, subject, purpose, and
+            available actions for each template
+          </caption>
           <thead className="bg-gray-50">
             <tr>
               <th
@@ -113,7 +117,7 @@ export default function EmailTemplatesTable({
             {templates.length === 0 ? (
               <tr>
                 <td
-                  colSpan={5}
+                  colSpan={4}
                   className="px-6 py-4 text-center text-sm text-gray-900"
                 >
                   No email templates found.
@@ -122,37 +126,46 @@ export default function EmailTemplatesTable({
             ) : (
               templates.map((template) => (
                 <tr key={template._id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <th scope="row" className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">
                       {template.name}
                     </div>
-                  </td>
+                  </th>
                   <td className="px-6 py-4">
-                    <div className="text-sm text-gray-900 max-w-xs truncate">
+                    <div
+                      className="text-sm text-gray-900 max-w-xs truncate"
+                      title={template.subject}
+                    >
                       {template.subject}
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="text-sm text-gray-900 max-w-xs truncate">
+                    <div
+                      className="text-sm text-gray-900 max-w-xs truncate"
+                      title={template.purpose}
+                    >
                       {template.purpose}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-4">
                     <button
                       onClick={() => openPreview(template)}
-                      className="text-green-600 hover:text-green-900"
+                      className="text-green-600 hover:text-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 rounded px-2 py-1"
+                      aria-label={`Preview email template: ${template.name}`}
                     >
                       Preview
                     </button>
                     <Link
                       href={`/admin/email-templates/${template._id}`}
-                      className="text-blue-600 hover:text-blue-900"
+                      className="text-blue-600 hover:text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
+                      aria-label={`Edit email template: ${template.name}`}
                     >
                       Edit
                     </Link>
                     <button
                       onClick={() => openDeleteConfirm(template)}
-                      className="text-red-600 hover:text-red-900"
+                      className="text-red-600 hover:text-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded px-2 py-1"
+                      aria-label={`Delete email template: ${template.name}`}
                     >
                       Delete
                     </button>
