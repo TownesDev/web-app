@@ -40,11 +40,10 @@ jobs:
           cd townesdev-app
           npm run typecheck
 
-      # TODO: Re-enable ESLint when lint errors are fixed
-      # - name: Run ESLint
-      #   run: |
-      #     cd townesdev-app
-      #     npm run lint
+      - name: Run ESLint
+        run: |
+          cd townesdev-app
+          npm run lint
 
       - name: Build application
         run: |
