@@ -1,5 +1,6 @@
 // server-only Sanity client
 import { createClient } from 'next-sanity'
+import { unstable_noStore as noStore } from 'next/cache'
 
 export const sanity = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
@@ -27,9 +28,10 @@ export async function runQuery(
   return sanity.fetch(query, params)
 }
 
-export async function runQueryFresh(
+export async function runQueryNoCache(
   query: string,
   params?: { [key: string]: unknown }
 ) {
-  return sanityWrite.fetch(query, params)
+  noStore()
+  return sanity.fetch(query, params)
 }

@@ -1,3 +1,5 @@
+export const revalidate = 3600 // Revalidate every hour for brand guidelines
+
 export default function BrandPage() {
   return (
     <div className="min-h-screen bg-comet-50 py-12 px-4">

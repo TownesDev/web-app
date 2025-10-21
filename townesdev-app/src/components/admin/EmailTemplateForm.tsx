@@ -7,9 +7,16 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import MDEditor from '@uiw/react-md-editor'
+import dynamic from 'next/dynamic'
 import { toast } from 'sonner'
-import { marked } from 'marked'
+
+// Dynamically import the markdown editor to reduce bundle size
+const MDEditor = dynamic(() => import('@uiw/react-md-editor'), {
+  ssr: false,
+  loading: () => (
+    <div className="h-64 border rounded p-4 bg-gray-50">Loading editor...</div>
+  ),
+})
 
 // Types for Portable Text
 interface PortableTextSpan {

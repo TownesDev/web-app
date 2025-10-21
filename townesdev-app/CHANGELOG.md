@@ -9,7 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Bot Platform Integration**: Complete Discord bot management system integration
+- **Testing Foundation**: Complete unit and E2E testing infrastructure
+  - Unit tests: Jest + React Testing Library setup with TypeScript support
+  - Test utilities: `cn()` function, auth functions (hash/verify password, JWT token generation/verification)
+  - E2E smoke tests: Playwright setup with key route verification (/, /plans, /status, /brand, auth redirect)
+  - Test scripts: `npm test` (unit), `npm run test:e2e` (E2E), `npm run test:watch` (watch mode)
+  - Configuration: `jest.config.js`, `jest.setup.js`, `playwright.config.ts`
+  - Dependencies: jest, @testing-library/react, @testing-library/jest-dom, @playwright/test, and related packages
+
+- **Performance: Cache/Revalidate Strategy**: Optimized caching for production readiness
+  - Public pages: Added `export const revalidate = 3600` (1 hour) for marketing content (/, /plans, /status, /brand)
+  - Portal/Admin pages: Implemented `cache: 'no-store'` using `unstable_noStore` for fresh data
+  - Query functions: Created `runQueryNoCache()` for portal/admin data fetching
+  - Updated all portal/admin queries: invoices, clients, incidents, monthlyRhythm, emailTemplates
+
+- **Performance: Bundle & CWV Optimization**: Reduced bundle size and improved Core Web Vitals
+  - Dynamic imports: Made MDEditor component lazy-loaded to reduce initial bundle size
+  - Code splitting: Route groups already separated (public, portal, admin)
+  - Bundle analysis: First Load JS shared chunks at 136 kB, individual pages optimized
+  - Static generation: Public pages prerendered with 1h revalidate for fast loading
   - Environment variables: `BOT_API_URL`, `BOT_API_KEY`, `BOT_WEBHOOK_SECRET`
   - Extended Sanity schemas: `botTenantId`/`botApiKey` on client, `status` on serviceAsset, `key` on feature
   - API endpoints: `/api/bot/tenants/provision`, `/api/bot/assets/:guildId/register`, `/api/bot/features/:guildId/:key/toggle`, `/api/bot/sync/:guildId`

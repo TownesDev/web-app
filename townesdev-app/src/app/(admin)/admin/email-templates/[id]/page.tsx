@@ -4,7 +4,7 @@
  */
 
 import { requireCapability } from '../../../../../lib/rbac/guards'
-import { runQueryFresh } from '../../../../../lib/client'
+import { runQueryNoCache } from '../../../../../lib/client'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import EmailTemplateForm from '../../../../../components/admin/EmailTemplateForm'
@@ -31,7 +31,7 @@ export default async function EmailTemplateEditPage({
   const { id } = await params
 
   // Fetch the specific email template
-  const template = (await runQueryFresh(
+  const template = (await runQueryNoCache(
     `*[_type=="emailTemplate" && _id==$id][0]{
       _id,
       name,

@@ -5,6 +5,8 @@
 
 import { Activity, AlertTriangle, CheckCircle } from 'lucide-react'
 
+export const revalidate = 3600 // Revalidate every hour for status page
+
 export default function StatusPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-nile-blue-50 to-white">

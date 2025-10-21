@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { PlanCard } from '../../components/PlanCard'
-import { sanity } from '../../lib/client'
+import { runQuery } from '../../lib/client'
 import { qPlans } from '../../sanity/lib/queries'
 
 interface Plan {
@@ -15,9 +15,11 @@ interface Plan {
 }
 
 async function getPlans(): Promise<Plan[]> {
-  const plans = await sanity.fetch(qPlans)
+  const plans = await runQuery(qPlans)
   return plans
 }
+
+export const revalidate = 3600 // Revalidate every hour for marketing content
 
 export default async function Home() {
   const plans = await getPlans()
