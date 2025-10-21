@@ -135,7 +135,7 @@ export const qAssetsByClient = /* groq */ `
 
 export const qFeaturesByType = /* groq */ `
   *[_type=="feature" && assetType==$assetType && isPrivate!=true]|order(name asc){
-    _id, name, slug, summary, price, sku, configKey
+    _id, name, slug, summary, price, sku, configKey, key
   }
 `;
 

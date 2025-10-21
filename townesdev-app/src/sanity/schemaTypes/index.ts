@@ -230,6 +230,22 @@ export const client: SchemaTypeDefinition = {
       },
       description: "Current status of the client retainer",
     },
+    {
+      name: "botTenantId",
+      title: "Bot Platform Tenant ID",
+      type: "string",
+      readOnly: true,
+      description: "Bot Platform tenant ID for Discord bot management",
+    },
+    {
+      name: "botApiKey",
+      title: "Bot Platform API Key",
+      type: "string",
+      readOnly: true,
+      hidden: true,
+      description:
+        "Server-only: Bot Platform API key for tenant authentication",
+    },
   ],
 };
 
@@ -1305,6 +1321,21 @@ export const serviceAsset: SchemaTypeDefinition = {
       description: "External identifiers (bot app ID, domain, etc.)",
     },
     {
+      name: "status",
+      title: "Status",
+      type: "string",
+      options: {
+        list: [
+          { title: "Active", value: "active" },
+          { title: "Inactive", value: "inactive" },
+          { title: "Pending", value: "pending" },
+        ],
+      },
+      initialValue: "pending",
+      validation: (Rule) => Rule.required(),
+      description: "Current status of the service asset",
+    },
+    {
       name: "notes",
       title: "Notes",
       type: "text",
@@ -1342,12 +1373,21 @@ export const feature: SchemaTypeDefinition = {
       type: "string",
       options: {
         list: [
-          { title: "Bot", value: "bot" },
-          { title: "App", value: "app" },
+          { title: "Discord Bot", value: "discord_bot" },
+          { title: "Web App", value: "web_app" },
+          { title: "Mobile App", value: "mobile_app" },
         ],
       },
       validation: (Rule) => Rule.required(),
       description: "Type of asset this feature applies to",
+    },
+    {
+      name: "key",
+      title: "Feature Key",
+      type: "string",
+      validation: (Rule) => Rule.required(),
+      description:
+        "Unique key for the feature (e.g., 'welcome', 'moderation', 'xp')",
     },
     {
       name: "summary",

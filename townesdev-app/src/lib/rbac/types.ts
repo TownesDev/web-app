@@ -17,7 +17,13 @@ export type Capability =
   | "content:write"
   // System administration
   | "system:read"
-  | "system:write";
+  | "system:write"
+  // Bot platform management
+  | "bot:tenants:provision"
+  | "bot:tenants:manage"
+  | "bot:assets:register"
+  | "bot:assets:manage"
+  | "bot:features:toggle";
 
 export interface UserWithRole {
   _id: string;

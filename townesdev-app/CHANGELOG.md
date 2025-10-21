@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Bot Platform Integration**: Complete Discord bot management system integration
+  - Environment variables: `BOT_API_URL`, `BOT_API_KEY`, `BOT_WEBHOOK_SECRET`
+  - Extended Sanity schemas: `botTenantId`/`botApiKey` on client, `status` on serviceAsset, `key` on feature
+  - API endpoints: `/api/bot/tenants/provision`, `/api/bot/assets/:guildId/register`, `/api/bot/features/:guildId/:key/toggle`, `/api/bot/sync/:guildId`
+  - RBAC capabilities: `bot:tenants:provision`, `bot:tenants:manage`, `bot:assets:register`, `bot:assets:manage`, `bot:features:toggle`
+  - Client Portal: Enhanced features page with toggle buttons for Discord bot features, Discord Assets navigation
+  - Admin Portal: Complete client bot management (tenant provisioning, guild registration, feature matrix)
+  - Components: `ToggleFeatureButton`, `TenantProvisioning`, `GuildManagement`, `FeatureManagement`, `BotManagementSection`
+  - Bot utilities: `getClient()`, `updateClientBotData()` in `src/lib/bot.ts`
+  - Documentation: Comprehensive integration guide in `refs/bot-platform-integration.md`
+
 - **Email API Integration**: Template-based email sending system with Sanity CMS
   - `POST /api/email` endpoint for sending emails by template name
   - Portable Text to HTML/text conversion with variable interpolation
