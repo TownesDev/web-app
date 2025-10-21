@@ -1,6 +1,7 @@
 // server-only Sanity client
 import { createClient } from 'next-sanity'
 import { unstable_noStore as noStore } from 'next/cache'
+import { previewClient } from '../sanity/lib/client'
 
 export const sanity = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
@@ -23,15 +24,19 @@ export const sanityWrite = createClient({
 
 export async function runQuery(
   query: string,
-  params?: { [key: string]: unknown }
+  params?: { [key: string]: unknown },
+  preview?: boolean
 ) {
-  return sanity.fetch(query, params)
+  const client = preview ? previewClient : sanity
+  return client.fetch(query, params)
 }
 
 export async function runQueryNoCache(
   query: string,
-  params?: { [key: string]: unknown }
+  params?: { [key: string]: unknown },
+  preview?: boolean
 ) {
   noStore()
-  return sanity.fetch(query, params)
+  const client = preview ? previewClient : sanity
+  return client.fetch(query, params)
 }
