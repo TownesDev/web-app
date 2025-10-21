@@ -23,22 +23,33 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+          cache-dependency-path: townesdev-app/package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          cd townesdev-app
+          npm ci
 
       - name: Check code formatting
-        run: npm run format:check
+        run: |
+          cd townesdev-app
+          npm run format:check
 
       - name: Run TypeScript type checking
-        run: npm run typecheck
+        run: |
+          cd townesdev-app
+          npm run typecheck
 
       # TODO: Re-enable ESLint when lint errors are fixed
       # - name: Run ESLint
-      #   run: npm run lint
+      #   run: |
+      #     cd townesdev-app
+      #     npm run lint
 
       - name: Build application
-        run: npm run build
+        run: |
+          cd townesdev-app
+          npm run build
         env:
           NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
           NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
