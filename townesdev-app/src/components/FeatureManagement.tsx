@@ -1,31 +1,31 @@
 interface Asset {
-  _id: string;
-  name: string;
-  type: string;
-  externalIds: string[];
-  status: string;
-  _createdAt: string;
+  _id: string
+  name: string
+  type: string
+  externalIds: string[]
+  status: string
+  _createdAt: string
 }
 
 interface Entitlement {
-  _id: string;
+  _id: string
   asset: {
-    _ref: string;
-  };
+    _ref: string
+  }
   feature: {
-    name: string;
-    key: string;
-    sku: string;
-  };
-  status: string;
-  activatedAt: string;
-  stripePaymentIntentId?: string;
+    name: string
+    key: string
+    sku: string
+  }
+  status: string
+  activatedAt: string
+  stripePaymentIntentId?: string
 }
 
 interface FeatureManagementProps {
-  clientId: string;
-  assets: Asset[];
-  entitlements: Entitlement[];
+  clientId: string
+  assets: Asset[]
+  entitlements: Entitlement[]
 }
 
 export function FeatureManagement({
@@ -35,23 +35,23 @@ export function FeatureManagement({
   // Group entitlements by asset
   const entitlementsByAsset = entitlements.reduce(
     (acc, entitlement) => {
-      const assetId = entitlement.asset._ref;
+      const assetId = entitlement.asset._ref
       if (!acc[assetId]) {
-        acc[assetId] = [];
+        acc[assetId] = []
       }
-      acc[assetId].push(entitlement);
-      return acc;
+      acc[assetId].push(entitlement)
+      return acc
     },
     {} as Record<string, Entitlement[]>
-  );
+  )
 
   return (
     <div className="space-y-6">
       {assets.map((asset) => {
-        const assetEntitlements = entitlementsByAsset[asset._id] || [];
+        const assetEntitlements = entitlementsByAsset[asset._id] || []
         const extractedGuildId = asset.externalIds
-          ?.find((id) => id.startsWith("guild:"))
-          ?.replace("guild:", "");
+          ?.find((id) => id.startsWith('guild:'))
+          ?.replace('guild:', '')
 
         return (
           <div
@@ -84,9 +84,9 @@ export function FeatureManagement({
                     <div className="flex items-center space-x-2">
                       <span
                         className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                          entitlement.status === "active"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-gray-100 text-gray-800"
+                          entitlement.status === 'active'
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-gray-100 text-gray-800'
                         }`}
                       >
                         {entitlement.status}
@@ -102,7 +102,7 @@ export function FeatureManagement({
 
             <div className="mt-4">
               <p className="text-sm text-gray-600">
-                Feature toggling is available in the client&apos;s portal at{" "}
+                Feature toggling is available in the client&apos;s portal at{' '}
                 <a
                   href={`/app/features?asset=${asset._id}`}
                   className="text-nile-blue-600 hover:text-nile-blue-700"
@@ -114,7 +114,7 @@ export function FeatureManagement({
               </p>
             </div>
           </div>
-        );
+        )
       })}
 
       {assets.length === 0 && (
@@ -124,5 +124,5 @@ export function FeatureManagement({
         </p>
       )}
     </div>
-  );
+  )
 }

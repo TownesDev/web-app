@@ -1,16 +1,16 @@
-import { getCurrentClient } from "../../../../lib/auth";
-import { getInvoicesByClient } from "../../../../queries/invoices";
-import InvoiceTable from "../../../../components/invoices/InvoiceTable";
-import { notFound } from "next/navigation";
+import { getCurrentClient } from '../../../../lib/auth'
+import { getInvoicesByClient } from '../../../../queries/invoices'
+import InvoiceTable from '../../../../components/invoices/InvoiceTable'
+import { notFound } from 'next/navigation'
 
 export default async function InvoicesPage() {
-  const client = await getCurrentClient();
+  const client = await getCurrentClient()
 
   if (!client) {
-    notFound();
+    notFound()
   }
 
-  const invoices = await getInvoicesByClient(client._id);
+  const invoices = await getInvoicesByClient(client._id)
 
   return (
     <div className="py-8 px-4">
@@ -26,5 +26,5 @@ export default async function InvoicesPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

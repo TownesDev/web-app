@@ -6,7 +6,7 @@ const client = createClient({
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
   apiVersion: '2024-01-01',
   useCdn: false,
-  token: process.env.NEXT_PUBLIC_SANITY_AUTH_TOKEN,
+  token: process.env.SANITY_WRITE_TOKEN,
 })
 
 // Generate invoice number
@@ -38,25 +38,34 @@ async function generateInvoiceNumber(client: any): Promise<string> {
 
 // Calculate line item amounts
 function calculateLineItemAmount(quantity: number, unitPrice: number): number {
-  return Math.round((quantity * unitPrice) * 100) / 100 // Round to 2 decimal places
+  return Math.round(quantity * unitPrice * 100) / 100 // Round to 2 decimal places
 }
 
 // Calculate totals
 function calculateTotals(lineItems: any[], taxRate?: number) {
   const subtotal = lineItems.reduce((sum, item) => sum + item.amount, 0)
-  const taxAmount = taxRate ? Math.round((subtotal * taxRate / 100) * 100) / 100 : 0
+  const taxAmount = taxRate
+    ? Math.round(((subtotal * taxRate) / 100) * 100) / 100
+    : 0
   const totalAmount = subtotal + taxAmount
 
   return {
     subtotal: Math.round(subtotal * 100) / 100,
     taxAmount,
-    totalAmount: Math.round(totalAmount * 100) / 100
+    totalAmount: Math.round(totalAmount * 100) / 100,
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const { clientId, lineItems, dueDate, notes, taxRate, currency = 'USD' } = await request.json()
+    const {
+      clientId,
+      lineItems,
+      dueDate,
+      notes,
+      taxRate,
+      currency = 'USD',
+    } = await request.json()
 
     if (!clientId || !lineItems || lineItems.length === 0) {
       return NextResponse.json(
@@ -68,24 +77,26 @@ export async function POST(request: NextRequest) {
     // Get client data
     const clientData = await client.getDocument(clientId)
     if (!clientData) {
-      return NextResponse.json(
-        { error: 'Client not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: 'Client not found' }, { status: 404 })
     }
 
     // Process line items and calculate amounts
     const processedLineItems = lineItems.map((item: any) => ({
       ...item,
-      amount: calculateLineItemAmount(item.quantity, item.unitPrice)
+      amount: calculateLineItemAmount(item.quantity, item.unitPrice),
     }))
 
     // Calculate totals
-    const { subtotal, taxAmount, totalAmount } = calculateTotals(processedLineItems, taxRate)
+    const { subtotal, taxAmount, totalAmount } = calculateTotals(
+      processedLineItems,
+      taxRate
+    )
 
     // Create due date (default to 30 days from now)
     const issueDate = new Date()
-    const calculatedDueDate = dueDate ? new Date(dueDate) : new Date(issueDate.getTime() + 30 * 24 * 60 * 60 * 1000)
+    const calculatedDueDate = dueDate
+      ? new Date(dueDate)
+      : new Date(issueDate.getTime() + 30 * 24 * 60 * 60 * 1000)
 
     // Generate invoice number
     const invoiceNumber = await generateInvoiceNumber(client)
@@ -105,9 +116,10 @@ export async function POST(request: NextRequest) {
       status: 'draft',
       lineItems: processedLineItems,
       notes: notes || '',
-      terms: 'Payment due within 30 days. Late payments may incur additional fees.',
+      terms:
+        'Payment due within 30 days. Late payments may incur additional fees.',
       createdBy: 'System', // In production, get from authenticated user
-      lastModified: issueDate.toISOString()
+      lastModified: issueDate.toISOString(),
     })
 
     console.log('✅ Invoice created successfully:', invoiceNumber)
@@ -119,10 +131,9 @@ export async function POST(request: NextRequest) {
         _id: invoice._id,
         invoiceNumber,
         totalAmount,
-        status: 'draft'
-      }
+        status: 'draft',
+      },
     })
-
   } catch (error: any) {
     console.error('❌ Error creating invoice:', error)
 
@@ -132,8 +143,8 @@ export async function POST(request: NextRequest) {
         message: error?.message || 'Unknown error',
         details: {
           message: error?.message,
-          name: error?.name
-        }
+          name: error?.name,
+        },
       },
       { status: 500 }
     )
@@ -180,29 +191,25 @@ export async function GET(request: NextRequest) {
       }`,
       { id },
       {
-        perspective: preview ? 'previewDrafts' : 'published'
+        perspective: preview ? 'previewDrafts' : 'published',
       }
     )
 
     if (!invoice) {
-      return NextResponse.json(
-        { error: 'Invoice not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: 'Invoice not found' }, { status: 404 })
     }
 
     return NextResponse.json({
       success: true,
-      invoice
+      invoice,
     })
-
   } catch (error: any) {
     console.error('❌ Error fetching invoice:', error)
 
     return NextResponse.json(
       {
         error: 'Failed to fetch invoice',
-        message: error?.message || 'Unknown error'
+        message: error?.message || 'Unknown error',
       },
       { status: 500 }
     )

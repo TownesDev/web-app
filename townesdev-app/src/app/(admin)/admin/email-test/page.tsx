@@ -3,25 +3,25 @@
  * Allows admins to test email templates with custom variables
  */
 
-import { requireCapability } from "@/lib/rbac/guards";
-import { getAllEmailTemplates } from "@/queries/emailTemplates";
-import EmailTestForm from "@/components/admin/EmailTestForm";
+import { requireCapability } from '@/lib/rbac/guards'
+import { getAllEmailTemplates } from '@/queries/emailTemplates'
+import EmailTestForm from '@/components/admin/EmailTestForm'
 
 interface PageProps {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: { [key: string]: string | string[] | undefined }
 }
 
 export default async function EmailTestPage({ searchParams }: PageProps) {
   // Require admin capability
-  await requireCapability("content:read");
+  await requireCapability('content:read')
 
   const templateName =
-    typeof searchParams.template === "string"
+    typeof searchParams.template === 'string'
       ? searchParams.template
-      : "Welcome Activation";
+      : 'Welcome Activation'
 
   // Get all templates for the dropdown
-  const allTemplates = await getAllEmailTemplates();
+  const allTemplates = await getAllEmailTemplates()
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -55,5 +55,5 @@ export default async function EmailTestPage({ searchParams }: PageProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }

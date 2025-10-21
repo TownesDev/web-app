@@ -1,14 +1,16 @@
-import { notFound } from "next/navigation";
+import { notFound } from 'next/navigation'
 
 interface InvoicePageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: string }>
 }
 
 async function getInvoice(id: string) {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/invoices?id=${id}`, {
-    cache: 'no-store' // Ensure fresh data
-  })
-
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/invoices?id=${id}`,
+    {
+      cache: 'no-store', // Ensure fresh data
+    }
+  )
 
   if (!response.ok) {
     if (response.status === 404) {
@@ -23,27 +25,27 @@ async function getInvoice(id: string) {
 }
 
 export default async function InvoicePage({ params }: InvoicePageProps) {
-  const { id } = await params;
-  const invoice = await getInvoice(id);
+  const { id } = await params
+  const invoice = await getInvoice(id)
 
   if (!invoice) {
-    notFound();
+    notFound()
   }
 
-  const formatCurrency = (amount: number, currency: string = "USD") => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
+  const formatCurrency = (amount: number, currency: string = 'USD') => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
       currency: currency,
-    }).format(amount);
-  };
+    }).format(amount)
+  }
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
@@ -63,11 +65,11 @@ export default async function InvoicePage({ params }: InvoicePageProps) {
               </div>
               <div
                 className={`inline-block px-3 py-1 rounded-full text-sm font-medium mt-2 ${
-                  invoice.status === "paid"
-                    ? "bg-green-100 text-green-800"
-                    : invoice.status === "overdue"
-                      ? "bg-red-100 text-red-800"
-                      : "bg-yellow-100 text-yellow-800"
+                  invoice.status === 'paid'
+                    ? 'bg-green-100 text-green-800'
+                    : invoice.status === 'overdue'
+                      ? 'bg-red-100 text-red-800'
+                      : 'bg-yellow-100 text-yellow-800'
                 }`}
               >
                 {invoice.status.toUpperCase()}
@@ -238,5 +240,5 @@ export default async function InvoicePage({ params }: InvoicePageProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }

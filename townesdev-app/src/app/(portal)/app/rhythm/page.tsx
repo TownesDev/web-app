@@ -1,17 +1,17 @@
-import { getCurrentClient } from "@/lib/auth";
-import { getMonthlyRhythmByClient } from "@/queries/monthlyRhythm";
-import RhythmTimeline from "@/components/portal/RhythmTimeline";
-import { notFound } from "next/navigation";
+import { getCurrentClient } from '@/lib/auth'
+import { getMonthlyRhythmByClient } from '@/queries/monthlyRhythm'
+import RhythmTimeline from '@/components/portal/RhythmTimeline'
+import { notFound } from 'next/navigation'
 
 export default async function RhythmPage() {
-  const client = await getCurrentClient();
+  const client = await getCurrentClient()
 
   if (!client) {
-    notFound();
+    notFound()
   }
 
-  const rhythmItems = await getMonthlyRhythmByClient(client._id);
-  const retainerHoursIncluded = client.selectedPlan?.retainerHours || 0;
+  const rhythmItems = await getMonthlyRhythmByClient(client._id)
+  const retainerHoursIncluded = client.selectedPlan?.retainerHours || 0
 
   return (
     <div className="py-8 px-4">
@@ -31,5 +31,5 @@ export default async function RhythmPage() {
         />
       </div>
     </div>
-  );
+  )
 }

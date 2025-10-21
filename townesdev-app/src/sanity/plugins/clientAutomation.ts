@@ -14,9 +14,13 @@ export const clientAutomation = definePlugin({
             onHandle: async () => {
               try {
                 // Get client data first
-                const clientData = await context.getClient({ apiVersion: '2024-01-01' }).getDocument(props.id)
+                const clientData = await context
+                  .getClient({ apiVersion: '2024-01-01' })
+                  .getDocument(props.id)
                 const clientName = clientData?.name || 'Unknown Client'
-                const sanitizedName = clientName.toLowerCase().replace(/[^a-z0-9]/g, '-')
+                const sanitizedName = clientName
+                  .toLowerCase()
+                  .replace(/[^a-z0-9]/g, '-')
 
                 // Create kickoff checklist
                 await context.getClient({ apiVersion: '2024-01-01' }).create({
@@ -32,8 +36,13 @@ export const clientAutomation = definePlugin({
                 })
 
                 // Create initial monthly rhythm
-                const currentMonth = new Date().toLocaleString('default', { month: 'long', year: 'numeric' })
-                const sanitizedMonth = currentMonth.toLowerCase().replace(/[^a-z0-9]/g, '-')
+                const currentMonth = new Date().toLocaleString('default', {
+                  month: 'long',
+                  year: 'numeric',
+                })
+                const sanitizedMonth = currentMonth
+                  .toLowerCase()
+                  .replace(/[^a-z0-9]/g, '-')
                 await context.getClient({ apiVersion: '2024-01-01' }).create({
                   _type: 'monthlyRhythm',
                   _id: `monthly-${sanitizedName}-${sanitizedMonth}`,
@@ -48,22 +57,33 @@ export const clientAutomation = definePlugin({
                 })
 
                 // Update client status to Active
-                await context.getClient({ apiVersion: '2024-01-01' }).patch(props.id).set({ status: 'Active' }).commit()
+                await context
+                  .getClient({ apiVersion: '2024-01-01' })
+                  .patch(props.id)
+                  .set({ status: 'Active' })
+                  .commit()
 
                 // Send welcome email
                 try {
-                  const emailTemplates = await context.getClient({ apiVersion: '2024-01-01' }).fetch('*[_type == "emailTemplate" && name == "Welcome Activation"][0]')
+                  const emailTemplates = await context
+                    .getClient({ apiVersion: '2024-01-01' })
+                    .fetch(
+                      '*[_type == "emailTemplate" && name == "Welcome Activation"][0]'
+                    )
                   if (emailTemplates && clientData) {
                     const clientEmail = clientData.email || 'client@example.com' // You'll need to add email field to client schema
                     await sendEmail(
-                      { subject: emailTemplates.subject, body: emailTemplates.body },
+                      {
+                        subject: emailTemplates.subject,
+                        body: emailTemplates.body,
+                      },
                       {
                         name: clientName,
                         selectedPlan: clientData.selectedPlan,
                         startDate: clientData.startDate,
                         slaStartTime: clientData.slaStartTime,
                         maintenanceWindow: clientData.maintenanceWindow,
-                        status: 'Active'
+                        status: 'Active',
                       },
                       clientEmail
                     )
@@ -86,11 +106,18 @@ export const clientAutomation = definePlugin({
           (props: any) => ({
             label: 'View Kickoff Checklist',
             onHandle: async () => {
-              const clientData = await context.getClient({ apiVersion: '2024-01-01' }).getDocument(props.id)
+              const clientData = await context
+                .getClient({ apiVersion: '2024-01-01' })
+                .getDocument(props.id)
               const clientName = clientData?.name || 'Unknown Client'
-              const sanitizedName = clientName.toLowerCase().replace(/[^a-z0-9]/g, '-')
+              const sanitizedName = clientName
+                .toLowerCase()
+                .replace(/[^a-z0-9]/g, '-')
               const kickoffId = `kickoff-${sanitizedName}`
-              window.open(`/admin/intent/edit/id=${kickoffId};type=kickoffChecklist/`, '_blank')
+              window.open(
+                `/admin/intent/edit/id=${kickoffId};type=kickoffChecklist/`,
+                '_blank'
+              )
             },
             tone: 'primary',
             disabled: props.published?.status !== 'Active',
@@ -98,13 +125,25 @@ export const clientAutomation = definePlugin({
           (props: any) => ({
             label: 'View Monthly Rhythm',
             onHandle: async () => {
-              const clientData = await context.getClient({ apiVersion: '2024-01-01' }).getDocument(props.id)
+              const clientData = await context
+                .getClient({ apiVersion: '2024-01-01' })
+                .getDocument(props.id)
               const clientName = clientData?.name || 'Unknown Client'
-              const sanitizedName = clientName.toLowerCase().replace(/[^a-z0-9]/g, '-')
-              const currentMonth = new Date().toLocaleString('default', { month: 'long', year: 'numeric' })
-              const sanitizedMonth = currentMonth.toLowerCase().replace(/[^a-z0-9]/g, '-')
+              const sanitizedName = clientName
+                .toLowerCase()
+                .replace(/[^a-z0-9]/g, '-')
+              const currentMonth = new Date().toLocaleString('default', {
+                month: 'long',
+                year: 'numeric',
+              })
+              const sanitizedMonth = currentMonth
+                .toLowerCase()
+                .replace(/[^a-z0-9]/g, '-')
               const monthlyId = `monthly-${sanitizedName}-${sanitizedMonth}`
-              window.open(`/admin/intent/edit/id=${monthlyId};type=monthlyRhythm/`, '_blank')
+              window.open(
+                `/admin/intent/edit/id=${monthlyId};type=monthlyRhythm/`,
+                '_blank'
+              )
             },
             tone: 'primary',
             disabled: props.published?.status !== 'Active',
@@ -113,13 +152,16 @@ export const clientAutomation = definePlugin({
             label: 'Create Invoice',
             onHandle: async () => {
               try {
-                const clientData = await context.getClient({ apiVersion: '2024-01-01' }).getDocument(props.id)
+                const clientData = await context
+                  .getClient({ apiVersion: '2024-01-01' })
+                  .getDocument(props.id)
                 const clientName = clientData?.name || 'Unknown Client'
 
                 // Check if dark mode is active
-                const isDarkMode = document.documentElement.classList.contains('dark') ||
-                                  document.body.classList.contains('dark') ||
-                                  window.matchMedia('(prefers-color-scheme: dark)').matches
+                const isDarkMode =
+                  document.documentElement.classList.contains('dark') ||
+                  document.body.classList.contains('dark') ||
+                  window.matchMedia('(prefers-color-scheme: dark)').matches
 
                 // Create invoice creation modal
                 const modal = document.createElement('div')
@@ -151,18 +193,21 @@ export const clientAutomation = definePlugin({
 
                 const title = document.createElement('h3')
                 title.textContent = 'Create Invoice'
-                title.style.cssText = 'margin: 0 0 16px 0; font-size: 18px; font-weight: 600;'
+                title.style.cssText =
+                  'margin: 0 0 16px 0; font-size: 18px; font-weight: 600;'
 
                 // Add Sanity Studio icon
                 const sanityIcon = document.createElement('span')
                 sanityIcon.innerHTML = '💰'
-                sanityIcon.style.cssText = 'margin-right: 8px; font-size: 20px; vertical-align: middle;'
+                sanityIcon.style.cssText =
+                  'margin-right: 8px; font-size: 20px; vertical-align: middle;'
                 title.insertBefore(sanityIcon, title.firstChild)
 
                 // Invoice Type Selection
                 const typeLabel = document.createElement('label')
                 typeLabel.textContent = 'Invoice Type:'
-                typeLabel.style.cssText = 'display: block; margin-bottom: 8px; font-weight: 500;'
+                typeLabel.style.cssText =
+                  'display: block; margin-bottom: 8px; font-weight: 500;'
 
                 const typeSelect = document.createElement('select')
                 typeSelect.style.cssText = `
@@ -177,12 +222,18 @@ export const clientAutomation = definePlugin({
                 `
 
                 const typeOptions = [
-                  { value: 'retainer', text: 'Retainer Invoice (Monthly Plan)' },
-                  { value: 'incident', text: 'Incident Invoice (Service Work)' },
-                  { value: 'custom', text: 'Custom Invoice (Manual Entry)' }
+                  {
+                    value: 'retainer',
+                    text: 'Retainer Invoice (Monthly Plan)',
+                  },
+                  {
+                    value: 'incident',
+                    text: 'Incident Invoice (Service Work)',
+                  },
+                  { value: 'custom', text: 'Custom Invoice (Manual Entry)' },
                 ]
 
-                typeOptions.forEach(option => {
+                typeOptions.forEach((option) => {
                   const optionEl = document.createElement('option')
                   optionEl.value = option.value
                   optionEl.textContent = option.text
@@ -208,14 +259,15 @@ export const clientAutomation = definePlugin({
                       margin-bottom: 16px;
                       font-size: 14px;
                     `
-                    planInfo.textContent = 'This will create an invoice based on the client\'s selected plan.'
+                    planInfo.textContent =
+                      "This will create an invoice based on the client's selected plan."
                     formContainer.appendChild(planInfo)
-
                   } else if (typeSelect.value === 'incident') {
                     // Incident invoice - select incident
                     const incidentLabel = document.createElement('label')
                     incidentLabel.textContent = 'Select Incident:'
-                    incidentLabel.style.cssText = 'display: block; margin-bottom: 8px; font-weight: 500;'
+                    incidentLabel.style.cssText =
+                      'display: block; margin-bottom: 8px; font-weight: 500;'
 
                     const incidentSelect = document.createElement('select')
                     incidentSelect.style.cssText = `
@@ -236,12 +288,12 @@ export const clientAutomation = definePlugin({
 
                     formContainer.appendChild(incidentLabel)
                     formContainer.appendChild(incidentSelect)
-
                   } else if (typeSelect.value === 'custom') {
                     // Custom invoice - manual entry
                     const descLabel = document.createElement('label')
                     descLabel.textContent = 'Description:'
-                    descLabel.style.cssText = 'display: block; margin-bottom: 8px; font-weight: 500;'
+                    descLabel.style.cssText =
+                      'display: block; margin-bottom: 8px; font-weight: 500;'
 
                     const descInput = document.createElement('input')
                     descInput.type = 'text'
@@ -259,7 +311,8 @@ export const clientAutomation = definePlugin({
 
                     const qtyLabel = document.createElement('label')
                     qtyLabel.textContent = 'Quantity:'
-                    qtyLabel.style.cssText = 'display: block; margin-bottom: 8px; font-weight: 500;'
+                    qtyLabel.style.cssText =
+                      'display: block; margin-bottom: 8px; font-weight: 500;'
 
                     const qtyInput = document.createElement('input')
                     qtyInput.type = 'number'
@@ -279,7 +332,8 @@ export const clientAutomation = definePlugin({
 
                     const priceLabel = document.createElement('label')
                     priceLabel.textContent = 'Unit Price ($):'
-                    priceLabel.style.cssText = 'display: block; margin-bottom: 8px; font-weight: 500;'
+                    priceLabel.style.cssText =
+                      'display: block; margin-bottom: 8px; font-weight: 500;'
 
                     const priceInput = document.createElement('input')
                     priceInput.type = 'number'
@@ -310,7 +364,8 @@ export const clientAutomation = definePlugin({
                 updateForm() // Initialize form
 
                 const buttonContainer = document.createElement('div')
-                buttonContainer.style.cssText = 'display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;'
+                buttonContainer.style.cssText =
+                  'display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;'
 
                 const cancelButton = document.createElement('button')
                 cancelButton.textContent = 'Cancel'
@@ -351,30 +406,42 @@ export const clientAutomation = definePlugin({
                     }
 
                     // Get plan details
-                    const planDetails = await context.getClient({ apiVersion: '2024-01-01' }).getDocument(planData._ref)
+                    const planDetails = await context
+                      .getClient({ apiVersion: '2024-01-01' })
+                      .getDocument(planData._ref)
                     if (!planDetails) {
                       toast.error('Plan details not found')
                       return
                     }
 
-                    lineItems = [{
-                      description: `Monthly Retainer - ${planDetails.name}`,
-                      quantity: 1,
-                      unitPrice: parseFloat(planDetails.price.replace('$', '').replace('/month', '')),
-                      reference: null
-                    }]
-
+                    lineItems = [
+                      {
+                        description: `Monthly Retainer - ${planDetails.name}`,
+                        quantity: 1,
+                        unitPrice: parseFloat(
+                          planDetails.price
+                            .replace('$', '')
+                            .replace('/month', '')
+                        ),
+                        reference: null,
+                      },
+                    ]
                   } else if (typeSelect.value === 'incident') {
                     toast.info('Incident invoice generation', {
                       description: 'Coming soon!',
                     })
                     return
-
                   } else if (typeSelect.value === 'custom') {
                     // Get form values
-                    const descInput = formContainer.querySelector('input[type="text"]') as HTMLInputElement
-                    const qtyInput = formContainer.querySelector('input[type="number"]:nth-of-type(1)') as HTMLInputElement
-                    const priceInput = formContainer.querySelector('input[type="number"]:nth-of-type(2)') as HTMLInputElement
+                    const descInput = formContainer.querySelector(
+                      'input[type="text"]'
+                    ) as HTMLInputElement
+                    const qtyInput = formContainer.querySelector(
+                      'input[type="number"]:nth-of-type(1)'
+                    ) as HTMLInputElement
+                    const priceInput = formContainer.querySelector(
+                      'input[type="number"]:nth-of-type(2)'
+                    ) as HTMLInputElement
 
                     const description = descInput?.value?.trim()
                     const quantity = parseFloat(qtyInput?.value || '0')
@@ -382,17 +449,20 @@ export const clientAutomation = definePlugin({
 
                     if (!description || !unitPrice || quantity <= 0) {
                       toast.error('Invalid input', {
-                        description: 'Please fill in all required fields with valid values.',
+                        description:
+                          'Please fill in all required fields with valid values.',
                       })
                       return
                     }
 
-                    lineItems = [{
-                      description,
-                      quantity,
-                      unitPrice,
-                      reference: null
-                    }]
+                    lineItems = [
+                      {
+                        description,
+                        quantity,
+                        unitPrice,
+                        reference: null,
+                      },
+                    ]
                   }
 
                   try {
@@ -409,14 +479,16 @@ export const clientAutomation = definePlugin({
                         lineItems,
                         currency: 'USD',
                         taxRate: 0, // Default no tax
-                        notes: `Invoice for ${clientName}`
+                        notes: `Invoice for ${clientName}`,
                       }),
                     })
 
                     const result = await response.json()
 
                     if (!response.ok) {
-                      throw new Error(result.error || 'Failed to create invoice')
+                      throw new Error(
+                        result.error || 'Failed to create invoice'
+                      )
                     }
 
                     toast.success('Invoice created successfully!', {
@@ -425,9 +497,11 @@ export const clientAutomation = definePlugin({
 
                     // Open the invoice in Sanity
                     setTimeout(() => {
-                      window.open(`/admin/intent/edit/id=${result.invoice._id};type=invoice/`, '_blank')
+                      window.open(
+                        `/admin/intent/edit/id=${result.invoice._id};type=invoice/`,
+                        '_blank'
+                      )
                     }, 1500)
-
                   } catch (error) {
                     console.error('Error creating invoice:', error)
                     toast.error('Error creating invoice', {
@@ -450,7 +524,6 @@ export const clientAutomation = definePlugin({
 
                 // Focus on type select
                 typeSelect.focus()
-
               } catch (error) {
                 console.error('Error opening invoice creation modal:', error)
                 toast.error('Error opening invoice creation modal', {
@@ -464,11 +537,15 @@ export const clientAutomation = definePlugin({
             label: 'Send Email Template',
             onHandle: async () => {
               try {
-                const clientData = await context.getClient({ apiVersion: '2024-01-01' }).getDocument(props.id)
+                const clientData = await context
+                  .getClient({ apiVersion: '2024-01-01' })
+                  .getDocument(props.id)
                 const clientName = clientData?.name || 'Unknown Client'
 
                 // Get all email templates
-                const emailTemplates = await context.getClient({ apiVersion: '2024-01-01' }).fetch('*[_type == "emailTemplate"]')
+                const emailTemplates = await context
+                  .getClient({ apiVersion: '2024-01-01' })
+                  .fetch('*[_type == "emailTemplate"]')
 
                 if (emailTemplates.length === 0) {
                   toast.error('No email templates found', {
@@ -478,9 +555,10 @@ export const clientAutomation = definePlugin({
                 }
 
                 // Check if dark mode is active
-                const isDarkMode = document.documentElement.classList.contains('dark') ||
-                                  document.body.classList.contains('dark') ||
-                                  window.matchMedia('(prefers-color-scheme: dark)').matches
+                const isDarkMode =
+                  document.documentElement.classList.contains('dark') ||
+                  document.body.classList.contains('dark') ||
+                  window.matchMedia('(prefers-color-scheme: dark)').matches
 
                 // Create a custom modal with dropdown selection
                 const modal = document.createElement('div')
@@ -512,17 +590,20 @@ export const clientAutomation = definePlugin({
 
                 const title = document.createElement('h3')
                 title.textContent = 'Send Email Template'
-                title.style.cssText = 'margin: 0 0 16px 0; font-size: 18px; font-weight: 600;'
+                title.style.cssText =
+                  'margin: 0 0 16px 0; font-size: 18px; font-weight: 600;'
 
                 // Add Sanity Studio icon to modal
                 const sanityIcon = document.createElement('span')
                 sanityIcon.innerHTML = '🎨' // You can replace this with any icon or emoji
-                sanityIcon.style.cssText = 'margin-right: 8px; font-size: 20px; vertical-align: middle;'
+                sanityIcon.style.cssText =
+                  'margin-right: 8px; font-size: 20px; vertical-align: middle;'
                 title.insertBefore(sanityIcon, title.firstChild)
 
                 const label = document.createElement('label')
                 label.textContent = 'Select Email Template:'
-                label.style.cssText = 'display: block; margin-bottom: 8px; font-weight: 500;'
+                label.style.cssText =
+                  'display: block; margin-bottom: 8px; font-weight: 500;'
 
                 const select = document.createElement('select')
                 select.style.cssText = `
@@ -546,7 +627,8 @@ export const clientAutomation = definePlugin({
 
                 const emailLabel = document.createElement('label')
                 emailLabel.textContent = 'Recipient Email:'
-                emailLabel.style.cssText = 'display: block; margin-bottom: 8px; font-weight: 500;'
+                emailLabel.style.cssText =
+                  'display: block; margin-bottom: 8px; font-weight: 500;'
 
                 const emailInput = document.createElement('input')
                 emailInput.type = 'email'
@@ -564,7 +646,8 @@ export const clientAutomation = definePlugin({
                 `
 
                 const buttonContainer = document.createElement('div')
-                buttonContainer.style.cssText = 'display: flex; gap: 12px; justify-content: flex-end;'
+                buttonContainer.style.cssText =
+                  'display: flex; gap: 12px; justify-content: flex-end;'
 
                 const cancelButton = document.createElement('button')
                 cancelButton.textContent = 'Cancel'
@@ -597,12 +680,15 @@ export const clientAutomation = definePlugin({
 
                   if (!selectedTemplateId || !recipientEmail) {
                     toast.error('Missing information', {
-                      description: 'Please select a template and enter an email address.',
+                      description:
+                        'Please select a template and enter an email address.',
                     })
                     return
                   }
 
-                  const selectedTemplate = emailTemplates.find((t: any) => t._id === selectedTemplateId)
+                  const selectedTemplate = emailTemplates.find(
+                    (t: any) => t._id === selectedTemplateId
+                  )
                   if (!selectedTemplate) {
                     toast.error('Template not found')
                     return
@@ -616,7 +702,7 @@ export const clientAutomation = definePlugin({
                         name: selectedTemplate.name,
                         subject: selectedTemplate.subject,
                         body: selectedTemplate.body,
-                        htmlBody: selectedTemplate.htmlBody
+                        htmlBody: selectedTemplate.htmlBody,
                       },
                       {
                         name: clientName,
@@ -624,7 +710,7 @@ export const clientAutomation = definePlugin({
                         startDate: clientData?.startDate,
                         slaStartTime: clientData?.slaStartTime,
                         maintenanceWindow: clientData?.maintenanceWindow,
-                        status: clientData?.status
+                        status: clientData?.status,
                       },
                       recipientEmail
                     )

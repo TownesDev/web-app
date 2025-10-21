@@ -3,12 +3,12 @@
  * Create a new email template
  */
 
-import { requireCapability } from "../../../../../lib/rbac/guards";
-import EmailTemplateForm from "../../../../../components/admin/EmailTemplateForm";
+import { requireCapability } from '../../../../../lib/rbac/guards'
+import EmailTemplateForm from '../../../../../components/admin/EmailTemplateForm'
 
 export default async function CreateEmailTemplatePage() {
   // Require admin capability for email templates management
-  await requireCapability("content:write");
+  await requireCapability('content:write')
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -35,5 +35,5 @@ export default async function CreateEmailTemplatePage() {
         <EmailTemplateForm />
       </div>
     </div>
-  );
+  )
 }

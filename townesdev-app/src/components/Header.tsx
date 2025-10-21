@@ -1,51 +1,51 @@
-"use client";
+'use client'
 
-import Image from "next/image";
-import Link from "next/link";
-import { AuthStatus } from "./AuthStatus";
+import Image from 'next/image'
+import Link from 'next/link'
+import { AuthStatus } from './AuthStatus'
 
-type HeaderVariant = "public" | "portal" | "admin";
+type HeaderVariant = 'public' | 'portal' | 'admin'
 
 interface HeaderProps {
-  variant: HeaderVariant;
+  variant: HeaderVariant
 }
 
 export default function Header({ variant }: HeaderProps) {
   const getMainTitle = () => {
-    return "TownesDev";
-  };
+    return 'TownesDev'
+  }
 
   const getSectionBadge = () => {
     switch (variant) {
-      case "portal":
+      case 'portal':
         return (
           <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-nile-blue-100 text-nile-blue-800 border border-nile-blue-200">
             Client
           </span>
-        );
-      case "admin":
+        )
+      case 'admin':
         return (
           <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-sandy-brown-100 text-sandy-brown-800 border border-sandy-brown-200">
             Staff
           </span>
-        );
+        )
       default:
-        return null;
+        return null
     }
-  };
+  }
 
   const getQuickNav = () => {
     switch (variant) {
-      case "portal":
+      case 'portal':
         // Navigation moved to ClientSidebar
-        return null;
-      case "admin":
+        return null
+      case 'admin':
         // Navigation moved to AdminSidebar
-        return null;
+        return null
       default:
-        return null;
+        return null
     }
-  };
+  }
 
   return (
     <header className="border-b bg-nile-blue-800 flex justify-between items-center shadow-sm p-4">
@@ -86,5 +86,5 @@ export default function Header({ variant }: HeaderProps) {
       {/* Auth Status */}
       <AuthStatus />
     </header>
-  );
+  )
 }

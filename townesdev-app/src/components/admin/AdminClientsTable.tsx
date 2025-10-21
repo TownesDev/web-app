@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 /**
  * Admin Clients Table Component
@@ -6,59 +6,59 @@
  * Includes status filtering functionality
  */
 
-import { useState, useMemo } from "react";
-import Link from "next/link";
+import { useState, useMemo } from 'react'
+import Link from 'next/link'
 
 interface Client {
-  _id: string;
-  name: string;
-  email: string;
-  status: string;
+  _id: string
+  name: string
+  email: string
+  status: string
   selectedPlan?: {
-    name: string;
-    price: string;
-  };
+    name: string
+    price: string
+  }
 }
 
 interface AdminClientsTableProps {
-  clients: Client[];
+  clients: Client[]
 }
 
-type StatusFilter = "all" | "Active" | "Inactive" | "Cancelled";
+type StatusFilter = 'all' | 'Active' | 'Inactive' | 'Cancelled'
 
 export default function AdminClientsTable({ clients }: AdminClientsTableProps) {
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
 
   // Filter clients based on status
   const filteredClients = useMemo(() => {
-    if (statusFilter === "all") return clients;
+    if (statusFilter === 'all') return clients
 
     return clients.filter((client) => {
       switch (statusFilter) {
-        case "Active":
-          return client.status === "Active";
-        case "Inactive":
-          return client.status === "Inactive";
-        case "Cancelled":
-          return client.status === "Cancelled";
+        case 'Active':
+          return client.status === 'Active'
+        case 'Inactive':
+          return client.status === 'Inactive'
+        case 'Cancelled':
+          return client.status === 'Cancelled'
         default:
-          return true;
+          return true
       }
-    });
-  }, [clients, statusFilter]);
+    })
+  }, [clients, statusFilter])
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "Active":
-        return "bg-green-100 text-green-800";
-      case "Inactive":
-        return "bg-red-100 text-red-800";
-      case "Cancelled":
-        return "bg-gray-100 text-gray-800";
+      case 'Active':
+        return 'bg-green-100 text-green-800'
+      case 'Inactive':
+        return 'bg-red-100 text-red-800'
+      case 'Cancelled':
+        return 'bg-gray-100 text-gray-800'
       default:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800'
     }
-  };
+  }
 
   return (
     <div className="space-y-4">
@@ -135,7 +135,7 @@ export default function AdminClientsTable({ clients }: AdminClientsTableProps) {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">
-                      {client.selectedPlan?.name || "No Plan"}
+                      {client.selectedPlan?.name || 'No Plan'}
                     </div>
                     {client.selectedPlan?.price && (
                       <div className="text-sm text-gray-500">
@@ -168,5 +168,5 @@ export default function AdminClientsTable({ clients }: AdminClientsTableProps) {
         </table>
       </div>
     </div>
-  );
+  )
 }

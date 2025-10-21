@@ -1,68 +1,68 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { toast } from "sonner";
+import { useState } from 'react'
+import { toast } from 'sonner'
 
 interface IncidentFormProps {
-  onSuccess?: () => void;
+  onSuccess?: () => void
 }
 
 export default function IncidentForm({ onSuccess }: IncidentFormProps) {
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState('')
   const [severity, setSeverity] = useState<
-    "low" | "medium" | "high" | "critical"
-  >("medium");
-  const [description, setDescription] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+    'low' | 'medium' | 'high' | 'critical'
+  >('medium')
+  const [description, setDescription] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
+    e.preventDefault()
+    setLoading(true)
+    setError('')
 
     try {
-      const response = await fetch("/api/incidents", {
-        method: "POST",
+      const response = await fetch('/api/incidents', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           title,
           severity,
           description,
         }),
-      });
+      })
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to submit incident");
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to submit incident')
       }
 
-      const result = await response.json();
-      console.log("Incident submitted successfully:", result);
+      const result = await response.json()
+      console.log('Incident submitted successfully:', result)
 
       // Success - reset form and show success message
-      setTitle("");
-      setSeverity("medium");
-      setDescription("");
-      setError("");
+      setTitle('')
+      setSeverity('medium')
+      setDescription('')
+      setError('')
 
-      toast.success("Incident reported successfully!", {
+      toast.success('Incident reported successfully!', {
         description: "We'll get back to you soon.",
-      });
+      })
 
-      onSuccess?.();
+      onSuccess?.()
     } catch (err: unknown) {
       const errorMessage =
         err instanceof Error
           ? err.message
-          : "An error occurred while submitting the incident. Please try again.";
-      setError(errorMessage);
+          : 'An error occurred while submitting the incident. Please try again.'
+      setError(errorMessage)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className="bg-white shadow rounded-lg p-6">
@@ -145,10 +145,10 @@ export default function IncidentForm({ onSuccess }: IncidentFormProps) {
             disabled={loading}
             className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-nile-blue-600 hover:bg-nile-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-nile-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? "Submitting..." : "Submit Incident"}
+            {loading ? 'Submitting...' : 'Submit Incident'}
           </button>
         </div>
       </form>
     </div>
-  );
+  )
 }

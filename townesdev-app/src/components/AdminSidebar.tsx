@@ -1,8 +1,8 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { useState } from 'react'
 import {
   BarChart3,
   Users,
@@ -12,62 +12,62 @@ import {
   Settings,
   Menu,
   X,
-} from "lucide-react";
+} from 'lucide-react'
 
 interface NavItem {
-  href: string;
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
+  href: string
+  label: string
+  icon: React.ComponentType<{ className?: string }>
 }
 
 const navItems: NavItem[] = [
   {
-    href: "/admin",
-    label: "Overview",
+    href: '/admin',
+    label: 'Overview',
     icon: BarChart3,
   },
   {
-    href: "/admin/clients",
-    label: "Clients",
+    href: '/admin/clients',
+    label: 'Clients',
     icon: Users,
   },
   {
-    href: "/admin/invoices",
-    label: "Invoices",
+    href: '/admin/invoices',
+    label: 'Invoices',
     icon: FileText,
   },
   {
-    href: "/admin/incidents",
-    label: "Incidents",
+    href: '/admin/incidents',
+    label: 'Incidents',
     icon: AlertTriangle,
   },
   {
-    href: "/admin/email-templates",
-    label: "Email Templates",
+    href: '/admin/email-templates',
+    label: 'Email Templates',
     icon: Mail,
   },
   {
-    href: "/admin/settings",
-    label: "Settings",
+    href: '/admin/settings',
+    label: 'Settings',
     icon: Settings,
   },
-];
+]
 
 export default function AdminSidebar() {
-  const pathname = usePathname();
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const pathname = usePathname()
+  const [isCollapsed, setIsCollapsed] = useState(false)
 
   const isActive = (href: string) => {
-    if (href === "/admin") {
-      return pathname === "/admin";
+    if (href === '/admin') {
+      return pathname === '/admin'
     }
-    return pathname.startsWith(href);
-  };
+    return pathname.startsWith(href)
+  }
 
   return (
     <aside
       className={`bg-white border-r border-gray-200 transition-all duration-300 ${
-        isCollapsed ? "w-16" : "w-64"
+        isCollapsed ? 'w-16' : 'w-64'
       }`}
     >
       {/* Header */}
@@ -88,7 +88,7 @@ export default function AdminSidebar() {
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
           {isCollapsed ? (
             <Menu className="h-5 w-5 text-gray-600" />
@@ -102,8 +102,8 @@ export default function AdminSidebar() {
       <nav className="p-4">
         <ul className="space-y-2">
           {navItems.map((item) => {
-            const Icon = item.icon;
-            const active = isActive(item.href);
+            const Icon = item.icon
+            const active = isActive(item.href)
 
             return (
               <li key={item.href}>
@@ -111,8 +111,8 @@ export default function AdminSidebar() {
                   href={item.href}
                   className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
                     active
-                      ? "bg-nile-blue-50 text-nile-blue-900 border-r-2 border-nile-blue-600"
-                      : "text-gray-700 hover:bg-gray-50 hover:text-nile-blue-900"
+                      ? 'bg-nile-blue-50 text-nile-blue-900 border-r-2 border-nile-blue-600'
+                      : 'text-gray-700 hover:bg-gray-50 hover:text-nile-blue-900'
                   }`}
                 >
                   <Icon className="h-5 w-5 flex-shrink-0" />
@@ -121,10 +121,10 @@ export default function AdminSidebar() {
                   )}
                 </Link>
               </li>
-            );
+            )
           })}
         </ul>
       </nav>
     </aside>
-  );
+  )
 }

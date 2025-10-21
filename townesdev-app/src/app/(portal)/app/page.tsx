@@ -1,25 +1,25 @@
 // app/web/townesdev-app/src/app/(portal)/app/page.tsx
 
-import { getCurrentClient } from "../../../lib/auth";
-import { getInvoicesByClient } from "../../../queries/invoices";
-import InvoiceTable from "../../../components/invoices/InvoiceTable";
-import ClientInfoGrid from "../../../components/ClientInfoGrid";
-import { notFound } from "next/navigation";
-import Link from "next/link";
+import { getCurrentClient } from '../../../lib/auth'
+import { getInvoicesByClient } from '../../../queries/invoices'
+import InvoiceTable from '../../../components/invoices/InvoiceTable'
+import ClientInfoGrid from '../../../components/ClientInfoGrid'
+import { notFound } from 'next/navigation'
+import Link from 'next/link'
 
 export default async function ClientDashboard() {
-  const client = await getCurrentClient();
+  const client = await getCurrentClient()
 
   if (!client) {
-    notFound();
+    notFound()
   }
 
-  const invoices = await getInvoicesByClient(client._id);
+  const invoices = await getInvoicesByClient(client._id)
 
   // Calculate next maintenance window (simplified - would need more logic)
   const nextMaintenance = client.maintenanceWindow
     ? new Date(client.maintenanceWindow).toLocaleDateString()
-    : "TBD";
+    : 'TBD'
 
   return (
     <div className="py-8 px-4">
@@ -218,5 +218,5 @@ export default async function ClientDashboard() {
         </div>
       </div>
     </div>
-  );
+  )
 }

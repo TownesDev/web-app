@@ -3,16 +3,16 @@
  * Displays all clients for staff users
  */
 
-import { requireCapability } from "../../../../lib/rbac/guards";
-import { getAllClients } from "../../../../queries/clients";
-import AdminClientsTable from "../../../../components/admin/AdminClientsTable";
+import { requireCapability } from '../../../../lib/rbac/guards'
+import { getAllClients } from '../../../../queries/clients'
+import AdminClientsTable from '../../../../components/admin/AdminClientsTable'
 
 export default async function AdminClientsPage() {
   // Require clients:read capability (staff/admin only)
-  await requireCapability("clients:read");
+  await requireCapability('clients:read')
 
   // Fetch all clients
-  const clients = await getAllClients();
+  const clients = await getAllClients()
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -38,5 +38,5 @@ export default async function AdminClientsPage() {
         <AdminClientsTable clients={clients} />
       </div>
     </div>
-  );
+  )
 }

@@ -1,52 +1,52 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { toast } from "sonner";
+import { useState } from 'react'
+import { toast } from 'sonner'
 import {
   createMonthlyRhythm,
   updateMonthlyRhythm,
-} from "@/sanity/actions/monthlyRhythm";
+} from '@/sanity/actions/monthlyRhythm'
 
 export default function MonthlyRhythmEditor({
   clientId,
   month,
   initialValue,
 }: {
-  clientId: string;
-  month: string;
+  clientId: string
+  month: string
   initialValue?: {
-    _id: string;
-    hoursIncluded?: number;
-    hoursUsed?: number;
-    week1Patch?: string;
-    week2Observability?: string;
-    week3Hardening?: string;
-    week4Report?: string;
-  } | null;
+    _id: string
+    hoursIncluded?: number
+    hoursUsed?: number
+    week1Patch?: string
+    week2Observability?: string
+    week3Hardening?: string
+    week4Report?: string
+  } | null
 }) {
   const [form, setForm] = useState({
     month,
     hoursIncluded: initialValue?.hoursIncluded ?? 0,
     hoursUsed: initialValue?.hoursUsed ?? 0,
-    week1Patch: initialValue?.week1Patch ?? "",
-    week2Observability: initialValue?.week2Observability ?? "",
-    week3Hardening: initialValue?.week3Hardening ?? "",
-    week4Report: initialValue?.week4Report ?? "",
-  });
+    week1Patch: initialValue?.week1Patch ?? '',
+    week2Observability: initialValue?.week2Observability ?? '',
+    week3Hardening: initialValue?.week3Hardening ?? '',
+    week4Report: initialValue?.week4Report ?? '',
+  })
 
   async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
+    e.preventDefault()
     try {
       if (initialValue?._id) {
-        await updateMonthlyRhythm(initialValue._id, form);
-        toast.success("Monthly rhythm updated");
+        await updateMonthlyRhythm(initialValue._id, form)
+        toast.success('Monthly rhythm updated')
       } else {
-        await createMonthlyRhythm({ clientId, ...form });
-        toast.success("Monthly rhythm created");
+        await createMonthlyRhythm({ clientId, ...form })
+        toast.success('Monthly rhythm created')
       }
     } catch (err) {
-      toast.error("Save failed");
-      console.error(err);
+      toast.error('Save failed')
+      console.error(err)
     }
   }
 
@@ -86,7 +86,7 @@ export default function MonthlyRhythmEditor({
                 onChange={(e) =>
                   setForm({
                     ...form,
-                    hoursIncluded: parseFloat(e.target.value || "0"),
+                    hoursIncluded: parseFloat(e.target.value || '0'),
                   })
                 }
                 required
@@ -105,7 +105,7 @@ export default function MonthlyRhythmEditor({
                 onChange={(e) =>
                   setForm({
                     ...form,
-                    hoursUsed: parseFloat(e.target.value || "0"),
+                    hoursUsed: parseFloat(e.target.value || '0'),
                   })
                 }
               />
@@ -174,5 +174,5 @@ export default function MonthlyRhythmEditor({
         </form>
       </div>
     </div>
-  );
+  )
 }

@@ -1,71 +1,71 @@
-"use client";
+'use client'
 
-import { marked } from "marked";
+import { marked } from 'marked'
 
 interface EmailTemplate {
-  _id: string;
-  name: string;
-  subject: string;
-  purpose: string;
-  htmlBody?: unknown;
+  _id: string
+  name: string
+  subject: string
+  purpose: string
+  htmlBody?: unknown
 }
 
 interface EmailPreviewModalProps {
-  template: EmailTemplate | null;
-  isOpen: boolean;
-  onClose: () => void;
+  template: EmailTemplate | null
+  isOpen: boolean
+  onClose: () => void
 }
 
 interface PortableTextSpan {
-  _type: "span";
-  text: string;
-  marks?: string[];
+  _type: 'span'
+  text: string
+  marks?: string[]
 }
 
 interface PortableTextBlock {
-  _type: "block";
-  children: PortableTextSpan[];
-  style?: string;
-  listItem?: string;
-  level?: number;
+  _type: 'block'
+  children: PortableTextSpan[]
+  style?: string
+  listItem?: string
+  level?: number
 }
 
 function portableTextToMarkdown(portableText: unknown[]): string {
-  if (!Array.isArray(portableText)) return "";
+  if (!Array.isArray(portableText)) return ''
 
   return portableText
     .map((block) => {
-      const b = block as PortableTextBlock;
-      if (b._type !== "block") return "";
+      const b = block as PortableTextBlock
+      if (b._type !== 'block') return ''
 
       const text =
         b.children
           ?.map((child: PortableTextSpan) => {
-            let text = child.text;
-            if (child.marks?.includes("strong")) {
-              text = `**${text}**`;
+            let text = child.text
+            if (child.marks?.includes('strong')) {
+              text = `**${text}**`
             }
-            if (child.marks?.includes("em")) {
-              text = `*${text}*`;
+            if (child.marks?.includes('em')) {
+              text = `*${text}*`
             }
-            return text;
+            return text
           })
-          .join("") || "";
+          .join('') || ''
 
       switch (b.style) {
-        case "h1":
-          return `# ${text}`;
-        case "h2":
-          return `## ${text}`;
-        case "h3":
-          return `### ${text}`;
-        case "blockquote":
-          return `> ${text}`;
+        case 'h1':
+          return `# ${text}`
+        case 'h2':
+          return `## ${text}`
+        case 'h3':
+          return `### ${text}`
+        case 'blockquote':
+          return `> ${text}`
         default:
-          return text;
+          return text
       }
     })
-    .join("\n\n");
+    .join('\n\n')
 }
 
 export default function EmailPreviewModal({
@@ -73,12 +73,12 @@ export default function EmailPreviewModal({
   isOpen,
   onClose,
 }: EmailPreviewModalProps) {
-  if (!isOpen || !template) return null;
+  if (!isOpen || !template) return null
 
   const markdownContent = template.htmlBody
     ? portableTextToMarkdown(template.htmlBody as unknown[])
-    : "";
-  const htmlContent = marked.parse(markdownContent) as string;
+    : ''
+  const htmlContent = marked.parse(markdownContent) as string
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -126,5 +126,5 @@ export default function EmailPreviewModal({
         </div>
       </div>
     </div>
-  );
+  )
 }

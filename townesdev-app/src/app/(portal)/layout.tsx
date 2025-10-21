@@ -1,8 +1,8 @@
-import { ReactNode } from "react";
-import "../globals.css";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-import ClientSidebar from "../../components/ClientSidebar";
+import { ReactNode } from 'react'
+import '../globals.css'
+import Header from '../../components/Header'
+import Footer from '../../components/Footer'
+import ClientSidebar from '../../components/ClientSidebar'
 
 export default function PortalLayout({ children }: { children: ReactNode }) {
   return (
@@ -14,5 +14,5 @@ export default function PortalLayout({ children }: { children: ReactNode }) {
       </div>
       <Footer variant="portal" />
     </div>
-  );
+  )
 }

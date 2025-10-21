@@ -3,32 +3,32 @@
  * Functions for fetching email template data
  */
 
-import { runQuery } from "../lib/client";
-import { PTBlock } from "../lib/email";
+import { runQuery } from '../lib/client'
+import { PTBlock } from '../lib/email'
 
 export type EmailTemplateDoc = {
-  _id: string;
-  name: string;
-  subject: string;
-  htmlBody: PTBlock[]; // Portable Text blocks
-};
+  _id: string
+  name: string
+  subject: string
+  htmlBody: PTBlock[] // Portable Text blocks
+}
 
 const qTemplateByName = /* groq */ `
   *[_type == "emailTemplate" && name == $name][0]{
     _id, name, subject, htmlBody
   }
-`;
+`
 
 const qAllTemplates = /* groq */ `
   *[_type == "emailTemplate"]|order(name asc){
     _id, name, subject
   }
-`;
+`
 
 export async function getEmailTemplateByName(name: string) {
-  return runQuery(qTemplateByName, { name });
+  return runQuery(qTemplateByName, { name })
 }
 
 export async function getAllEmailTemplates() {
-  return runQuery(qAllTemplates);
+  return runQuery(qAllTemplates)
 }

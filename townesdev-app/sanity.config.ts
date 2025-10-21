@@ -4,18 +4,21 @@
  * This configuration is used to for the Sanity Studio that’s mounted on the `/app/admin/[[...tool]]/page.tsx` route
  */
 
-import {visionTool} from '@sanity/vision'
-import {defineConfig} from 'sanity'
-import {structureTool} from 'sanity/structure'
-import {presentationTool} from 'sanity/presentation'
+import { visionTool } from '@sanity/vision'
+import { defineConfig } from 'sanity'
+import { structureTool } from 'sanity/structure'
+import { presentationTool } from 'sanity/presentation'
 
 // Go to https://www.sanity.io/docs/api-versioning to learn how API versioning works
-import {apiVersion, dataset, projectId} from './src/sanity/env'
-import {schema} from './src/sanity/schemaTypes'
-import {structure} from './src/sanity/structure'
-import {clientAutomation} from './src/sanity/plugins/clientAutomation'
-import { previewInvoice, sendStatusUpdateEmail } from './src/sanity/actions/clientActions'
-import {locations, mainDocuments} from './src/lib/presentation/resolve'
+import { apiVersion, dataset, projectId } from './src/sanity/env'
+import { schema } from './src/sanity/schemaTypes'
+import { structure } from './src/sanity/structure'
+import { clientAutomation } from './src/sanity/plugins/clientAutomation'
+import {
+  previewInvoice,
+  sendStatusUpdateEmail,
+} from './src/sanity/actions/clientActions'
+import { locations, mainDocuments } from './src/lib/presentation/resolve'
 
 export default defineConfig({
   basePath: '/studio',
@@ -25,13 +28,13 @@ export default defineConfig({
   schema,
   title: 'TownesDev Sanity Admin',
   plugins: [
-    structureTool({structure}),
+    structureTool({ structure }),
     clientAutomation(),
     // Vision is for querying with GROQ from inside the Studio
     // https://www.sanity.io/docs/the-vision-plugin
-    visionTool({defaultApiVersion: apiVersion}),
+    visionTool({ defaultApiVersion: apiVersion }),
     presentationTool({
-      resolve: {locations, mainDocuments},
+      resolve: { locations, mainDocuments },
       previewUrl: {
         initial: 'http://localhost:3000',
         previewMode: {
@@ -50,5 +53,4 @@ export default defineConfig({
       return prev
     },
   },
-  
 })

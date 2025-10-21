@@ -3,17 +3,17 @@
  * Functions for fetching monthly rhythm data for portal use
  */
 
-import { runQuery } from "../lib/client";
+import { runQuery } from '../lib/client'
 import {
   qMonthlyRhythmByClient,
   qMonthlyRhythmForClientMonth,
-} from "../sanity/lib/queries";
+} from '../sanity/lib/queries'
 
 /**
  * Get monthly rhythm entries for a specific client, sorted by newest first
  */
 export async function getMonthlyRhythmByClient(clientId: string) {
-  return runQuery(qMonthlyRhythmByClient, { clientId });
+  return runQuery(qMonthlyRhythmByClient, { clientId })
 }
 
 /**
@@ -23,7 +23,7 @@ export async function getMonthlyRhythmForClientMonth(
   clientId: string,
   month: string
 ) {
-  return runQuery(qMonthlyRhythmForClientMonth, { clientId, month });
+  return runQuery(qMonthlyRhythmForClientMonth, { clientId, month })
 }
 
 /**
@@ -37,5 +37,5 @@ export async function getRecentMonthlyRhythms(limit: number = 10) {
       _updatedAt,
       client->{_id, name}
     }
-  `);
+  `)
 }

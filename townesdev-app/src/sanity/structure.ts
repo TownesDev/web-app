@@ -1,5 +1,5 @@
-import type { StructureResolver } from "sanity/structure";
-import React from "react";
+import type { StructureResolver } from 'sanity/structure'
+import React from 'react'
 import {
   Users,
   Settings,
@@ -21,25 +21,25 @@ import {
   Zap,
   Key,
   CreditCard,
-} from "lucide-react";
+} from 'lucide-react'
 
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
 export const structure: StructureResolver = (S) =>
   S.list()
-    .title("Content")
+    .title('Content')
     .items([
       // Configuration Section
       S.listItem()
-        .title("SEO Configuration")
+        .title('SEO Configuration')
         .icon(Settings)
-        .child(S.document().schemaType("seoConfig").documentId("seoConfig")),
+        .child(S.document().schemaType('seoConfig').documentId('seoConfig')),
       S.listItem()
-        .title("Operation Configuration")
+        .title('Operation Configuration')
         .icon(Settings)
         .child(
           S.document()
-            .schemaType("operationConfig")
-            .documentId("operationConfig")
+            .schemaType('operationConfig')
+            .documentId('operationConfig')
         ),
 
       // Section Separator
@@ -47,42 +47,42 @@ export const structure: StructureResolver = (S) =>
 
       // Landing Page Section
       S.listItem()
-        .title("Landing Page")
+        .title('Landing Page')
         .icon(FileText)
         .child(
           S.list()
-            .title("Landing Page Content")
+            .title('Landing Page Content')
             .items([
               S.listItem()
-                .title("Projects")
+                .title('Projects')
                 .icon(FolderOpen)
-                .child(S.documentTypeList("project").title("Projects")),
+                .child(S.documentTypeList('project').title('Projects')),
               S.listItem()
-                .title("About Me")
+                .title('About Me')
                 .icon(User)
                 .child(
-                  S.document().schemaType("aboutMe").documentId("aboutMe")
+                  S.document().schemaType('aboutMe').documentId('aboutMe')
                 ),
               S.listItem()
-                .title("Contact Info")
+                .title('Contact Info')
                 .icon(Mail)
                 .child(
                   S.document()
-                    .schemaType("contactInfo")
-                    .documentId("contactInfo")
+                    .schemaType('contactInfo')
+                    .documentId('contactInfo')
                 ),
               S.listItem()
-                .title("Hero Section")
+                .title('Hero Section')
                 .icon(Image)
                 .child(
                   S.document()
-                    .schemaType("heroSection")
-                    .documentId("heroSection")
+                    .schemaType('heroSection')
+                    .documentId('heroSection')
                 ),
               S.listItem()
-                .title("Testimonials")
+                .title('Testimonials')
                 .icon(MessageSquare)
-                .child(S.documentTypeList("testimonial").title("Testimonials")),
+                .child(S.documentTypeList('testimonial').title('Testimonials')),
             ])
         ),
 
@@ -93,78 +93,78 @@ export const structure: StructureResolver = (S) =>
       ...S.documentTypeListItems()
         .filter((listItem) =>
           [
-            "client",
-            "plan",
-            "serviceAsset",
-            "feature",
-            "entitlement",
-            "retainer",
-            "kickoffChecklist",
-            "monthlyRhythm",
-            "incident",
-            "offboarding",
-            "emailTemplate",
-          ].includes(listItem.getId() || "")
+            'client',
+            'plan',
+            'serviceAsset',
+            'feature',
+            'entitlement',
+            'retainer',
+            'kickoffChecklist',
+            'monthlyRhythm',
+            'incident',
+            'offboarding',
+            'emailTemplate',
+          ].includes(listItem.getId() || '')
         )
         .map((item) => {
           // Add custom icons based on document type
-          const id = item.getId();
+          const id = item.getId()
           switch (id) {
-            case "client":
-              return item.icon(Users);
-            case "plan":
-              return item.icon(Briefcase);
-            case "serviceAsset":
-              return item.icon(Server);
-            case "feature":
-              return item.icon(Zap);
-            case "entitlement":
-              return item.icon(Key);
-            case "retainer":
-              return item.icon(CreditCard);
-            case "kickoffChecklist":
-              return item.icon(CheckSquare);
-            case "monthlyRhythm":
-              return item.icon(Calendar);
-            case "incident":
-              return item.icon(AlertTriangle);
-            case "offboarding":
-              return item.icon(UserX);
-            case "emailTemplate":
-              return item.icon(Mail);
+            case 'client':
+              return item.icon(Users)
+            case 'plan':
+              return item.icon(Briefcase)
+            case 'serviceAsset':
+              return item.icon(Server)
+            case 'feature':
+              return item.icon(Zap)
+            case 'entitlement':
+              return item.icon(Key)
+            case 'retainer':
+              return item.icon(CreditCard)
+            case 'kickoffChecklist':
+              return item.icon(CheckSquare)
+            case 'monthlyRhythm':
+              return item.icon(Calendar)
+            case 'incident':
+              return item.icon(AlertTriangle)
+            case 'offboarding':
+              return item.icon(UserX)
+            case 'emailTemplate':
+              return item.icon(Mail)
             default:
-              return item;
+              return item
           }
         }),
 
       // Users Section
       S.listItem()
-        .title("Users")
+        .title('Users')
         .icon(Users)
-        .child(S.documentTypeList("user").title("Users")),
+        .child(S.documentTypeList('user').title('Users')),
       S.listItem()
-        .title("Invoices")
+        .title('Invoices')
         .icon(DollarSign)
         .child(
-          S.documentTypeList("invoice")
-            .title("Invoices")
+          S.documentTypeList('invoice')
+            .title('Invoices')
             .child((documentId) =>
               S.document()
                 .documentId(documentId)
-                .schemaType("invoice")
+                .schemaType('invoice')
                 .views([
                   S.view.form(),
                   S.view
                     .component(() => {
                       const PreviewComponent = React.lazy(
-                        () => import("../app/(portal)/app/invoice/[id]/preview")
-                      );
+                        () => import('../app/(portal)/app/invoice/[id]/preview')
+                      )
                       return React.createElement(PreviewComponent, {
                         id: documentId,
-                      } as any);
+                      } as any)
                     })
-                    .title("Preview"),
+                    .title('Preview'),
                 ])
             )
         ),
-    ]);
+    ])

@@ -1,47 +1,47 @@
-import { getCurrentClient } from "@/lib/auth";
-import { runQuery } from "@/lib/client";
-import { qFeaturesByType, qEntitlementsByAsset } from "@/sanity/lib/queries";
-import Link from "next/link";
-import { ToggleFeatureButton } from "@/components/ToggleFeatureButton";
+import { getCurrentClient } from '@/lib/auth'
+import { runQuery } from '@/lib/client'
+import { qFeaturesByType, qEntitlementsByAsset } from '@/sanity/lib/queries'
+import Link from 'next/link'
+import { ToggleFeatureButton } from '@/components/ToggleFeatureButton'
 
 interface Asset {
-  _id: string;
-  name: string;
-  type: string;
-  externalIds?: string[];
+  _id: string
+  name: string
+  type: string
+  externalIds?: string[]
 }
 
 interface Entitlement {
-  _id: string;
+  _id: string
   feature: {
-    _id: string;
-    name: string;
-    configKey: string;
-  };
-  activatedAt: string;
+    _id: string
+    name: string
+    configKey: string
+  }
+  activatedAt: string
 }
 
 interface Feature {
-  _id: string;
-  name: string;
-  slug: { current: string };
-  summary: string;
-  price: number;
-  sku: string;
-  configKey: string;
-  key?: string; // For bot features
+  _id: string
+  name: string
+  slug: { current: string }
+  summary: string
+  price: number
+  sku: string
+  configKey: string
+  key?: string // For bot features
 }
 
 export default async function FeaturesPage({
   searchParams,
 }: {
-  searchParams: { asset?: string };
+  searchParams: { asset?: string }
 }) {
-  const client = await getCurrentClient();
-  const assetId = searchParams.asset;
+  const client = await getCurrentClient()
+  const assetId = searchParams.asset
 
   if (!client || !assetId) {
-    return <div>Access denied</div>;
+    return <div>Access denied</div>
   }
 
   // Get asset with external IDs for Discord bot guild extraction
@@ -50,39 +50,38 @@ export default async function FeaturesPage({
       _id, name, type, externalIds
     }`,
     { assetId, clientId: client._id }
-  );
+  )
 
   if (!asset) {
-    return <div>Asset not found</div>;
+    return <div>Asset not found</div>
   }
 
   // Extract guild ID for Discord bots
   const getGuildId = (asset: Asset): string | null => {
-    if (asset.type === "discord_bot" && asset.externalIds) {
+    if (asset.type === 'discord_bot' && asset.externalIds) {
       const guildIdMatch = asset.externalIds.find((id: string) =>
-        id.startsWith("guild:")
-      );
-      return guildIdMatch ? guildIdMatch.replace("guild:", "") : null;
+        id.startsWith('guild:')
+      )
+      return guildIdMatch ? guildIdMatch.replace('guild:', '') : null
     }
-    return null;
-  };
+    return null
+  }
 
-  const guildId = getGuildId(asset);
+  const guildId = getGuildId(asset)
 
   // Get asset type for filtering features
-  const assetTypeMap = { discord_bot: "bot", web_app: "app" };
-  const featureAssetType =
-    assetTypeMap[asset.type as keyof typeof assetTypeMap];
+  const assetTypeMap = { discord_bot: 'bot', web_app: 'app' }
+  const featureAssetType = assetTypeMap[asset.type as keyof typeof assetTypeMap]
 
   const features = await runQuery(qFeaturesByType, {
     assetType: featureAssetType,
-  });
-  const entitlements = await runQuery(qEntitlementsByAsset, { assetId });
+  })
+  const entitlements = await runQuery(qEntitlementsByAsset, { assetId })
 
   // Create a set of entitled feature IDs
   const entitledFeatureIds = new Set(
     entitlements.map((ent: Entitlement) => ent.feature._id)
-  );
+  )
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -93,7 +92,7 @@ export default async function FeaturesPage({
               Features for {asset.name}
             </h1>
             <p className="text-gray-600 mt-2">
-              Add new capabilities to your {asset.type.replace("_", " ")}
+              Add new capabilities to your {asset.type.replace('_', ' ')}
             </p>
           </div>
           <Link
@@ -114,7 +113,7 @@ export default async function FeaturesPage({
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {features.map((feature: Feature) => {
-            const isEntitled = entitledFeatureIds.has(feature._id);
+            const isEntitled = entitledFeatureIds.has(feature._id)
 
             return (
               <div
@@ -145,7 +144,7 @@ export default async function FeaturesPage({
                 </div>
 
                 <div className="mt-6">
-                  {asset.type === "discord_bot" && guildId && feature.key ? (
+                  {asset.type === 'discord_bot' && guildId && feature.key ? (
                     <ToggleFeatureButton
                       featureKey={feature.key}
                       guildId={guildId}
@@ -181,10 +180,10 @@ export default async function FeaturesPage({
                   )}
                 </div>
               </div>
-            );
+            )
           })}
         </div>
       )}
     </div>
-  );
+  )
 }

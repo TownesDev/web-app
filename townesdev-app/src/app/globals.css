@@ -1,7 +1,6 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme Brand {
-
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -57,8 +56,8 @@
   --color-comet-950: #020617;
 
   /* TownesDev Brand Fonts */
-  --font-heading: "Sumana", serif;
-  --font-body: "Cairo", sans-serif;
+  --font-heading: 'Sumana', serif;
+  --font-body: 'Cairo', sans-serif;
 
   /* Border radius */
   --radius: 0.5rem;
@@ -95,7 +94,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  
+
   /* Border radius */
   --radius: 0.5rem;
   --color-sidebar-ring: var(--sidebar-ring);
@@ -131,10 +130,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-
-
 }
-
 
 :root {
   --color-background: var(--background);
@@ -143,9 +139,8 @@
   --font-mono: var(--font-geist-mono);
 
   /* TownesDev Brand Fonts */
-  --font-heading: "Sumana", serif;
-  --font-body: "Cairo", sans-serif;
-
+  --font-heading: 'Sumana', serif;
+  --font-body: 'Cairo', sans-serif;
 }
 @media (prefers-color-scheme: dark) {
   :root {

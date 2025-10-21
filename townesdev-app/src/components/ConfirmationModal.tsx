@@ -1,14 +1,14 @@
-"use client";
+'use client'
 
 interface ConfirmationModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  title: string;
-  message: string;
-  confirmText?: string;
-  cancelText?: string;
-  confirmButtonClass?: string;
+  isOpen: boolean
+  onClose: () => void
+  onConfirm: () => void
+  title: string
+  message: string
+  confirmText?: string
+  cancelText?: string
+  confirmButtonClass?: string
 }
 
 export default function ConfirmationModal({
@@ -17,16 +17,16 @@ export default function ConfirmationModal({
   onConfirm,
   title,
   message,
-  confirmText = "Confirm",
-  cancelText = "Cancel",
-  confirmButtonClass = "bg-red-600 hover:bg-red-700 text-white",
+  confirmText = 'Confirm',
+  cancelText = 'Cancel',
+  confirmButtonClass = 'bg-red-600 hover:bg-red-700 text-white',
 }: ConfirmationModalProps) {
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
   const handleConfirm = () => {
-    onConfirm();
-    onClose();
-  };
+    onConfirm()
+    onClose()
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -59,5 +59,5 @@ export default function ConfirmationModal({
         </div>
       </div>
     </div>
-  );
+  )
 }

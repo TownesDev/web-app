@@ -1,30 +1,30 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import PlanModal from "./PlanModal";
+import { useState } from 'react'
+import PlanModal from './PlanModal'
 
 interface Client {
-  _id: string;
-  name: string;
-  email: string;
-  status: string;
-  startDate?: string;
-  maintenanceWindow?: string;
+  _id: string
+  name: string
+  email: string
+  status: string
+  startDate?: string
+  maintenanceWindow?: string
   selectedPlan?: {
-    name: string;
-    price: string;
-    features: string[];
-    description?: string;
-    content?: string;
-  };
+    name: string
+    price: string
+    features: string[]
+    description?: string
+    content?: string
+  }
 }
 
 interface ClientInfoGridProps {
-  client: Client;
+  client: Client
 }
 
 export default function ClientInfoGrid({ client }: ClientInfoGridProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   return (
     <>
@@ -39,10 +39,10 @@ export default function ClientInfoGrid({ client }: ClientInfoGridProps) {
             Plan
           </h2>
           <p className="text-nile-blue-700 font-medium">
-            {client.selectedPlan?.name || "No plan selected"}
+            {client.selectedPlan?.name || 'No plan selected'}
           </p>
           <p className="text-nile-blue-600 text-sm mb-2">
-            {client.selectedPlan?.price || ""}
+            {client.selectedPlan?.price || ''}
           </p>
           {client.selectedPlan?.features && (
             <ul className="text-sm text-gray-600 mb-3">
@@ -73,9 +73,9 @@ export default function ClientInfoGrid({ client }: ClientInfoGridProps) {
           <h2 className="text-lg font-semibold text-green-900 mb-2">Status</h2>
           <p
             className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
-              client.status === "Active"
-                ? "bg-green-100 text-green-800"
-                : "bg-gray-100 text-gray-800"
+              client.status === 'Active'
+                ? 'bg-green-100 text-green-800'
+                : 'bg-gray-100 text-gray-800'
             }`}
           >
             {client.status}
@@ -87,10 +87,10 @@ export default function ClientInfoGrid({ client }: ClientInfoGridProps) {
             Maintenance Window
           </h2>
           <p className="text-sandy-brown-700">
-            {client.maintenanceWindow || "Not set"}
+            {client.maintenanceWindow || 'Not set'}
           </p>
         </div>
       </div>
     </>
-  );
+  )
 }

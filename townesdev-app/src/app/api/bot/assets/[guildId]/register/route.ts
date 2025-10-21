@@ -1,15 +1,15 @@
-import { NextRequest, NextResponse } from "next/server";
-import { requireCapability } from "@/lib/rbac/guards";
-import { getClient } from "@/lib/bot";
-import { sanityWrite } from "@/lib/client";
+import { NextRequest, NextResponse } from 'next/server'
+import { requireCapability } from '@/lib/rbac/guards'
+import { getClient } from '@/lib/bot'
+import { sanityWrite } from '@/lib/client'
 
 // Bot Platform API configuration
-const BOT_API_URL = process.env.BOT_API_URL;
+const BOT_API_URL = process.env.BOT_API_URL
 
 interface BotGuildResponse {
-  id: string;
-  name: string;
-  memberCount: number;
+  id: string
+  name: string
+  memberCount: number
 }
 
 export async function POST(
@@ -18,85 +18,85 @@ export async function POST(
 ) {
   try {
     // Require bot asset registration capability
-    await requireCapability("bot:assets:register");
+    await requireCapability('bot:assets:register')
 
-    const { guildId } = await params;
-    const { clientId, guildName } = await request.json();
+    const { guildId } = await params
+    const { clientId, guildName } = await request.json()
 
     if (!clientId) {
       return NextResponse.json(
-        { success: false, error: "Client ID is required" },
+        { success: false, error: 'Client ID is required' },
         { status: 400 }
-      );
+      )
     }
 
     if (!guildName) {
       return NextResponse.json(
-        { success: false, error: "Guild name is required" },
+        { success: false, error: 'Guild name is required' },
         { status: 400 }
-      );
+      )
     }
 
     // Verify client exists and has bot tenant
-    const client = await getClient(clientId);
+    const client = await getClient(clientId)
     if (!client) {
       return NextResponse.json(
-        { success: false, error: "Client not found" },
+        { success: false, error: 'Client not found' },
         { status: 404 }
-      );
+      )
     }
 
     if (!client.botTenantId || !client.botApiKey) {
       return NextResponse.json(
         {
           success: false,
-          error: "Client does not have bot tenant provisioned",
+          error: 'Client does not have bot tenant provisioned',
         },
         { status: 400 }
-      );
+      )
     }
 
     // Call Bot Platform API to register guild
     const botResponse = await fetch(
       `${BOT_API_URL}/tenants/${client.botTenantId}/guilds`,
       {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          "X-API-Key": client.botApiKey,
+          'Content-Type': 'application/json',
+          'X-API-Key': client.botApiKey,
         },
         body: JSON.stringify({
           id: guildId,
           name: guildName,
         }),
       }
-    );
+    )
 
     if (!botResponse.ok) {
-      const errorData = await botResponse.json();
-      console.error("Bot platform guild registration failed:", errorData);
+      const errorData = await botResponse.json()
+      console.error('Bot platform guild registration failed:', errorData)
       return NextResponse.json(
-        { success: false, error: "Failed to register guild" },
+        { success: false, error: 'Failed to register guild' },
         { status: 500 }
-      );
+      )
     }
 
-    const botData: BotGuildResponse = await botResponse.json();
+    const botData: BotGuildResponse = await botResponse.json()
 
     // Create serviceAsset record in Sanity
     const assetData = {
-      _type: "serviceAsset",
+      _type: 'serviceAsset',
       client: {
-        _type: "reference",
+        _type: 'reference',
         _ref: clientId,
       },
-      type: "discord_bot",
+      type: 'discord_bot',
       name: botData.name,
       externalIds: [`guild:${guildId}`],
-      status: "active",
-    };
+      status: 'active',
+    }
 
-    const asset = await sanityWrite.create(assetData);
+    const asset = await sanityWrite.create(assetData)
 
     return NextResponse.json({
       success: true,
@@ -106,12 +106,12 @@ export async function POST(
         name: botData.name,
         memberCount: botData.memberCount,
       },
-    });
+    })
   } catch (error) {
-    console.error("Bot asset registration error:", error);
+    console.error('Bot asset registration error:', error)
     return NextResponse.json(
-      { success: false, error: "Internal server error" },
+      { success: false, error: 'Internal server error' },
       { status: 500 }
-    );
+    )
   }
 }

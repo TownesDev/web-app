@@ -1,16 +1,16 @@
-import { getCurrentClient } from "@/lib/auth";
-import { runQuery } from "@/lib/client";
-import { qAssetsByClient } from "@/sanity/lib/queries";
-import Link from "next/link";
+import { getCurrentClient } from '@/lib/auth'
+import { runQuery } from '@/lib/client'
+import { qAssetsByClient } from '@/sanity/lib/queries'
+import Link from 'next/link'
 
 export default async function AssetsPage() {
-  const client = await getCurrentClient();
+  const client = await getCurrentClient()
 
   if (!client) {
-    return <div>Access denied</div>;
+    return <div>Access denied</div>
   }
 
-  const assets = await runQuery(qAssetsByClient, { clientId: client._id });
+  const assets = await runQuery(qAssetsByClient, { clientId: client._id })
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -41,7 +41,7 @@ export default async function AssetsPage() {
                     {asset.name}
                   </h3>
                   <p className="text-sm text-gray-500 capitalize">
-                    {asset.type.replace("_", " ")}
+                    {asset.type.replace('_', ' ')}
                   </p>
                 </div>
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -81,5 +81,5 @@ export default async function AssetsPage() {
         </div>
       )}
     </div>
-  );
+  )
 }

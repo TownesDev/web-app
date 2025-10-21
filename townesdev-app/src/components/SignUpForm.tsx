@@ -1,89 +1,89 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import { toast } from "sonner";
+import { useState, useEffect } from 'react'
+import { toast } from 'sonner'
 
 export function SignUpForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
-  const fullName = `${firstName.trim()} ${lastName.trim()}`.trim();
+  const fullName = `${firstName.trim()} ${lastName.trim()}`.trim()
 
   useEffect(() => {
     // Check for saved theme preference or default to system preference
-    const savedTheme = localStorage.getItem("theme");
+    const savedTheme = localStorage.getItem('theme')
     const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
+      '(prefers-color-scheme: dark)'
+    ).matches
 
-    if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
-      document.documentElement.classList.add("dark");
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+      document.documentElement.classList.add('dark')
     }
 
     // Listen for system theme changes
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
     const handleChange = (e: MediaQueryListEvent) => {
-      const savedTheme = localStorage.getItem("theme");
+      const savedTheme = localStorage.getItem('theme')
       if (!savedTheme) {
         // Only auto-switch if no manual preference is saved
         if (e.matches) {
-          document.documentElement.classList.add("dark");
+          document.documentElement.classList.add('dark')
         } else {
-          document.documentElement.classList.remove("dark");
+          document.documentElement.classList.remove('dark')
         }
       }
-    };
+    }
 
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
-  }, []);
+    mediaQuery.addEventListener('change', handleChange)
+    return () => mediaQuery.removeEventListener('change', handleChange)
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
+    e.preventDefault()
+    setLoading(true)
+    setError('')
 
     try {
-      const response = await fetch("/api/auth/signup", {
-        method: "POST",
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           email,
           password,
           name: fullName,
         }),
-      });
+      })
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Sign up failed");
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Sign up failed')
       }
 
-      const result = await response.json();
-      console.log("Sign up successful:", result);
+      const result = await response.json()
+      console.log('Sign up successful:', result)
 
       // Success - show success message and redirect
-      setError("");
-      toast.success("Account created successfully!", {
-        description: "Redirecting to sign in...",
-      });
+      setError('')
+      toast.success('Account created successfully!', {
+        description: 'Redirecting to sign in...',
+      })
       setTimeout(() => {
-        window.location.href = "/auth/signin";
-      }, 1500);
+        window.location.href = '/auth/signin'
+      }, 1500)
     } catch (err: any) {
       const errorMessage =
-        err?.message || "An error occurred during sign up. Please try again.";
-      setError(errorMessage);
+        err?.message || 'An error occurred during sign up. Please try again.'
+      setError(errorMessage)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-md mx-auto">
@@ -180,7 +180,7 @@ export function SignUpForm() {
         type="submit"
         disabled={loading}
         className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-nile-blue-600 hover:bg-nile-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-nile-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-body"
-        aria-describedby={loading ? "loading-status" : undefined}
+        aria-describedby={loading ? 'loading-status' : undefined}
       >
         {loading ? (
           <>
@@ -207,13 +207,13 @@ export function SignUpForm() {
             <span id="loading-status">Creating account...</span>
           </>
         ) : (
-          "Create Account"
+          'Create Account'
         )}
       </button>
 
       <div className="text-center">
         <p className="text-sm text-comet-600 dark:text-comet-400 font-body">
-          Already have an account?{" "}
+          Already have an account?{' '}
           <a
             href="/auth/signin"
             className="text-nile-blue-600 hover:text-nile-blue-700 font-medium"
@@ -223,5 +223,5 @@ export function SignUpForm() {
         </p>
       </div>
     </form>
-  );
+  )
 }

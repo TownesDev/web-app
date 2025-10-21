@@ -1,94 +1,94 @@
-"use client";
+'use client'
 
-import { useState } from "react";
+import { useState } from 'react'
 
 interface Client {
-  _id: string;
-  name: string;
-  email: string;
-  status: string;
-  botTenantId?: string;
-  botApiKey?: string;
+  _id: string
+  name: string
+  email: string
+  status: string
+  botTenantId?: string
+  botApiKey?: string
   selectedPlan?: {
-    name: string;
-  };
+    name: string
+  }
 }
 
 interface Asset {
-  _id: string;
-  name: string;
-  type: string;
-  externalIds: string[];
-  status: string;
-  _createdAt: string;
+  _id: string
+  name: string
+  type: string
+  externalIds: string[]
+  status: string
+  _createdAt: string
 }
 
 interface GuildManagementProps {
-  clientId: string;
-  client: Client;
-  assets: Asset[];
+  clientId: string
+  client: Client
+  assets: Asset[]
 }
 
 export function GuildManagement({ clientId, assets }: GuildManagementProps) {
-  const [isRegistering, setIsRegistering] = useState(false);
-  const [guildId, setGuildId] = useState("");
-  const [guildName, setGuildName] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [isRegistering, setIsRegistering] = useState(false)
+  const [guildId, setGuildId] = useState('')
+  const [guildName, setGuildName] = useState('')
+  const [error, setError] = useState<string | null>(null)
 
   const handleRegisterGuild = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsRegistering(true);
-    setError(null);
+    e.preventDefault()
+    setIsRegistering(true)
+    setError(null)
 
     try {
       const response = await fetch(`/api/bot/assets/${guildId}/register`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           clientId,
           guildName: guildName.trim() || `Guild ${guildId}`,
         }),
-      });
+      })
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to register guild");
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to register guild')
       }
 
       // Refresh the page to show updated assets
-      window.location.reload();
+      window.location.reload()
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
-      setIsRegistering(false);
+      setIsRegistering(false)
     }
-  };
+  }
 
   const handleSyncGuild = async (guildId: string) => {
     try {
       const response = await fetch(`/api/bot/sync/${guildId}`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ clientId }),
-      });
+      })
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to sync guild");
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to sync guild')
       }
 
       // Could show a success message here
-      alert("Guild synced successfully");
+      alert('Guild synced successfully')
     } catch (err) {
       alert(
-        `Sync failed: ${err instanceof Error ? err.message : "Unknown error"}`
-      );
+        `Sync failed: ${err instanceof Error ? err.message : 'Unknown error'}`
+      )
     }
-  };
+  }
 
   return (
     <div className="space-y-6">
@@ -101,8 +101,8 @@ export function GuildManagement({ clientId, assets }: GuildManagementProps) {
           <div className="space-y-3">
             {assets.map((asset) => {
               const extractedGuildId = asset.externalIds
-                ?.find((id) => id.startsWith("guild:"))
-                ?.replace("guild:", "");
+                ?.find((id) => id.startsWith('guild:'))
+                ?.replace('guild:', '')
 
               return (
                 <div
@@ -129,7 +129,7 @@ export function GuildManagement({ clientId, assets }: GuildManagementProps) {
                     </button>
                   </div>
                 </div>
-              );
+              )
             })}
           </div>
         </div>
@@ -217,11 +217,11 @@ export function GuildManagement({ clientId, assets }: GuildManagementProps) {
                 Registering...
               </>
             ) : (
-              "Register Guild"
+              'Register Guild'
             )}
           </button>
         </form>
       </div>
     </div>
-  );
+  )
 }

@@ -1,17 +1,17 @@
-"use client";
+'use client'
 
-import { useEffect } from "react";
+import { useEffect } from 'react'
 
 export default function Error({
   error,
   reset,
 }: {
-  error: Error & { digest?: string };
-  reset: () => void;
+  error: Error & { digest?: string }
+  reset: () => void
 }) {
   useEffect(() => {
-    console.error(error);
-  }, [error]);
+    console.error(error)
+  }, [error])
 
   return (
     <div className="py-8 px-4">
@@ -33,5 +33,5 @@ export default function Error({
         </div>
       </div>
     </div>
-  );
+  )
 }

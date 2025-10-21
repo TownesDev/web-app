@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { findUserByEmail, verifyPassword, generateToken } from '../../../../lib/auth'
+import {
+  findUserByEmail,
+  verifyPassword,
+  generateToken,
+} from '../../../../lib/auth'
 
 export async function POST(request: NextRequest) {
   try {

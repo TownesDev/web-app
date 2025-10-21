@@ -1,26 +1,26 @@
-"use client";
+'use client'
 
 export function BillingPortalButton() {
   const handlePortalClick = async () => {
     try {
-      const response = await fetch("/api/stripe/portal", {
-        method: "POST",
+      const response = await fetch('/api/stripe/portal', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-      });
+      })
 
       if (!response.ok) {
-        throw new Error("Failed to access billing portal");
+        throw new Error('Failed to access billing portal')
       }
 
-      const { url } = await response.json();
-      window.location.href = url;
+      const { url } = await response.json()
+      window.location.href = url
     } catch (error) {
-      console.error("Billing portal error:", error);
-      alert("Failed to open billing portal. Please try again.");
+      console.error('Billing portal error:', error)
+      alert('Failed to open billing portal. Please try again.')
     }
-  };
+  }
 
   return (
     <button
@@ -29,5 +29,5 @@ export function BillingPortalButton() {
     >
       Open Billing Portal
     </button>
-  );
+  )
 }
