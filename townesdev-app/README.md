@@ -18,6 +18,7 @@ A multi-tenant SaaS platform for digital service management built with Next.js 1
 ## 🚀 Quick Start
 
 1. **Clone and install**
+
    ```bash
    git clone https://github.com/TownesDev/web-app.git
    cd web-app/app/web/townesdev-app
@@ -25,6 +26,7 @@ A multi-tenant SaaS platform for digital service management built with Next.js 1
    ```
 
 2. **Configure environment**
+
    ```bash
    cp .env.example .env.local
    # Edit .env.local with your configuration
