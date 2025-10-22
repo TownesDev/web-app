@@ -1,5 +1,5 @@
 import { getCurrentClient } from '@/lib/auth'
-import { runQuery } from '@/lib/client'
+import { runPortalQuery } from '@/lib/portal/client'
 import { qAssetsByClient } from '@/sanity/lib/queries'
 import Link from 'next/link'
 
@@ -18,7 +18,7 @@ export default async function AssetsPage() {
     return <div>Access denied</div>
   }
 
-  const assets = await runQuery(qAssetsByClient, { clientId: client._id })
+  const assets = await runPortalQuery(qAssetsByClient, { clientId: client._id })
 
   return (
     <div className="container mx-auto px-4 py-8">

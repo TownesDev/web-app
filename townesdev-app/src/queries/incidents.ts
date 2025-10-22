@@ -1,11 +1,12 @@
-import { runQueryNoCache } from '../lib/client'
+import { runPortalQuery } from '../lib/portal/client'
+import { runAdminQueryNoCache } from '../lib/admin/client'
 import { qIncidentsByClient, qAllIncidents } from '../sanity/lib/queries'
 
 /**
  * Get incidents for a specific client, sorted by reportedAt desc.
  */
 export async function getIncidentsByClient(clientId: string) {
-  return runQueryNoCache(qIncidentsByClient, { clientId })
+  return runPortalQuery(qIncidentsByClient, { clientId })
 }
 
 /**
@@ -13,5 +14,5 @@ export async function getIncidentsByClient(clientId: string) {
  * Returns incidents with client names and all incident details
  */
 export async function getAllIncidents() {
-  return runQueryNoCache(qAllIncidents)
+  return runAdminQueryNoCache(qAllIncidents)
 }

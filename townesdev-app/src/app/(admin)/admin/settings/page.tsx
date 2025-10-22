@@ -4,7 +4,7 @@
  */
 
 import { requireCapability } from '@/lib/rbac/guards'
-import { runQueryNoCache } from '@/lib/client'
+import { runAdminQueryNoCache } from '@/lib/admin/client'
 import { qOperationConfig } from '@/sanity/lib/queries'
 import Link from 'next/link'
 import { Settings, Edit } from 'lucide-react'
@@ -20,7 +20,9 @@ export default async function SettingsPage() {
   await requireCapability('content:write')
 
   // Fetch operation configuration
-  const config = (await runQueryNoCache(qOperationConfig)) as OperationConfig
+  const config = (await runAdminQueryNoCache(
+    qOperationConfig
+  )) as OperationConfig
 
   // Build Sanity Studio edit URL
   const editUrl = `/studio/desk/operationConfig`

@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
-import { sanityWrite } from './client'
 import { getSession } from './session' // Adjust the import based on your project structure
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'
@@ -10,6 +9,12 @@ export interface User {
   email: string
   name: string
   password: string
+}
+
+// Dynamic import helper for Sanity client
+async function getSanityWriteClient() {
+  const { sanityWrite } = await import('./client')
+  return sanityWrite
 }
 
 export async function hashPassword(password: string): Promise<string> {
@@ -54,6 +59,8 @@ export async function createUser(
   password: string,
   name: string
 ): Promise<User> {
+  const sanityWrite = await getSanityWriteClient()
+
   // Check if user already exists
   const existingUser = await sanityWrite.fetch(
     `*[_type == "user" && email == $email][0]`,
@@ -84,6 +91,8 @@ export async function createUser(
 }
 
 export async function findUserByEmail(email: string): Promise<User | null> {
+  const sanityWrite = await getSanityWriteClient()
+
   const user = await sanityWrite.fetch(
     `*[_type == "user" && email == $email][0]{
       _id,
@@ -98,6 +107,8 @@ export async function findUserByEmail(email: string): Promise<User | null> {
 }
 
 export async function findUserById(id: string): Promise<User | null> {
+  const sanityWrite = await getSanityWriteClient()
+
   const user = await sanityWrite.fetch(
     `*[_type == "user" && _id == $id][0]{
       _id,
@@ -116,6 +127,7 @@ export async function getCurrentClient() {
   console.log('getCurrentClient: Session retrieved:', session)
   if (!session) return null
 
+  const sanityWrite = await getSanityWriteClient()
   const client = await sanityWrite.fetch(
     `*[_type=="client" && user._ref==$userId][0]{
       _id, name, email, status,

@@ -4,27 +4,28 @@
  */
 
 import { requireCapability } from '../../../../../lib/rbac/guards'
-import { runQuery } from '../../../../../lib/client'
+import { runAdminQuery } from '../../../../../lib/admin/client'
 import { qClientById } from '../../../../../sanity/lib/queries'
 import Link from 'next/link'
 import { BotManagementSection } from '../../../../../components/BotManagementSection'
 
 interface ClientDetailPageProps {
-  params: {
+  params: Promise<{
     clientId: string
-  }
+  }>
 }
 
 export default async function ClientDetailPage({
   params,
 }: ClientDetailPageProps) {
-  const { clientId } = params
+  // Await the params object in Next.js 15
+  const { clientId } = await params
 
   // Require clients:read capability
   await requireCapability('clients:read')
 
   // Fetch client details
-  const client = await runQuery(qClientById, { id: clientId })
+  const client = await runAdminQuery(qClientById, { id: clientId })
 
   if (!client) {
     return (

@@ -8,16 +8,18 @@ import { getAllEmailTemplates } from '@/queries/emailTemplates'
 import EmailTestForm from '@/components/admin/EmailTestForm'
 
 interface PageProps {
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 export default async function EmailTestPage({ searchParams }: PageProps) {
   // Require admin capability
   await requireCapability('content:read')
 
+  // Await searchParams in Next.js 15
+  const resolvedSearchParams = await searchParams
   const templateName =
-    typeof searchParams.template === 'string'
-      ? searchParams.template
+    typeof resolvedSearchParams.template === 'string'
+      ? resolvedSearchParams.template
       : 'Welcome Activation'
 
   // Get all templates for the dropdown

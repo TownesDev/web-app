@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
+    "build:webpack": "next build",
+    "build:analyze": "ANALYZE=true npm run build:webpack",
     "start": "next start",
     "lint": "eslint --quiet || true",
     "lint:fix": "eslint --fix",
@@ -13,7 +15,10 @@
     "format:check": "prettier --check .",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "test:e2e": "playwright test",
+    "test:all": "npm run test && npm run test:e2e",
+    "test:ci": "npm run typecheck && npm run lint && npm run test:coverage && npm run build",
     "snapshot": "node -e \"require('fs').copyFileSync('src/sanity/schemaTypes/index.ts', 'schematypes.txt')\" && node tools/snapshot.mjs"
   },
   "dependencies": {
@@ -46,6 +51,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@next/bundle-analyzer": "^16.0.0",
     "@playwright/test": "^1.56.1",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",

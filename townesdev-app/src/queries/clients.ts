@@ -3,7 +3,7 @@
  * Functions for fetching client data for admin use
  */
 
-import { runQueryNoCache } from '../lib/client'
+import { runAdminQueryNoCache } from '../lib/admin/client'
 import { qAllClients } from '../sanity/lib/queries'
 
 /**
@@ -11,5 +11,5 @@ import { qAllClients } from '../sanity/lib/queries'
  * Returns clients with basic info and plan details
  */
 export async function getAllClients() {
-  return runQueryNoCache(qAllClients)
+  return runAdminQueryNoCache(qAllClients)
 }

@@ -1,4 +1,4 @@
-import { runQuery } from '@/lib/client'
+import { runAdminQuery } from '@/lib/admin/client'
 import { TenantProvisioning } from './TenantProvisioning'
 import { GuildManagement } from './GuildManagement'
 import { FeatureManagement } from './FeatureManagement'
@@ -25,7 +25,7 @@ export async function BotManagementSection({
   client,
 }: BotManagementSectionProps) {
   // Fetch client's service assets (guilds)
-  const assets = await runQuery(
+  const assets = await runAdminQuery(
     `*[_type=="serviceAsset" && client._ref==$clientId && type=="discord_bot"]{
       _id,
       name,
@@ -38,7 +38,7 @@ export async function BotManagementSection({
   )
 
   // Fetch client's entitlements
-  const entitlements = await runQuery(
+  const entitlements = await runAdminQuery(
     `*[_type=="entitlement" && client._ref==$clientId]{
       _id,
       asset,

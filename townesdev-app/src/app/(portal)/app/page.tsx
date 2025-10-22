@@ -8,7 +8,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 
 interface PageProps {
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 export default async function ClientDashboard({ searchParams }: PageProps) {
@@ -17,6 +17,9 @@ export default async function ClientDashboard({ searchParams }: PageProps) {
   if (!client) {
     notFound()
   }
+
+  // Await searchParams in Next.js 15
+  const resolvedSearchParams = await searchParams
 
   const invoices = await getInvoicesByClient(client._id)
   const searchParamsData = await searchParams

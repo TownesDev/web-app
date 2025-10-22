@@ -6,15 +6,9 @@ import { sanityWrite } from '../../../lib/client'
 import Stripe from 'stripe'
 
 interface SuccessPageProps {
-  searchParams: {
+  searchParams: Promise<{
     session_id?: string
-  }
-}
-
-interface SuccessPageProps {
-  searchParams: {
-    session_id?: string
-  }
+  }>
 }
 
 async function verifySession(sessionId: string) {

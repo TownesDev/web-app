@@ -16,7 +16,7 @@ async function verifyToken(token: string) {
     const { payload } = await jwtVerify(token, secret)
     const { id, email, name } = payload as Record<string, any>
     return { id, email, name }
-  } catch (err) {
+  } catch {
     return null
   }
 }

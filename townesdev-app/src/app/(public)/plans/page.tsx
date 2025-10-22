@@ -1,5 +1,5 @@
 import { PlanCard } from '../../../components/PlanCard'
-import { runQuery } from '../../../lib/client'
+import { runPublicQuery } from '../../../lib/public/client'
 import { qPlans } from '../../../sanity/lib/queries'
 import { draftMode } from 'next/headers'
 
@@ -16,7 +16,13 @@ interface Plan {
 
 async function getPlans(): Promise<Plan[]> {
   const { isEnabled } = await draftMode()
-  const plans = await runQuery(qPlans, {}, isEnabled)
+  if (isEnabled) {
+    // For draft mode, use dynamic import to load preview capabilities
+    const { runQuery } = await import('../../../lib/client')
+    return await runQuery(qPlans, {}, true)
+  }
+  // For public pages, use the public client with no Sanity in shared bundle
+  const plans = await runPublicQuery(qPlans)
   return plans
 }
 

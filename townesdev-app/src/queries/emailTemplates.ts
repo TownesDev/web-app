@@ -3,7 +3,7 @@
  * Functions for fetching email template data
  */
 
-import { runQueryNoCache } from '../lib/client'
+import { runAdminQueryNoCache } from '../lib/admin/client'
 import { PTBlock } from '../lib/email'
 
 export type EmailTemplateDoc = {
@@ -26,9 +26,11 @@ const qAllTemplates = /* groq */ `
 `
 
 export async function getEmailTemplateByName(name: string) {
+  // Use dynamic import for API route usage
+  const { runQueryNoCache } = await import('../lib/client')
   return runQueryNoCache(qTemplateByName, { name })
 }
 
 export async function getAllEmailTemplates() {
-  return runQueryNoCache(qAllTemplates)
+  return runAdminQueryNoCache(qAllTemplates)
 }
