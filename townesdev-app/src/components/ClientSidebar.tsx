@@ -8,11 +8,12 @@ import {
   FileText,
   AlertTriangle,
   Calendar,
-  LogOut,
   Menu,
   X,
-  Bot,
+  Settings,
   CreditCard,
+  Award,
+  Layers,
 } from 'lucide-react'
 
 interface NavItem {
@@ -28,14 +29,19 @@ const navItems: NavItem[] = [
     icon: LayoutDashboard,
   },
   {
-    href: '/app/plans',
-    label: 'Retainer Plans',
-    icon: CreditCard,
+    href: '/app/assets',
+    label: 'My Assets',
+    icon: Layers,
   },
   {
-    href: '/app/assets',
-    label: 'Discord Assets',
-    icon: Bot,
+    href: '/app/entitlements',
+    label: 'Subscriptions',
+    icon: Award,
+  },
+  {
+    href: '/app/plans',
+    label: 'Upgrade Plans',
+    icon: CreditCard,
   },
   {
     href: '/app/invoices',
@@ -44,18 +50,18 @@ const navItems: NavItem[] = [
   },
   {
     href: '/app/incidents',
-    label: 'Incidents',
+    label: 'Support',
     icon: AlertTriangle,
   },
   {
     href: '/app/rhythm',
-    label: 'Rhythm',
+    label: 'Monthly Rhythm',
     icon: Calendar,
   },
   {
-    href: '/app/offboarding',
-    label: 'Offboarding',
-    icon: LogOut,
+    href: '/app/profile',
+    label: 'Account Settings',
+    icon: Settings,
   },
 ]
 
