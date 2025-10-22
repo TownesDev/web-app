@@ -15,6 +15,7 @@
 - [**Database Setup**](./setup/sanity.md) - Sanity CMS configuration
 - [**Testing**](./guides/testing.md) - Running unit and E2E tests
 - [**Caching Strategy**](./architecture/caching.md) - Performance optimization patterns
+- [**Client Portal Flow**](./guides/portal-flow.md) - Portal user experience and features
 
 ## Architecture
 
