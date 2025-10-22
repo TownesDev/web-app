@@ -15,6 +15,21 @@ const customJestConfig = {
   testEnvironment: 'jest-environment-jsdom',
   transformIgnorePatterns: ['/node_modules/(?!(@sanity|sanity)/)'],
   testPathIgnorePatterns: ['<rootDir>/e2e/'],
+  collectCoverageFrom: [
+    'src/**/*.{js,jsx,ts,tsx}',
+    '!src/**/*.d.ts',
+    '!src/sanity/**',
+    '!src/**/index.ts',
+  ],
+  coverageThreshold: {
+    global: {
+      branches: 30,
+      functions: 30,
+      lines: 30,
+      statements: 30,
+    },
+  },
+  coverageReporters: ['text', 'lcov', 'html'],
 }
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

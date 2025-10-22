@@ -1,4 +1,4 @@
-import { runQuery } from '@/lib/client'
+import { runAdminQuery } from '@/lib/admin/client'
 import { qMonthlyRhythmForClientMonth } from '@/sanity/lib/queries'
 import MonthlyRhythmEditor from '@/components/admin/MonthlyRhythmEditor'
 
@@ -13,7 +13,10 @@ export default async function Page({
 }) {
   const clientId = params.clientId
   const month = monthLabel()
-  const doc = await runQuery(qMonthlyRhythmForClientMonth, { clientId, month })
+  const doc = await runAdminQuery(qMonthlyRhythmForClientMonth, {
+    clientId,
+    month,
+  })
 
   return (
     <MonthlyRhythmEditor clientId={clientId} month={month} initialValue={doc} />
