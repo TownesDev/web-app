@@ -35,10 +35,11 @@ interface Feature {
 export default async function FeaturesPage({
   searchParams,
 }: {
-  searchParams: { asset?: string }
+  searchParams: Promise<{ asset?: string }>
 }) {
   const client = await getCurrentClient()
-  const assetId = searchParams.asset
+  const params = await searchParams
+  const assetId = params.asset
 
   if (!client || !assetId) {
     return <div>Access denied</div>

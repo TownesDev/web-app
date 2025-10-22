@@ -83,7 +83,8 @@ export default async function EntitlementsPage() {
   )
 
   const formatPrice = (cents: number) => `$${(cents / 100).toFixed(2)}`
-  const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString()
+  const formatDate = (dateString: string) =>
+    new Date(dateString).toLocaleDateString()
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -96,7 +97,9 @@ export default async function EntitlementsPage() {
 
       {/* Active Subscription Section */}
       <div className="mb-8">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Base Subscription</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          Base Subscription
+        </h2>
         {subscription ? (
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-start justify-between">
@@ -123,7 +126,8 @@ export default async function EntitlementsPage() {
                 <div>
                   <p className="font-medium text-gray-700">Current Period</p>
                   <p className="text-gray-600">
-                    {formatDate(subscription.currentPeriodStart)} - {formatDate(subscription.currentPeriodEnd)}
+                    {formatDate(subscription.currentPeriodStart)} -{' '}
+                    {formatDate(subscription.currentPeriodEnd)}
                   </p>
                 </div>
                 <div>
@@ -148,7 +152,8 @@ export default async function EntitlementsPage() {
             <div className="text-center">
               <p className="text-gray-500">No active subscription</p>
               <p className="text-sm text-gray-400 mt-1">
-                Choose a plan to get started with ongoing support and maintenance
+                Choose a plan to get started with ongoing support and
+                maintenance
               </p>
               <div className="mt-4">
                 <Link
@@ -165,7 +170,9 @@ export default async function EntitlementsPage() {
 
       {/* Feature Entitlements Section */}
       <div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Feature Purchases</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          Feature Purchases
+        </h2>
         {entitlements.length === 0 ? (
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="text-center">
@@ -201,7 +208,9 @@ export default async function EntitlementsPage() {
                     <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
                       <span>Asset: {entitlement.asset.name}</span>
                       <span>•</span>
-                      <span>Type: {entitlement.asset.type.replace('_', ' ')}</span>
+                      <span>
+                        Type: {entitlement.asset.type.replace('_', ' ')}
+                      </span>
                     </div>
                   </div>
                   <div className="text-right">
@@ -218,9 +227,14 @@ export default async function EntitlementsPage() {
                     <div>
                       <p className="font-medium text-gray-700">Activated</p>
                       <p className="text-gray-600">
-                        {formatDate(entitlement.activatedAt)} 
+                        {formatDate(entitlement.activatedAt)}
                         <span className="text-gray-500 ml-1">
-                          ({formatDistanceToNow(new Date(entitlement.activatedAt), { addSuffix: true })})
+                          (
+                          {formatDistanceToNow(
+                            new Date(entitlement.activatedAt),
+                            { addSuffix: true }
+                          )}
+                          )
                         </span>
                       </p>
                     </div>

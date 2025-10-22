@@ -51,13 +51,16 @@ export default async function AssetsPage() {
   const assets = await runQuery(qAssetsByClient, { clientId: client._id })
 
   // Group assets by type for better organization
-  const assetsByType = assets.reduce((acc: Record<string, Asset[]>, asset: Asset) => {
-    if (!acc[asset.type]) {
-      acc[asset.type] = []
-    }
-    acc[asset.type].push(asset)
-    return acc
-  }, {})
+  const assetsByType = assets.reduce(
+    (acc: Record<string, Asset[]>, asset: Asset) => {
+      if (!acc[asset.type]) {
+        acc[asset.type] = []
+      }
+      acc[asset.type].push(asset)
+      return acc
+    },
+    {}
+  )
 
   const renderAssetCard = (asset: Asset) => {
     const config = assetTypeConfig[asset.type as keyof typeof assetTypeConfig]
@@ -71,7 +74,9 @@ export default async function AssetsPage() {
       >
         <div className="flex items-start justify-between">
           <div className="flex items-start space-x-3">
-            <div className={`p-2 rounded-lg ${config?.color || 'bg-gray-100 text-gray-800'}`}>
+            <div
+              className={`p-2 rounded-lg ${config?.color || 'bg-gray-100 text-gray-800'}`}
+            >
               <IconComponent className="h-5 w-5" />
             </div>
             <div>
@@ -83,10 +88,10 @@ export default async function AssetsPage() {
               </p>
             </div>
           </div>
-          <span 
+          <span
             className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-              status === 'active' 
-                ? 'bg-green-100 text-green-800' 
+              status === 'active'
+                ? 'bg-green-100 text-green-800'
                 : 'bg-yellow-100 text-yellow-800'
             }`}
           >
@@ -96,9 +101,7 @@ export default async function AssetsPage() {
 
         {asset.externalIds && asset.externalIds.length > 0 && (
           <div className="mt-4">
-            <p className="text-sm font-medium text-gray-700">
-              Configuration:
-            </p>
+            <p className="text-sm font-medium text-gray-700">Configuration:</p>
             <ul className="mt-1 text-sm text-gray-600">
               {asset.externalIds.map((id: string, index: number) => (
                 <li key={index} className="truncate">
@@ -155,7 +158,9 @@ export default async function AssetsPage() {
           <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-gray-100">
             <Globe className="h-6 w-6 text-gray-600" />
           </div>
-          <h3 className="mt-2 text-lg font-medium text-gray-900">No assets found</h3>
+          <h3 className="mt-2 text-lg font-medium text-gray-900">
+            No assets found
+          </h3>
           <p className="mt-1 text-sm text-gray-500">
             Contact support to add your first digital asset.
           </p>
@@ -177,10 +182,11 @@ export default async function AssetsPage() {
             </div>
           ) : (
             Object.entries(assetsByType).map(([type, typeAssets]) => {
-              const config = assetTypeConfig[type as keyof typeof assetTypeConfig]
+              const config =
+                assetTypeConfig[type as keyof typeof assetTypeConfig]
               const IconComponent = config?.icon || Globe
               const assetList = typeAssets as Asset[]
-              
+
               return (
                 <div key={type}>
                   <div className="flex items-center space-x-2 mb-4">
@@ -202,15 +208,21 @@ export default async function AssetsPage() {
 
           {/* Quick Action Links */}
           <div className="mt-12 border-t border-gray-200 pt-8">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-4">
+              Quick Actions
+            </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Link
                 href="/app/entitlements"
                 className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50"
               >
                 <div className="flex-1">
-                  <h4 className="font-medium text-gray-900">View Entitlements</h4>
-                  <p className="text-sm text-gray-500">Subscriptions & purchases</p>
+                  <h4 className="font-medium text-gray-900">
+                    View Entitlements
+                  </h4>
+                  <p className="text-sm text-gray-500">
+                    Subscriptions & purchases
+                  </p>
                 </div>
               </Link>
               <Link
@@ -219,7 +231,9 @@ export default async function AssetsPage() {
               >
                 <div className="flex-1">
                   <h4 className="font-medium text-gray-900">Upgrade Plan</h4>
-                  <p className="text-sm text-gray-500">Enhanced support & features</p>
+                  <p className="text-sm text-gray-500">
+                    Enhanced support & features
+                  </p>
                 </div>
               </Link>
               <Link
