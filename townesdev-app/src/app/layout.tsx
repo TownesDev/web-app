@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
+import '../styles/accessibility.css'
 import { getSEOConfig } from '../sanity/lib/seo'
 import { Toaster } from 'sonner'
 
@@ -57,6 +58,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
         <Toaster />
         {children}
       </body>
