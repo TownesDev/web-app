@@ -14,6 +14,7 @@ import {
   CreditCard,
   Award,
   Layers,
+  FileBarChart,
 } from 'lucide-react'
 
 interface NavItem {
@@ -57,6 +58,11 @@ const navItems: NavItem[] = [
     href: '/app/rhythm',
     label: 'Monthly Rhythm',
     icon: Calendar,
+  },
+  {
+    href: '/app/reports',
+    label: 'Reports',
+    icon: FileBarChart,
   },
   {
     href: '/app/profile',
