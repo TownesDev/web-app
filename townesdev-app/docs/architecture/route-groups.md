@@ -17,9 +17,11 @@ src/app/
 ## Public Routes `(public)`
 
 ### Purpose
+
 Marketing and informational pages accessible to all users.
 
 ### Route Structure
+
 ```
 (public)/
 ├── page.tsx           # Homepage with pricing overview
@@ -31,12 +33,14 @@ Marketing and informational pages accessible to all users.
 ```
 
 ### Key Features
+
 - **SEO Optimized**: Static generation with meta tags
 - **Performance**: CDN delivery with 1-hour revalidation
 - **Responsive Design**: Mobile-first responsive layouts
 - **Brand Consistency**: Unified design system
 
 ### URL Pattern
+
 - `/` - Homepage
 - `/plans` - Pricing page
 - `/status` - System status
@@ -44,9 +48,11 @@ Marketing and informational pages accessible to all users.
 ## Portal Routes `(portal)`
 
 ### Purpose
+
 Client dashboard for managing digital services and subscriptions.
 
 ### Route Structure
+
 ```
 (portal)/
 └── app/
@@ -65,12 +71,14 @@ Client dashboard for managing digital services and subscriptions.
 ```
 
 ### Key Features
+
 - **Authentication Required**: All routes protected
 - **User-Specific Data**: Personalized content
 - **Real-Time Updates**: Fresh data on every request
 - **Service Management**: Multi-service asset support
 
 ### URL Pattern
+
 - `/app` - Dashboard
 - `/app/assets` - Asset management
 - `/app/features?asset=:id` - Feature configuration
@@ -80,9 +88,11 @@ Client dashboard for managing digital services and subscriptions.
 ## Admin Routes `(admin)`
 
 ### Purpose
+
 Administrative interface for platform management and client oversight.
 
 ### Route Structure
+
 ```
 (admin)/
 └── admin/
@@ -107,12 +117,14 @@ Administrative interface for platform management and client oversight.
 ```
 
 ### Key Features
+
 - **Role-Based Access**: Admin permissions required
 - **System Management**: Platform configuration
 - **Client Oversight**: Multi-tenant administration
 - **Advanced Tools**: Email templates, billing, analytics
 
 ### URL Pattern
+
 - `/admin` - Admin dashboard
 - `/admin/clients` - Client management
 - `/admin/clients/:id` - Client details
@@ -124,16 +136,19 @@ Administrative interface for platform management and client oversight.
 ### Access Control
 
 #### Public Routes
+
 - **Open Access**: No authentication required
 - **Rate Limiting**: Basic protection against abuse
 - **Content Security**: Static content only
 
 #### Portal Routes
+
 - **Client Authentication**: Valid session required
 - **User Context**: Data filtered by client ownership
 - **Fresh Data**: No caching to prevent data leakage
 
 #### Admin Routes
+
 - **Admin Authentication**: Admin role required
 - **Elevated Permissions**: Full system access
 - **Audit Logging**: Administrative actions tracked
@@ -144,12 +159,12 @@ Administrative interface for platform management and client oversight.
 // Middleware protection
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
-  
+
   // Public routes - no auth required
   if (pathname.startsWith('/(public)')) {
     return NextResponse.next()
   }
-  
+
   // Portal routes - client auth required
   if (pathname.startsWith('/app')) {
     const session = await getSession(request)
@@ -157,7 +172,7 @@ export async function middleware(request: NextRequest) {
       return redirect('/auth/signin')
     }
   }
-  
+
   // Admin routes - admin role required
   if (pathname.startsWith('/admin')) {
     const session = await getSession(request)
@@ -175,18 +190,21 @@ export async function middleware(request: NextRequest) {
 Each route group loads only its required dependencies:
 
 #### Public Bundle
+
 - **Shared Core**: 137kB base bundle
 - **Marketing Components**: Homepage, pricing, status
 - **Static Assets**: Images, fonts, icons
 - **CDN Optimized**: Global edge delivery
 
 #### Portal Bundle
+
 - **Client Components**: Dashboard, asset management
 - **User Interface**: Tables, forms, modals
 - **Dynamic Loading**: Feature-specific code
 - **Authentication**: Session management
 
 #### Admin Bundle
+
 - **Admin Components**: Client management, settings
 - **Advanced UI**: Data tables, configuration forms
 - **Management Tools**: Email templates, analytics
@@ -212,6 +230,7 @@ import { runPublicQuery } from '@/lib/public/client'  // Public only
 ### Shared Elements
 
 #### Root Layout (`app/layout.tsx`)
+
 - **Global Styles**: Tailwind CSS, fonts
 - **Meta Tags**: SEO configuration
 - **Providers**: Context providers
@@ -312,7 +331,7 @@ export default function PortalError({ error, reset }) {
 export default async function PortalPage() {
   const client = await getCurrentClient()
   if (!client) redirect('/auth/signin')
-  
+
   const data = await runPortalQuery(query, { clientId: client._id })
   return <PortalContent data={data} />
 }
@@ -320,7 +339,7 @@ export default async function PortalPage() {
 // Admin page pattern
 export default async function AdminPage() {
   await requireAdmin() // Throws if not admin
-  
+
   const data = await runAdminQuery(query)
   return <AdminContent data={data} />
 }

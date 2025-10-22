@@ -2,11 +2,50 @@
 
 [![CI](https://github.com/TownesDev/web-app/actions/workflows/ci.yml/badge.svg)](https://github.com/TownesDev/web-app/actions/workflows/ci.yml)
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+A multi-tenant SaaS platform for digital service management built with Next.js 15, supporting Discord bots, websites, e-commerce stores, and mobile applications.
+
+## 📚 Documentation
+
+**[Complete Documentation](./docs/README.md)** - Architecture, setup guides, and development patterns
+
+### Quick Links
+
+- **[Local Setup](./docs/setup/local-development.md)** - Get started with development
+- **[Architecture Overview](./docs/architecture/overview.md)** - Platform structure and patterns
+- **[Route Groups](./docs/architecture/route-groups.md)** - Multi-tenant routing architecture
+- **[Caching Strategy](./docs/architecture/caching.md)** - Performance optimization
+
+## 🚀 Quick Start
+
+1. **Clone and install**
+   ```bash
+   git clone https://github.com/TownesDev/web-app.git
+   cd web-app/app/web/townesdev-app
+   npm install
+   ```
+
+2. **Configure environment**
+   ```bash
+   cp .env.example .env.local
+   # Edit .env.local with your configuration
+   ```
+
+3. **Start development**
+   ```bash
+   npm run dev --turbopack
+   ```
+
+## 🏗️ Architecture
+
+- **Next.js 15** with App Router and Turbopack
+- **Multi-tenant** route groups: `(public)`, `(portal)`, `(admin)`
+- **Sanity CMS** with route-specific clients for optimal caching
+- **Stripe** integration for subscriptions and payments
+- **TypeScript** strict mode with comprehensive testing
 
 ## Environment Variables
 
-Create a `.env.local` file in the root directory with the following variables:
+Create a `.env.local` file with the following variables:
 
 ### Required
 

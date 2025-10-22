@@ -67,6 +67,7 @@ export async function runAdminQuery(query, params, preview) {
 - **Use Case**: Marketing content that changes infrequently
 
 **Routes**:
+
 - `/` - Homepage with plans
 - `/plans` - Pricing page
 - `/status` - System status
@@ -80,6 +81,7 @@ export async function runAdminQuery(query, params, preview) {
 - **Use Case**: User-specific sensitive data
 
 **Routes**:
+
 - `/app/assets` - User's service assets
 - `/app/entitlements` - User's subscriptions and purchases
 - `/app/features` - Asset-specific feature management
@@ -93,6 +95,7 @@ export async function runAdminQuery(query, params, preview) {
 - **Use Case**: Administrative sensitive data
 
 **Routes**:
+
 - `/admin/clients` - Client management
 - `/admin/settings` - System configuration
 - `/admin/email-templates` - Email template management

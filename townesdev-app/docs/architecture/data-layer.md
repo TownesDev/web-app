@@ -12,13 +12,13 @@ The platform uses a structured content schema:
 
 ```typescript
 // Core entity types
-- client          // Customer accounts and profiles
-- serviceAsset    // Digital services (bots, websites, etc.)
-- plan           // Subscription tiers and pricing
-- feature        // Purchasable add-on features
-- entitlement    // Customer feature access records
-- invoice        // Billing and payment history
-- incident       // Support tickets and issues
+;-client - // Customer accounts and profiles
+  serviceAsset - // Digital services (bots, websites, etc.)
+  plan - // Subscription tiers and pricing
+  feature - // Purchasable add-on features
+  entitlement - // Customer feature access records
+  invoice - // Billing and payment history
+  incident // Support tickets and issues
 ```
 
 ### Query Patterns
@@ -79,8 +79,8 @@ export const qAssetById = `
 ```typescript
 // src/lib/public/client.ts
 export const publicSanity = createClient({
-  useCdn: true,     // CDN for performance
-  perspective: 'published'
+  useCdn: true, // CDN for performance
+  perspective: 'published',
 })
 
 export async function runPublicQuery(query, params, preview) {
@@ -94,8 +94,8 @@ export async function runPublicQuery(query, params, preview) {
 ```typescript
 // src/lib/portal/client.ts
 export const portalSanity = createClient({
-  useCdn: false,    // Always fresh for user data
-  token: process.env.SANITY_READ_TOKEN
+  useCdn: false, // Always fresh for user data
+  token: process.env.SANITY_READ_TOKEN,
 })
 
 export async function runPortalQuery(query, params, preview) {
@@ -110,8 +110,8 @@ export async function runPortalQuery(query, params, preview) {
 ```typescript
 // src/lib/admin/client.ts
 export const adminSanity = createClient({
-  useCdn: false,    // Always fresh for admin data
-  token: process.env.SANITY_READ_TOKEN
+  useCdn: false, // Always fresh for admin data
+  token: process.env.SANITY_READ_TOKEN,
 })
 
 export async function runAdminQuery(query, params, preview) {
@@ -130,12 +130,12 @@ export async function runAdminQuery(query, params, preview) {
 export default async function AssetsPage() {
   const client = await getCurrentClient()
   if (!client) redirect('/auth/signin')
-  
+
   // Use portal client for user-specific data
-  const assets = await runPortalQuery(qAssetsByClient, { 
-    clientId: client._id 
+  const assets = await runPortalQuery(qAssetsByClient, {
+    clientId: client._id
   })
-  
+
   return <AssetsList assets={assets} />
 }
 ```
@@ -182,10 +182,10 @@ const assets: ServiceAsset[] = await runPortalQuery(qAssetsByClient, params)
 export async function getCurrentClient() {
   const session = await getSession()
   if (!session?.user) return null
-  
+
   // Get full client data
-  return await runPortalQuery(qClientByUserId, { 
-    userId: session.user.id 
+  return await runPortalQuery(qClientByUserId, {
+    userId: session.user.id,
   })
 }
 
@@ -244,7 +244,7 @@ const assetCount = `count(*[_type=="serviceAsset" && client._ref==$clientId])`
 const clients = {
   public: publicSanity,
   portal: portalSanity,
-  admin: adminSanity
+  admin: adminSanity,
 }
 
 // Connection pooling handled by Sanity client
@@ -308,9 +308,9 @@ export async function enablePreview(token: string) {
   const client = createClient({
     ...sanityConfig,
     token,
-    perspective: 'previewDrafts'
+    perspective: 'previewDrafts',
   })
-  
+
   return client
 }
 ```
@@ -322,7 +322,7 @@ export async function enablePreview(token: string) {
 export default async function PreviewPage({ searchParams }) {
   const { isEnabled } = await draftMode()
   const content = await runPublicQuery(query, params, isEnabled)
-  
+
   return <ContentRenderer content={content} preview={isEnabled} />
 }
 ```
