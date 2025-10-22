@@ -3,8 +3,9 @@ import '../globals.css'
 import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 import { SanityLive } from '../../sanity/lib/live'
-import { draftMode } from 'next/headers'
+import { draftMode, cookies } from 'next/headers'
 import { VisualEditingClient } from './visual-editing'
+import MaintenanceCover from './MaintenanceCover'
 
 async function PreviewBanner() {
   const { isEnabled } = await draftMode()
@@ -24,7 +25,15 @@ async function PreviewBanner() {
   )
 }
 
-export default function PublicLayout({ children }: { children: ReactNode }) {
+export default async function PublicLayout({ children }: { children: ReactNode }) {
+  const maintenance = process.env.MAINTENANCE_MODE === 'true'
+  const cookieStore = await cookies()
+  const bypass = cookieStore.get('maintenance-bypass')?.value
+
+  if (maintenance && bypass !== 'allow') {
+    return <MaintenanceCover />
+  }
+
   return (
     <div lang="en" className="min-h-screen flex flex-col">
       <PreviewBanner />
