@@ -6,7 +6,9 @@ jest.mock('../../lib/client', () => ({
   runQueryNoCache: jest.fn(),
 }))
 
-const mockRunQueryNoCache = runQueryNoCache as jest.MockedFunction<typeof runQueryNoCache>
+const mockRunQueryNoCache = runQueryNoCache as jest.MockedFunction<
+  typeof runQueryNoCache
+>
 
 describe('invoices queries', () => {
   beforeEach(() => {
@@ -21,8 +23,8 @@ describe('invoices queries', () => {
           _id: 'invoice-1',
           issueDate: '2024-01-01',
           amount: 150,
-          status: 'paid'
-        }
+          status: 'paid',
+        },
       ]
       mockRunQueryNoCache.mockResolvedValue(mockInvoices)
 
@@ -52,15 +54,15 @@ describe('invoices queries', () => {
           issueDate: '2024-01-01',
           amount: 150,
           status: 'paid',
-          client: { name: 'Client A' }
+          client: { name: 'Client A' },
         },
         {
           _id: 'invoice-2',
           issueDate: '2024-01-02',
           amount: 200,
           status: 'pending',
-          client: { name: 'Client B' }
-        }
+          client: { name: 'Client B' },
+        },
       ]
       mockRunQueryNoCache.mockResolvedValue(mockInvoices)
 
@@ -74,7 +76,9 @@ describe('invoices queries', () => {
       const error = new Error('Database connection failed')
       mockRunQueryNoCache.mockRejectedValue(error)
 
-      await expect(getAllInvoices()).rejects.toThrow('Database connection failed')
+      await expect(getAllInvoices()).rejects.toThrow(
+        'Database connection failed'
+      )
     })
   })
 })

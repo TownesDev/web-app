@@ -6,7 +6,9 @@ jest.mock('../../lib/client', () => ({
   runQueryNoCache: jest.fn(),
 }))
 
-const mockRunQueryNoCache = runQueryNoCache as jest.MockedFunction<typeof runQueryNoCache>
+const mockRunQueryNoCache = runQueryNoCache as jest.MockedFunction<
+  typeof runQueryNoCache
+>
 
 describe('incidents queries', () => {
   beforeEach(() => {
@@ -22,8 +24,8 @@ describe('incidents queries', () => {
           title: 'Server Down',
           priority: 'high',
           status: 'resolved',
-          reportedAt: '2024-01-01T10:00:00Z'
-        }
+          reportedAt: '2024-01-01T10:00:00Z',
+        },
       ]
       mockRunQueryNoCache.mockResolvedValue(mockIncidents)
 
@@ -54,7 +56,7 @@ describe('incidents queries', () => {
           priority: 'medium',
           status: 'investigating',
           reportedAt: '2024-01-01T10:00:00Z',
-          client: { name: 'Client A', _id: 'client-1' }
+          client: { name: 'Client A', _id: 'client-1' },
         },
         {
           _id: 'incident-2',
@@ -62,8 +64,8 @@ describe('incidents queries', () => {
           priority: 'low',
           status: 'planned',
           reportedAt: '2024-01-02T15:30:00Z',
-          client: { name: 'Client B', _id: 'client-2' }
-        }
+          client: { name: 'Client B', _id: 'client-2' },
+        },
       ]
       mockRunQueryNoCache.mockResolvedValue(mockIncidents)
 

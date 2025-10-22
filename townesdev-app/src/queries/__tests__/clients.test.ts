@@ -6,7 +6,9 @@ jest.mock('../../lib/client', () => ({
   runQueryNoCache: jest.fn(),
 }))
 
-const mockRunQueryNoCache = runQueryNoCache as jest.MockedFunction<typeof runQueryNoCache>
+const mockRunQueryNoCache = runQueryNoCache as jest.MockedFunction<
+  typeof runQueryNoCache
+>
 
 describe('clients queries', () => {
   beforeEach(() => {
@@ -20,8 +22,8 @@ describe('clients queries', () => {
           _id: '1',
           name: 'Test Client',
           email: 'test@example.com',
-          selectedPlan: { name: 'Bronze', price: '150' }
-        }
+          selectedPlan: { name: 'Bronze', price: '150' },
+        },
       ]
       mockRunQueryNoCache.mockResolvedValue(mockClients)
 

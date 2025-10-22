@@ -32,12 +32,12 @@ test.describe('Smoke Tests', () => {
     // Start from homepage
     await page.goto('/')
     await expect(page).toHaveTitle(/TownesDev/)
-    
+
     // Navigate to plans page directly (no nav link in public header)
     await page.goto('/plans')
     await expect(page).toHaveURL(/.*plans/)
     await expect(page.locator('text=Choose Your Plan')).toBeVisible()
-    
+
     // Try to access protected route (should redirect to auth)
     await page.goto('/app')
     await expect(page).toHaveURL(/.*signin/)
@@ -53,7 +53,7 @@ test.describe('Smoke Tests', () => {
   test('health endpoint is accessible', async ({ page }) => {
     const response = await page.request.get('/api/health')
     expect(response.status()).toBe(200)
-    
+
     const data = await response.json()
     expect(data).toHaveProperty('status', 'ok')
     expect(data).toHaveProperty('time')
