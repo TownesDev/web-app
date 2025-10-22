@@ -12,6 +12,7 @@ import {
   Settings,
   Menu,
   X,
+  FileBarChart,
 } from 'lucide-react'
 
 interface NavItem {
@@ -40,6 +41,11 @@ const navItems: NavItem[] = [
     href: '/admin/incidents',
     label: 'Incidents',
     icon: AlertTriangle,
+  },
+  {
+    href: '/admin/reports',
+    label: 'Reports',
+    icon: FileBarChart,
   },
   {
     href: '/admin/email-templates',

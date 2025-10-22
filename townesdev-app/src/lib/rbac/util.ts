@@ -14,6 +14,8 @@ export const ROLE_CAPABILITIES: Record<UserRole, Capability[]> = {
     'clients:write',
     'invoices:read',
     'invoices:write',
+    'reports:read',
+    'reports:generate',
     'content:read',
     'content:write',
     'system:read',
@@ -29,6 +31,8 @@ export const ROLE_CAPABILITIES: Record<UserRole, Capability[]> = {
     'clients:write',
     'invoices:read',
     'invoices:write',
+    'reports:read',
+    'reports:generate',
     'content:read',
     'content:write',
     'bot:assets:manage',
@@ -37,6 +41,7 @@ export const ROLE_CAPABILITIES: Record<UserRole, Capability[]> = {
   client: [
     'clients:read', // Can read their own client data
     'invoices:read', // Can read their own invoices
+    'reports:read', // Can view their own reports
   ],
   user: [
     // Basic user with no special capabilities
