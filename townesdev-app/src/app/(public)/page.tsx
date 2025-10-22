@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { PlanCard } from '../../components/PlanCard'
-import { runQuery } from '../../lib/client'
+import { runPublicQuery } from '../../lib/public/client'
 import { qPlans } from '../../sanity/lib/queries'
 import { draftMode } from 'next/headers'
 
@@ -17,7 +17,7 @@ interface Plan {
 
 async function getPlans(): Promise<Plan[]> {
   const { isEnabled } = await draftMode()
-  const plans = await runQuery(qPlans, {}, isEnabled)
+  const plans = await runPublicQuery(qPlans, {}, isEnabled)
   return plans
 }
 

@@ -1,5 +1,5 @@
 import { getCurrentClient } from '@/lib/auth'
-import { runQuery } from '@/lib/client'
+import { runPortalQuery } from '@/lib/portal/client'
 import { qFeaturesByType, qEntitlementsByAsset } from '@/sanity/lib/queries'
 import Link from 'next/link'
 import { ToggleFeatureButton } from '@/components/ToggleFeatureButton'
@@ -46,7 +46,7 @@ export default async function FeaturesPage({
   }
 
   // Get asset with external IDs for Discord bot guild extraction
-  const asset = await runQuery(
+  const asset = await runPortalQuery(
     `*[_type=="serviceAsset" && _id==$assetId && client._ref==$clientId][0]{
       _id, name, type, externalIds
     }`,
@@ -74,10 +74,10 @@ export default async function FeaturesPage({
   const assetTypeMap = { discord_bot: 'bot', web_app: 'app' }
   const featureAssetType = assetTypeMap[asset.type as keyof typeof assetTypeMap]
 
-  const features = await runQuery(qFeaturesByType, {
+  const features = await runPortalQuery(qFeaturesByType, {
     assetType: featureAssetType,
   })
-  const entitlements = await runQuery(qEntitlementsByAsset, { assetId })
+  const entitlements = await runPortalQuery(qEntitlementsByAsset, { assetId })
 
   // Create a set of entitled feature IDs
   const entitledFeatureIds = new Set(

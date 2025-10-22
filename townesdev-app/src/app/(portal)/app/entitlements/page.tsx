@@ -1,5 +1,5 @@
 import { getCurrentClient } from '@/lib/auth'
-import { runQuery } from '@/lib/client'
+import { runPortalQuery } from '@/lib/portal/client'
 import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
 
@@ -45,7 +45,7 @@ export default async function EntitlementsPage() {
   }
 
   // Get client's entitlements with feature and asset details
-  const entitlements = await runQuery(
+  const entitlements = await runPortalQuery(
     `*[_type=="entitlement" && client._ref==$clientId] | order(activatedAt desc) {
       _id,
       activatedAt,
@@ -67,7 +67,7 @@ export default async function EntitlementsPage() {
   )
 
   // Get client's active subscription
-  const subscription = await runQuery(
+  const subscription = await runPortalQuery(
     `*[_type=="subscription" && client._ref==$clientId && status=="active"][0]{
       _id,
       status,

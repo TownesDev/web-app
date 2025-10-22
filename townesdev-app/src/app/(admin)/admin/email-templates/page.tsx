@@ -4,7 +4,7 @@
  */
 
 import { requireCapability } from '../../../../lib/rbac/guards'
-import { runQueryNoCache } from '../../../../lib/client'
+import { runAdminQuery } from '@/lib/admin/client'
 import { qEmailTemplates } from '../../../../sanity/lib/queries'
 import EmailTemplatesTable from '../../../../components/admin/EmailTemplatesTable'
 import Link from 'next/link'
@@ -14,7 +14,7 @@ export default async function EmailTemplatesPage() {
   await requireCapability('content:write')
 
   // Fetch all email templates
-  const templates = await runQueryNoCache(qEmailTemplates)
+  const templates = await runAdminQuery(qEmailTemplates)
 
   return (
     <div className="container mx-auto px-4 py-8">

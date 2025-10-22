@@ -1,5 +1,5 @@
 import { getCurrentClient } from '@/lib/auth'
-import { runQuery } from '@/lib/client'
+import { runPortalQuery } from '@/lib/portal/client'
 import { qAssetsByClient } from '@/sanity/lib/queries'
 import Link from 'next/link'
 import { Bot, Globe, ShoppingCart, Smartphone } from 'lucide-react'
@@ -48,7 +48,7 @@ export default async function AssetsPage() {
     return <div>Access denied</div>
   }
 
-  const assets = await runQuery(qAssetsByClient, { clientId: client._id })
+  const assets = await runPortalQuery(qAssetsByClient, { clientId: client._id })
 
   // Group assets by type for better organization
   const assetsByType = assets.reduce(

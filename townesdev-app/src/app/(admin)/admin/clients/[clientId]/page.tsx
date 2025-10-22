@@ -4,7 +4,7 @@
  */
 
 import { requireCapability } from '../../../../../lib/rbac/guards'
-import { runQuery } from '../../../../../lib/client'
+import { runAdminQuery } from '@/lib/admin/client'
 import { qClientById } from '../../../../../sanity/lib/queries'
 import Link from 'next/link'
 import { BotManagementSection } from '../../../../../components/BotManagementSection'
@@ -24,7 +24,7 @@ export default async function ClientDetailPage({
   await requireCapability('clients:read')
 
   // Fetch client details
-  const client = await runQuery(qClientById, { id: clientId })
+  const client = await runAdminQuery(qClientById, { id: clientId })
 
   if (!client) {
     return (
