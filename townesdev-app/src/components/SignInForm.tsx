@@ -69,7 +69,10 @@ export function SignInForm() {
         description: 'Welcome back!',
       })
       setTimeout(() => {
-        window.location.href = '/'
+        // If tester bypass cookie is present, send user to client portal
+        const cookies = document.cookie || ''
+        const hasBypass = cookies.includes('maintenance-bypass=allow')
+        window.location.href = hasBypass ? '/app' : '/'
       }, 1500)
     } catch (err: unknown) {
       console.error('Sign in exception:', err)
