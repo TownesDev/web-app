@@ -13,7 +13,10 @@ export default async function Page({
 }) {
   const clientId = params.clientId
   const month = monthLabel()
-  const doc = await runAdminQuery(qMonthlyRhythmForClientMonth, { clientId, month })
+  const doc = await runAdminQuery(qMonthlyRhythmForClientMonth, {
+    clientId,
+    month,
+  })
 
   return (
     <MonthlyRhythmEditor clientId={clientId} month={month} initialValue={doc} />
