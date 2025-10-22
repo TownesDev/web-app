@@ -135,9 +135,7 @@ export default function ClientSidebar() {
                   {!isCollapsed && (
                     <span className="font-medium">{item.label}</span>
                   )}
-                  {isCollapsed && (
-                    <span className="sr-only">{item.label}</span>
-                  )}
+                  {isCollapsed && <span className="sr-only">{item.label}</span>}
                 </Link>
               </li>
             )

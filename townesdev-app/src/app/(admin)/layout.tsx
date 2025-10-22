@@ -17,7 +17,9 @@ export default async function AdminLayout({
       <Header variant="admin" />
       <div className="flex flex-1">
         <AdminSidebar />
-        <main id="main-content" className="flex-1 bg-slate-50">{children}</main>
+        <main id="main-content" className="flex-1 bg-slate-50">
+          {children}
+        </main>
       </div>
       <Footer variant="admin" />
     </div>

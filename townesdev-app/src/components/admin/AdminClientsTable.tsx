@@ -81,7 +81,7 @@ export default function AdminClientsTable({ clients }: AdminClientsTableProps) {
           <option value="Inactive">Inactive</option>
           <option value="Cancelled">Cancelled</option>
         </select>
-        <span 
+        <span
           className="text-sm text-gray-500"
           aria-live="polite"
           aria-atomic="true"
@@ -94,35 +94,37 @@ export default function AdminClientsTable({ clients }: AdminClientsTableProps) {
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200" role="table">
           <caption className="sr-only">
-            Client management table showing {filteredClients.length} of {clients.length} total clients with their status, plan, and available actions
+            Client management table showing {filteredClients.length} of{' '}
+            {clients.length} total clients with their status, plan, and
+            available actions
           </caption>
           <thead className="bg-gray-50">
             <tr>
-              <th 
+              <th
                 scope="col"
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 Name
               </th>
-              <th 
+              <th
                 scope="col"
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 Email
               </th>
-              <th 
+              <th
                 scope="col"
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 Status
               </th>
-              <th 
+              <th
                 scope="col"
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 Plan
               </th>
-              <th 
+              <th
                 scope="col"
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
@@ -183,7 +185,7 @@ export default function AdminClientsTable({ clients }: AdminClientsTableProps) {
                         Rhythm
                       </Link>
                       {/* Edit button - only show if user has write capability */}
-                      <span 
+                      <span
                         className="text-gray-300 cursor-not-allowed px-2 py-1"
                         aria-label={`Edit ${client.name} (not available)`}
                       >
