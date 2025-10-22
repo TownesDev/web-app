@@ -68,11 +68,35 @@ export function SignInForm() {
       toast.success('Sign in successful!', {
         description: 'Welcome back!',
       })
-      setTimeout(() => {
-        // If tester bypass cookie is present, send user to client portal
-        const cookies = document.cookie || ''
-        const hasBypass = cookies.includes('maintenance-bypass=allow')
-        window.location.href = hasBypass ? '/app' : '/'
+      setTimeout(async () => {
+        try {
+          // If the URL includes the maintenance_bypass flag, call the bypass
+          // endpoint to set the cookie server-side only after a successful sign-in.
+          const params = new URLSearchParams(window.location.search)
+          const wantsBypass = params.get('maintenance_bypass') === '1'
+          const redirectTarget =
+            params.get('redirect') || (wantsBypass ? '/app' : '/')
+
+          if (wantsBypass) {
+            // Call the bypass endpoint which sets the cookie and returns a redirect.
+            const res = await fetch(
+              `/api/maintenance/bypass?redirect=${encodeURIComponent(redirectTarget)}`
+            )
+            if (res.redirected) {
+              window.location.href = res.url
+              return
+            }
+          }
+
+          // Default fallback redirect
+          window.location.href = redirectTarget
+        } catch (e) {
+          console.error('Bypass setup failed:', e)
+          // Even if the bypass step fails, redirect to the intended target
+          const params = new URLSearchParams(window.location.search)
+          const redirectTarget = params.get('redirect') || '/'
+          window.location.href = redirectTarget
+        }
       }, 1500)
     } catch (err: unknown) {
       console.error('Sign in exception:', err)

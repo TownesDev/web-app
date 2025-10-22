@@ -25,14 +25,14 @@ async function PreviewBanner() {
   )
 }
 
-export default async function PublicLayout({ children }: { children: ReactNode }) {
+export default async function PublicLayout({
+  children,
+}: {
+  children: ReactNode
+}) {
   const maintenance = process.env.MAINTENANCE_MODE === 'true'
   const cookieStore = await cookies()
   const bypass = cookieStore.get('maintenance-bypass')?.value
-
-  if (maintenance && bypass !== 'allow') {
-    return <MaintenanceCover />
-  }
 
   return (
     <div lang="en" className="min-h-screen flex flex-col">
@@ -42,6 +42,7 @@ export default async function PublicLayout({ children }: { children: ReactNode }
       <Footer variant="public" />
       <SanityLive />
       <VisualEditingClient />
+      {maintenance && bypass !== 'allow' ? <MaintenanceCover /> : null}
     </div>
   )
 }
