@@ -15,11 +15,13 @@ The Email to Incident integration allows clients to create support tickets by se
 ## Features
 
 ### Smart Client Mapping
+
 - **Exact Match**: Direct email address lookup in client records
 - **Domain Match**: Matches emails from the same organization domain
 - **Email Extraction**: Handles various email formats ("Name <email>" or plain email)
 
 ### Intelligent Content Parsing
+
 - **Subject Cleaning**: Removes "Re:", "Fwd:" prefixes and formatting
 - **Priority Detection**: Analyzes content for urgency keywords (urgent, emergency, critical)
 - **Tag Generation**: Automatically tags incidents based on content (bot, infrastructure, billing, etc.)
@@ -27,6 +29,7 @@ The Email to Incident integration allows clients to create support tickets by se
 - **Signature Removal**: Strips common email signatures and boilerplate
 
 ### Attachment Handling
+
 - **File Type Detection**: Categorizes attachments as images, documents, or other
 - **Security Validation**: Flags potentially unsafe files and enforces size limits
 - **Metadata Cataloging**: Records attachment details without full file processing
@@ -38,9 +41,11 @@ The Email to Incident integration allows clients to create support tickets by se
 Webhook endpoint for receiving inbound emails from email service providers.
 
 #### Authentication
+
 Requires webhook authentication via headers:
+
 - `x-webhook-signature`
-- `resend-signature`  
+- `resend-signature`
 - `authorization`
 
 Set the `EMAIL_WEBHOOK_SECRET` environment variable to secure the endpoint.
@@ -71,6 +76,7 @@ The endpoint accepts various webhook formats. Common payload structure:
 #### Response Format
 
 **Success Response (200)**:
+
 ```json
 {
   "success": true,
@@ -89,6 +95,7 @@ The endpoint accepts various webhook formats. Common payload structure:
 ```
 
 **Error Responses**:
+
 - `400`: Invalid email format or missing required fields
 - `401`: Missing webhook authentication
 - `404`: Client not found for sender email
@@ -137,12 +144,15 @@ EMAIL_FROM=noreply@townesdev.com
 ### Email Service Setup
 
 #### Resend Configuration
+
 1. Configure webhook endpoint: `https://your-domain.com/api/email/inbound`
 2. Set webhook secret in environment variables
 3. Enable relevant webhook events (email received)
 
 #### Other Email Services
+
 The webhook supports multiple formats and can be adapted for:
+
 - SendGrid
 - Mailgun
 - Postmark
@@ -161,6 +171,7 @@ Clients must have their email addresses registered in the TownesDev system:
 ### Domain-Based Matching
 
 For organizations with multiple email addresses:
+
 - If client record has "support@acme.com"
 - Emails from "john@acme.com" or "jane@acme.com" will also match
 - This allows team members to create incidents from their work emails
@@ -170,11 +181,13 @@ For organizations with multiple email addresses:
 The system provides comprehensive logging for debugging and monitoring:
 
 ### Log Levels
+
 - **Info**: Successful incident creation, client mapping
 - **Warn**: Unknown senders, unsafe attachments
 - **Error**: Authentication failures, processing errors
 
 ### Logged Information
+
 - Email processing pipeline steps
 - Client lookup results and match types
 - Parsed content analysis (title, priority, tags)
@@ -182,6 +195,7 @@ The system provides comprehensive logging for debugging and monitoring:
 - Incident creation success/failure
 
 ### Example Log Output
+
 ```
 [Email Webhook] Received payload: { from: "client@example.com", subject: "Bot issue" }
 [Email Mapping] Found exact match for client@example.com: Example Corp
@@ -193,17 +207,20 @@ The system provides comprehensive logging for debugging and monitoring:
 ## Security Considerations
 
 ### Webhook Authentication
+
 - Always verify webhook signatures
 - Use environment variables for secrets
 - Monitor for unauthorized access attempts
 
 ### Attachment Security
+
 - File size limits (10MB default)
 - Dangerous file type detection
 - Content type validation
 - Log unsafe attachment attempts
 
 ### Email Validation
+
 - Sender email format validation
 - Client account verification required
 - Domain matching validation
@@ -213,16 +230,19 @@ The system provides comprehensive logging for debugging and monitoring:
 ### Common Issues
 
 **"Client not found" errors**:
+
 - Verify client email address is registered in system
 - Check domain matching configuration
 - Review email extraction logic for complex sender formats
 
 **Authentication failures**:
+
 - Verify webhook secret configuration
 - Check email service webhook setup
 - Monitor webhook signature format
 
 **Parsing errors**:
+
 - Review email content format
 - Check for encoding issues
 - Validate attachment structure
@@ -248,6 +268,7 @@ Potential improvements for future releases:
 Use the following email formats to test the integration:
 
 ### Basic Email
+
 ```
 From: client@example.com
 Subject: Test incident
@@ -255,6 +276,7 @@ Body: This is a test incident for the email integration.
 ```
 
 ### High Priority Email
+
 ```
 From: client@example.com
 Subject: URGENT: Bot is down
@@ -262,9 +284,11 @@ Body: The Discord bot is completely down and not responding to any commands. Thi
 ```
 
 ### Email with Attachments
+
 Send emails with various attachment types to test file processing and security validation.
 
 ### Reply Email
+
 ```
 From: client@example.com
 Subject: Re: Bot issue

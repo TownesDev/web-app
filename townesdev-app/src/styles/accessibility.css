@@ -19,7 +19,7 @@
 
 /* Enhanced focus styles for better visibility */
 .focus-visible {
-  outline: 2px solid #3A506B; /* nile-blue-600 */
+  outline: 2px solid #3a506b; /* nile-blue-600 */
   outline-offset: 2px;
 }
 
@@ -41,7 +41,7 @@
   .hover\:bg-gray-50:hover {
     background-color: #f8f9fa !important;
   }
-  
+
   .text-nile-blue-600 {
     font-weight: 600;
   }
@@ -54,7 +54,7 @@
   .transition-transform {
     transition: none !important;
   }
-  
+
   .transform {
     transform: none !important;
   }
@@ -71,18 +71,18 @@ a:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid #3A506B;
+  outline: 2px solid #3a506b;
   outline-offset: 2px;
   border-radius: 4px;
 }
 
 /* Table accessibility improvements */
-table[role="table"] {
+table[role='table'] {
   border-collapse: collapse;
   width: 100%;
 }
 
-table[role="table"] caption {
+table[role='table'] caption {
   text-align: left;
   margin-bottom: 0.5rem;
   font-weight: 600;
@@ -109,7 +109,7 @@ nav[aria-label] {
   position: relative;
 }
 
-nav[aria-label] ul[role="list"] {
+nav[aria-label] ul[role='list'] {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -134,7 +134,7 @@ input:invalid:focus {
 }
 
 /* Error states */
-.error[role="alert"] {
+.error[role='alert'] {
   color: #ef4444;
   font-weight: 500;
 }

@@ -11,12 +11,16 @@ import { jwtVerify } from 'jose'
 async function verifyToken(token: string) {
   try {
     const secret = new TextEncoder().encode(
-      process.env.JWT_SECRET || 'your-secret-key'
+      process.env.JWT_SECRET || 'default-secret',
     )
     const { payload } = await jwtVerify(token, secret)
-    const { id, email, name } = payload as Record<string, any>
+    const { id, email, name } = payload as {
+      id: string
+      email: string
+      name: string
+    }
     return { id, email, name }
-  } catch (err) {
+  } catch {
     return null
   }
 }

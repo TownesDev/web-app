@@ -18,10 +18,12 @@ TownesDev includes Sanity preview mode functionality that allows content editors
 **Endpoint**: `GET /api/preview`
 
 **Parameters**:
+
 - `secret` (required) - Preview secret from environment variables
 - `redirect` (optional) - URL to redirect to after enabling preview (default: `/`)
 
 **Example**:
+
 ```
 http://localhost:3000/api/preview?secret=your_secret&redirect=/plans
 ```
@@ -33,6 +35,7 @@ http://localhost:3000/api/preview?secret=your_secret&redirect=/plans
 Disables preview mode and redirects to the homepage.
 
 **Example**:
+
 ```
 http://localhost:3000/api/preview/disable
 ```
@@ -46,6 +49,7 @@ SANITY_PREVIEW_SECRET=your_secure_random_string
 ```
 
 Generate a secure secret:
+
 ```bash
 openssl rand -base64 32
 ```
@@ -146,6 +150,7 @@ export async function runPublicQuery(
 ```
 
 **Examples**:
+
 - Preview homepage: `/api/preview?secret=abc123&redirect=/`
 - Preview plans page: `/api/preview?secret=abc123&redirect=/plans`
 - Preview specific content: `/api/preview?secret=abc123&redirect=/blog/draft-post`
@@ -177,12 +182,14 @@ export async function runPublicQuery(
 ### Debug Steps
 
 1. **Check Environment Variables**:
+
    ```bash
    echo $SANITY_PREVIEW_SECRET
    echo $SANITY_AUTH_TOKEN
    ```
 
 2. **Test Preview URL**:
+
    ```bash
    curl -i "http://localhost:3000/api/preview?secret=YOUR_SECRET"
    ```

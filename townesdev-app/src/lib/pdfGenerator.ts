@@ -3,20 +3,20 @@
  * Creates PDF reports from HTML templates using Puppeteer
  */
 
-import puppeteer, { Browser, Page } from 'puppeteer';
-import { MonthlyReportData } from './reportData';
+import puppeteer, { Browser, Page } from 'puppeteer'
+import { MonthlyReportData } from './reportData'
 
 export interface PDFGenerationOptions {
-  format?: 'A4' | 'Letter';
+  format?: 'A4' | 'Letter'
   margin?: {
-    top?: string;
-    right?: string;
-    bottom?: string;
-    left?: string;
-  };
-  headerTemplate?: string;
-  footerTemplate?: string;
-  displayHeaderFooter?: boolean;
+    top?: string
+    right?: string
+    bottom?: string
+    left?: string
+  }
+  headerTemplate?: string
+  footerTemplate?: string
+  displayHeaderFooter?: boolean
 }
 
 /**
@@ -26,27 +26,29 @@ export async function generateMonthlyReportPDF(
   reportData: MonthlyReportData,
   options: PDFGenerationOptions = {}
 ): Promise<Buffer> {
-  console.log(`[PDF Generation] Starting PDF generation for ${reportData.client.name} - ${reportData.month}`);
-  
-  let browser: Browser | null = null;
-  let page: Page | null = null;
+  console.log(
+    `[PDF Generation] Starting PDF generation for ${reportData.client.name} - ${reportData.month}`
+  )
+
+  let browser: Browser | null = null
+  let page: Page | null = null
 
   try {
     // Launch Puppeteer
     browser = await puppeteer.launch({
       headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
-    });
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    })
 
-    page = await browser.newPage();
+    page = await browser.newPage()
 
     // Generate HTML content
-    const htmlContent = generateReportHTML(reportData);
+    const htmlContent = generateReportHTML(reportData)
 
     // Set content
-    await page.setContent(htmlContent, { 
-      waitUntil: 'networkidle0' 
-    });
+    await page.setContent(htmlContent, {
+      waitUntil: 'networkidle0',
+    })
 
     // Generate PDF
     const pdfBuffer = await page.pdf({
@@ -55,23 +57,27 @@ export async function generateMonthlyReportPDF(
         top: '1in',
         right: '0.75in',
         bottom: '1in',
-        left: '0.75in'
+        left: '0.75in',
       },
       displayHeaderFooter: options.displayHeaderFooter || true,
-      headerTemplate: options.headerTemplate || generateHeaderTemplate(reportData),
+      headerTemplate:
+        options.headerTemplate || generateHeaderTemplate(reportData),
       footerTemplate: options.footerTemplate || generateFooterTemplate(),
-      printBackground: true
-    });
+      printBackground: true,
+    })
 
-    console.log(`[PDF Generation] Successfully generated PDF (${pdfBuffer.length} bytes)`);
-    return Buffer.from(pdfBuffer);
-
+    console.log(
+      `[PDF Generation] Successfully generated PDF (${pdfBuffer.length} bytes)`
+    )
+    return Buffer.from(pdfBuffer)
   } catch (error) {
-    console.error('[PDF Generation] Error generating PDF:', error);
-    throw new Error(`Failed to generate PDF: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    console.error('[PDF Generation] Error generating PDF:', error)
+    throw new Error(
+      `Failed to generate PDF: ${error instanceof Error ? error.message : 'Unknown error'}`
+    )
   } finally {
-    if (page) await page.close();
-    if (browser) await browser.close();
+    if (page) await page.close()
+    if (browser) await browser.close()
   }
 }
 
@@ -79,7 +85,7 @@ export async function generateMonthlyReportPDF(
  * Generate HTML content for the report
  */
 function generateReportHTML(data: MonthlyReportData): string {
-  const { client, month, monthlyRhythm, incidents, invoices, summary } = data;
+  const { client, month, monthlyRhythm, incidents, invoices, summary } = data
 
   return `
 <!DOCTYPE html>
@@ -138,7 +144,9 @@ function generateReportHTML(data: MonthlyReportData): string {
         </section>
 
         <!-- Monthly Rhythm -->
-        ${monthlyRhythm ? `
+        ${
+          monthlyRhythm
+            ? `
         <section class="rhythm-section">
             <h2>Monthly Rhythm</h2>
             <div class="rhythm-content">
@@ -146,43 +154,65 @@ function generateReportHTML(data: MonthlyReportData): string {
                     <p><strong>Hours Used:</strong> ${monthlyRhythm.hoursUsed || 0} / ${monthlyRhythm.hoursIncluded || 0}</p>
                 </div>
                 
-                ${monthlyRhythm.week1Patch ? `
+                ${
+                  monthlyRhythm.week1Patch
+                    ? `
                 <div class="rhythm-week">
                     <h3>Week 1 - Patch and Review</h3>
                     <p>${monthlyRhythm.week1Patch}</p>
                 </div>
-                ` : ''}
+                `
+                    : ''
+                }
                 
-                ${monthlyRhythm.week2Observability ? `
+                ${
+                  monthlyRhythm.week2Observability
+                    ? `
                 <div class="rhythm-week">
                     <h3>Week 2 - Observability</h3>
                     <p>${monthlyRhythm.week2Observability}</p>
                 </div>
-                ` : ''}
+                `
+                    : ''
+                }
                 
-                ${monthlyRhythm.week3Hardening ? `
+                ${
+                  monthlyRhythm.week3Hardening
+                    ? `
                 <div class="rhythm-week">
                     <h3>Week 3 - Hardening</h3>
                     <p>${monthlyRhythm.week3Hardening}</p>
                 </div>
-                ` : ''}
+                `
+                    : ''
+                }
                 
-                ${monthlyRhythm.week4Report ? `
+                ${
+                  monthlyRhythm.week4Report
+                    ? `
                 <div class="rhythm-week">
                     <h3>Week 4 - Report</h3>
                     <p>${monthlyRhythm.week4Report}</p>
                 </div>
-                ` : ''}
+                `
+                    : ''
+                }
             </div>
         </section>
-        ` : ''}
+        `
+            : ''
+        }
 
         <!-- Incidents -->
         <section class="incidents-section">
             <h2>Incidents (${incidents.length})</h2>
-            ${incidents.length > 0 ? `
+            ${
+              incidents.length > 0
+                ? `
             <div class="incidents-list">
-                ${incidents.map(incident => `
+                ${incidents
+                  .map(
+                    (incident) => `
                 <div class="incident-item severity-${incident.severity}">
                     <div class="incident-header">
                         <h3>${incident.title}</h3>
@@ -198,15 +228,21 @@ function generateReportHTML(data: MonthlyReportData): string {
                         ${incident.resolvedAt ? `<span>Resolved: ${new Date(incident.resolvedAt).toLocaleDateString()}</span>` : ''}
                     </div>
                 </div>
-                `).join('')}
+                `
+                  )
+                  .join('')}
             </div>
-            ` : '<p class="no-data">No incidents reported this month.</p>'}
+            `
+                : '<p class="no-data">No incidents reported this month.</p>'
+            }
         </section>
 
         <!-- Invoices -->
         <section class="invoices-section">
             <h2>Invoices (${invoices.length})</h2>
-            ${invoices.length > 0 ? `
+            ${
+              invoices.length > 0
+                ? `
             <table class="invoices-table">
                 <thead>
                     <tr>
@@ -218,7 +254,9 @@ function generateReportHTML(data: MonthlyReportData): string {
                     </tr>
                 </thead>
                 <tbody>
-                    ${invoices.map(invoice => `
+                    ${invoices
+                      .map(
+                        (invoice) => `
                     <tr>
                         <td>${invoice.invoiceNumber}</td>
                         <td>${invoice.currency} ${invoice.totalAmount.toFixed(2)}</td>
@@ -226,10 +264,14 @@ function generateReportHTML(data: MonthlyReportData): string {
                         <td>${new Date(invoice.issueDate).toLocaleDateString()}</td>
                         <td>${new Date(invoice.dueDate).toLocaleDateString()}</td>
                     </tr>
-                    `).join('')}
+                    `
+                      )
+                      .join('')}
                 </tbody>
             </table>
-            ` : '<p class="no-data">No invoices issued this month.</p>'}
+            `
+                : '<p class="no-data">No invoices issued this month.</p>'
+            }
         </section>
 
         <!-- Footer -->
@@ -240,7 +282,7 @@ function generateReportHTML(data: MonthlyReportData): string {
     </div>
 </body>
 </html>
-  `;
+  `
 }
 
 /**
@@ -516,7 +558,7 @@ function getReportStyles(): string {
             page-break-inside: avoid;
         }
     }
-  `;
+  `
 }
 
 /**
@@ -528,7 +570,7 @@ function generateHeaderTemplate(data: MonthlyReportData): string {
       <span style="float: left;">TownesDev Monthly Report</span>
       <span style="float: right;">${data.client.name} - ${data.month}</span>
     </div>
-  `;
+  `
 }
 
 /**
@@ -541,5 +583,5 @@ function generateFooterTemplate(): string {
       <span>Page <span class="pageNumber"></span> of <span class="totalPages"></span></span>
       <span style="float: right;">TownesDev.com</span>
     </div>
-  `;
+  `
 }

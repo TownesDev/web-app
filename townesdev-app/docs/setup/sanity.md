@@ -66,6 +66,7 @@ sanity init
 ```
 
 Follow the prompts:
+
 - Create new project or select existing
 - Choose project name
 - Select dataset name (usually "production")
@@ -99,18 +100,17 @@ TownesDev uses the following content types:
 
 ```typescript
 // Core entities
-- client          // Customer accounts
-- serviceAsset    // Digital services (Discord bots, websites, etc.)
-- plan           // Subscription tiers
-- feature        // Purchasable add-ons
-- entitlement    // Customer access records
-- invoice        // Billing history
-- incident       // Support tickets
-
-// Content entities
-- emailTemplate  // Email templates
-- seoConfig     // SEO settings
-- systemStatus  // Status page content
+;-client - // Customer accounts
+  serviceAsset - // Digital services (Discord bots, websites, etc.)
+  plan - // Subscription tiers
+  feature - // Purchasable add-ons
+  entitlement - // Customer access records
+  invoice - // Billing history
+  incident - // Support tickets
+  // Content entities
+  emailTemplate - // Email templates
+  seoConfig - // SEO settings
+  systemStatus // Status page content
 ```
 
 ### Schema Deployment
@@ -344,6 +344,7 @@ sanity dataset import staging-backup.tar.gz production
 ### Common Issues
 
 1. **Authentication Failed**
+
    ```bash
    sanity logout
    sanity login
@@ -394,6 +395,7 @@ console.log('Sanity connected:', !!health)
 ### Monitoring
 
 Monitor API usage in Sanity dashboard:
+
 - Request volume
 - Response times
 - Error rates

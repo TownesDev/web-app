@@ -462,8 +462,17 @@ export const incident: SchemaTypeDefinition = {
       title: 'Client',
       type: 'reference',
       to: [{ type: 'client' }],
-      validation: (Rule) => Rule.required(),
-      description: 'The client this incident is for',
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          // Allow empty client for email incidents from unknown senders
+          if (!value && context.document?.source === 'email') {
+            return true
+          }
+          // Require client for all other incident types
+          return value ? true : 'Client is required for non-email incidents'
+        }),
+      description:
+        'The client this incident is for (optional for unknown email senders)',
     },
     {
       name: 'title',
@@ -543,6 +552,183 @@ export const incident: SchemaTypeDefinition = {
       title: 'Assignee',
       type: 'string',
       description: 'Person assigned to handle this incident',
+    },
+    // Email-related fields for incidents created from inbound emails
+    {
+      name: 'source',
+      title: 'Source',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Manual', value: 'manual' },
+          { title: 'Email', value: 'email' },
+          { title: 'API', value: 'api' },
+          { title: 'Bot', value: 'bot' },
+        ],
+      },
+      initialValue: 'manual',
+      description: 'How this incident was created',
+    },
+    {
+      name: 'emailMessageId',
+      title: 'Email Message ID',
+      type: 'string',
+      description: 'Original email message ID for tracking',
+      hidden: ({ document }) => document?.source !== 'email',
+    },
+    {
+      name: 'senderEmail',
+      title: 'Sender Email',
+      type: 'string',
+      description: 'Email address of the person who reported this incident',
+      hidden: ({ document }) => document?.source !== 'email',
+    },
+    {
+      name: 'originalFrom',
+      title: 'Original From',
+      type: 'string',
+      description: 'Original from address from the email',
+      hidden: ({ document }) => document?.source !== 'email',
+    },
+    {
+      name: 'hasAttachments',
+      title: 'Has Attachments',
+      type: 'boolean',
+      description: 'Whether the original email had attachments',
+      hidden: ({ document }) => document?.source !== 'email',
+    },
+    {
+      name: 'isReply',
+      title: 'Is Reply',
+      type: 'boolean',
+      description: 'Whether this was a reply to an existing thread',
+      hidden: ({ document }) => document?.source !== 'email',
+    },
+    {
+      name: 'matchType',
+      title: 'Match Type',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Exact Email', value: 'exact' },
+          { title: 'Domain Match', value: 'domain' },
+          { title: 'No Match', value: 'none' },
+        ],
+      },
+      description: 'How the client was matched from the email',
+      hidden: ({ document }) => document?.source !== 'email',
+    },
+    {
+      name: 'attachments',
+      title: 'Attachments',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {
+              name: 'filename',
+              title: 'Filename',
+              type: 'string',
+            },
+            {
+              name: 'contentType',
+              title: 'Content Type',
+              type: 'string',
+            },
+            {
+              name: 'size',
+              title: 'Size (bytes)',
+              type: 'number',
+            },
+            {
+              name: 'url',
+              title: 'URL',
+              type: 'url',
+            },
+            {
+              name: 'isSafe',
+              title: 'Is Safe',
+              type: 'boolean',
+            },
+          ],
+        },
+      ],
+      description: 'Email attachments information',
+      hidden: ({ document }) => document?.source !== 'email',
+    },
+    {
+      name: 'metadata',
+      title: 'Email Metadata',
+      type: 'object',
+      fields: [
+        {
+          name: 'attachmentCount',
+          title: 'Attachment Count',
+          type: 'number',
+        },
+        {
+          name: 'attachmentSummary',
+          title: 'Attachment Summary',
+          type: 'object',
+          fields: [
+            {
+              name: 'documentCount',
+              title: 'Document Count',
+              type: 'number',
+            },
+            {
+              name: 'fileList',
+              title: 'File List',
+              type: 'array',
+              of: [{ type: 'string' }],
+            },
+            {
+              name: 'hasUnsafe',
+              title: 'Has Unsafe Files',
+              type: 'boolean',
+            },
+            {
+              name: 'imageCount',
+              title: 'Image Count',
+              type: 'number',
+            },
+            {
+              name: 'safeCount',
+              title: 'Safe File Count',
+              type: 'number',
+            },
+            {
+              name: 'totalCount',
+              title: 'Total File Count',
+              type: 'number',
+            },
+            {
+              name: 'totalSize',
+              title: 'Total Size',
+              type: 'string',
+            },
+          ],
+        },
+      ],
+      description: 'Email processing metadata',
+      hidden: ({ document }) => document?.source !== 'email',
+    },
+    {
+      name: 'tags',
+      title: 'Tags',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'Auto-generated tags based on email content',
+      options: {
+        list: [
+          { title: 'Question', value: 'question' },
+          { title: 'Bug Report', value: 'bug' },
+          { title: 'Feature Request', value: 'feature' },
+          { title: 'Urgent', value: 'urgent' },
+          { title: 'Critical', value: 'critical' },
+        ],
+      },
     },
   ],
 }

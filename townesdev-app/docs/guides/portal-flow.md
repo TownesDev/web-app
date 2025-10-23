@@ -9,13 +9,11 @@ The TownesDev Client Portal provides a comprehensive dashboard for managing your
 ### Account Creation & Onboarding
 
 1. **Initial Setup**
-
    - Receive invitation email with secure login link
    - Set up account password and security preferences
    - Complete profile information
 
 2. **Welcome Experience**
-
    - Interactive onboarding tour
    - Service overview and key features
    - Asset-specific setup guidance
@@ -149,14 +147,12 @@ The dashboard provides a comprehensive overview of your services:
 
 1. **Access Incident Form**: Navigate to Incidents → New Incident
 2. **Select Severity**:
-
    - **Low**: Minor issues, general questions
    - **Medium**: Service degradation, feature requests
    - **High**: Significant issues affecting operations
    - **Critical**: Service outages, security issues
 
 3. **Provide Details**:
-
    - Clear title describing the issue
    - Detailed description with steps to reproduce
    - Screenshots or error messages

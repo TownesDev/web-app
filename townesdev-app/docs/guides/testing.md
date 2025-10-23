@@ -43,6 +43,7 @@ open coverage/lcov-report/index.html
 ```
 
 **Coverage Targets:**
+
 - Statements: >80%
 - Branches: >75%
 - Functions: >80%
@@ -136,10 +137,7 @@ module.exports = {
   moduleNameMapping: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
-  collectCoverageFrom: [
-    'src/**/*.{ts,tsx}',
-    '!src/**/*.d.ts',
-  ],
+  collectCoverageFrom: ['src/**/*.{ts,tsx}', '!src/**/*.d.ts'],
 }
 ```
 
@@ -214,13 +212,13 @@ import { fireEvent, waitFor } from '@testing-library/react'
 
 it('handles form submission', async () => {
   render(<ContactForm />)
-  
+
   fireEvent.change(screen.getByLabelText('Email'), {
     target: { value: 'test@example.com' }
   })
-  
+
   fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
-  
+
   await waitFor(() => {
     expect(screen.getByText('Success')).toBeInTheDocument()
   })
@@ -245,6 +243,7 @@ Tests run automatically on PRs:
 ### Test Requirements
 
 All PRs must:
+
 - Pass unit tests
 - Pass E2E smoke tests
 - Maintain coverage thresholds
