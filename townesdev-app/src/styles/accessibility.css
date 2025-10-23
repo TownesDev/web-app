@@ -1,0 +1,140 @@
+/* Accessibility CSS - Global focus styles and accessibility enhancements */
+
+/* Skip links for keyboard navigation */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #000;
+  color: #fff;
+  padding: 8px;
+  text-decoration: none;
+  z-index: 1000;
+  border-radius: 4px;
+}
+
+.skip-link:focus {
+  top: 6px;
+}
+
+/* Enhanced focus styles for better visibility */
+.focus-visible {
+  outline: 2px solid #3a506b; /* nile-blue-600 */
+  outline-offset: 2px;
+}
+
+/* Screen reader only text */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .hover\:bg-gray-50:hover {
+    background-color: #f8f9fa !important;
+  }
+
+  .text-nile-blue-600 {
+    font-weight: 600;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .transition-all,
+  .transition-colors,
+  .transition-transform {
+    transition: none !important;
+  }
+
+  .transform {
+    transform: none !important;
+  }
+}
+
+/* Focus management for modals and overlays */
+.focus-trap {
+  outline: none;
+}
+
+/* Better focus styles for interactive elements */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #3a506b;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Table accessibility improvements */
+table[role='table'] {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table[role='table'] caption {
+  text-align: left;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+/* Status indicators with better contrast */
+.status-active {
+  background-color: #10b981;
+  color: #ffffff;
+}
+
+.status-inactive {
+  background-color: #f59e0b;
+  color: #ffffff;
+}
+
+.status-cancelled {
+  background-color: #ef4444;
+  color: #ffffff;
+}
+
+/* Navigation accessibility */
+nav[aria-label] {
+  position: relative;
+}
+
+nav[aria-label] ul[role='list'] {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Form accessibility */
+label {
+  cursor: pointer;
+}
+
+input:invalid {
+  border-color: #ef4444;
+}
+
+input:invalid:focus {
+  outline-color: #ef4444;
+}
+
+/* Loading states with proper announcements */
+.loading[aria-live] {
+  min-height: 1.5rem;
+}
+
+/* Error states */
+.error[role='alert'] {
+  color: #ef4444;
+  font-weight: 500;
+}

@@ -12,6 +12,9 @@ export type Capability =
   // Invoice management
   | 'invoices:read'
   | 'invoices:write'
+  // Report generation
+  | 'reports:read'
+  | 'reports:generate'
   // Content management (for Sanity Studio)
   | 'content:read'
   | 'content:write'

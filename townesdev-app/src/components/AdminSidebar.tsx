@@ -12,6 +12,7 @@ import {
   Settings,
   Menu,
   X,
+  FileBarChart,
 } from 'lucide-react'
 
 interface NavItem {
@@ -42,6 +43,11 @@ const navItems: NavItem[] = [
     icon: AlertTriangle,
   },
   {
+    href: '/admin/reports',
+    label: 'Reports',
+    icon: FileBarChart,
+  },
+  {
     href: '/admin/email-templates',
     label: 'Email Templates',
     icon: Mail,
@@ -69,6 +75,7 @@ export default function AdminSidebar() {
       className={`bg-white border-r border-gray-200 transition-all duration-300 ${
         isCollapsed ? 'w-16' : 'w-64'
       }`}
+      aria-label="Admin portal navigation"
     >
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gradient-to-r from-sandy-brown-50 to-white">
@@ -87,8 +94,10 @@ export default function AdminSidebar() {
         )}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+          className="p-2 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-sandy-brown-500"
           aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          aria-expanded={!isCollapsed}
+          aria-controls="admin-navigation"
         >
           {isCollapsed ? (
             <Menu className="h-5 w-5 text-gray-600" />
@@ -99,8 +108,8 @@ export default function AdminSidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="p-4">
-        <ul className="space-y-2">
+      <nav className="p-4" aria-label="Admin navigation" id="admin-navigation">
+        <ul className="space-y-2" role="list">
           {navItems.map((item) => {
             const Icon = item.icon
             const active = isActive(item.href)
@@ -109,16 +118,18 @@ export default function AdminSidebar() {
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
+                  className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-sandy-brown-500 ${
                     active
                       ? 'bg-nile-blue-50 text-nile-blue-900 border-r-2 border-nile-blue-600'
                       : 'text-gray-700 hover:bg-gray-50 hover:text-nile-blue-900'
                   }`}
+                  aria-current={active ? 'page' : undefined}
                 >
-                  <Icon className="h-5 w-5 flex-shrink-0" />
+                  <Icon className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
                   {!isCollapsed && (
                     <span className="font-medium">{item.label}</span>
                   )}
+                  {isCollapsed && <span className="sr-only">{item.label}</span>}
                 </Link>
               </li>
             )

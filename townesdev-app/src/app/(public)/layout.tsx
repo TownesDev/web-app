@@ -16,7 +16,7 @@ async function PreviewBanner() {
     <div className="bg-yellow-400 text-yellow-900 px-4 py-2 text-center text-sm font-medium">
       Preview Mode - Viewing draft content
       <a
-        href={`/api/draft-mode/disable?secret=${process.env.SANITY_PREVIEW_SECRET}`}
+        href="/api/preview/disable"
         className="inline ml-4 underline hover:no-underline"
       >
         Exit Preview

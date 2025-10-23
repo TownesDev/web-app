@@ -22,7 +22,9 @@ export default async function PortalLayout({
       <Header variant="portal" />
       <div className="flex flex-1">
         <ClientSidebar />
-        <main className="flex-1 bg-gray-50">{children}</main>
+        <main id="main-content" className="flex-1 bg-gray-50">
+          {children}
+        </main>
       </div>
       <Footer variant="portal" />
     </div>

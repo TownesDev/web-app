@@ -81,29 +81,53 @@ export default function AdminClientsTable({ clients }: AdminClientsTableProps) {
           <option value="Inactive">Inactive</option>
           <option value="Cancelled">Cancelled</option>
         </select>
-        <span className="text-sm text-gray-500">
+        <span
+          className="text-sm text-gray-500"
+          aria-live="polite"
+          aria-atomic="true"
+        >
           Showing {filteredClients.length} of {clients.length} clients
         </span>
       </div>
 
       {/* Table */}
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
+        <table className="min-w-full divide-y divide-gray-200" role="table">
+          <caption className="sr-only">
+            Client management table showing {filteredClients.length} of{' '}
+            {clients.length} total clients with their status, plan, and
+            available actions
+          </caption>
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Name
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Email
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Status
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Plan
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Actions
               </th>
             </tr>
@@ -129,6 +153,7 @@ export default function AdminClientsTable({ clients }: AdminClientsTableProps) {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(client.status)}`}
+                      aria-label={`Client status: ${client.status}`}
                     >
                       {client.status}
                     </span>
@@ -144,22 +169,29 @@ export default function AdminClientsTable({ clients }: AdminClientsTableProps) {
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <Link
-                      href={`/admin/clients/${client._id}`}
-                      className="text-nile-blue-600 hover:text-nile-blue-900 mr-4"
-                    >
-                      View Details
-                    </Link>
-                    <Link
-                      href={`/admin/clients/${client._id}/rhythm`}
-                      className="text-nile-blue-600 hover:text-nile-blue-900 mr-4"
-                    >
-                      Rhythm
-                    </Link>
-                    {/* Edit button - only show if user has write capability */}
-                    <span className="text-gray-300 cursor-not-allowed">
-                      Edit
-                    </span>
+                    <div className="flex space-x-2">
+                      <Link
+                        href={`/admin/clients/${client._id}`}
+                        className="text-nile-blue-600 hover:text-nile-blue-900 focus:outline-none focus:ring-2 focus:ring-nile-blue-500 rounded px-2 py-1"
+                        aria-label={`View details for ${client.name}`}
+                      >
+                        View Details
+                      </Link>
+                      <Link
+                        href={`/admin/clients/${client._id}/rhythm`}
+                        className="text-nile-blue-600 hover:text-nile-blue-900 focus:outline-none focus:ring-2 focus:ring-nile-blue-500 rounded px-2 py-1"
+                        aria-label={`View rhythm settings for ${client.name}`}
+                      >
+                        Rhythm
+                      </Link>
+                      {/* Edit button - only show if user has write capability */}
+                      <span
+                        className="text-gray-300 cursor-not-allowed px-2 py-1"
+                        aria-label={`Edit ${client.name} (not available)`}
+                      >
+                        Edit
+                      </span>
+                    </div>
                   </td>
                 </tr>
               ))
