@@ -11,7 +11,7 @@ import { jwtVerify } from 'jose'
 async function verifyToken(token: string) {
   try {
     const secret = new TextEncoder().encode(
-      process.env.JWT_SECRET || 'default-secret',
+      process.env.JWT_SECRET || 'default-secret'
     )
     const { payload } = await jwtVerify(token, secret)
     const { id, email, name } = payload as {
