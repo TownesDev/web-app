@@ -45,7 +45,7 @@ export default defineConfig({
           disable: '/api/draft-mode/disable',
         },
       },
-      allowOrigins: ['http://localhost:*', 'https://*.vercel-preview.app'],
+      allowOrigins: ['http://localhost:*', 'https://*.vercel-preview.app', 'https://townes.dev'],
     }),
   ],
   document: {

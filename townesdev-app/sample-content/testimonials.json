@@ -1,0 +1,97 @@
+[
+  {
+    "_id": "testimonial-sarah-johnson",
+    "_type": "testimonial",
+    "clientName": "Sarah Johnson",
+    "clientTitle": "CTO, TechFlow Solutions",
+    "companyWebsite": "https://techflowsolutions.com",
+    "testimonialText": "TownesDev transformed our legacy system into a modern, scalable platform that can handle 10x our previous traffic. Their attention to detail and focus on clean architecture saved us months of technical debt. The team's communication was exceptional throughout the entire project, and they delivered exactly what they promised on time and within budget.",
+    "pullQuote": "TownesDev transformed our legacy system into a modern, scalable platform that can handle 10x our previous traffic.",
+    "rating": 5,
+    "serviceType": "Custom Software Development",
+    "projectDuration": "4 months",
+    "keyResults": [
+      "300% improvement in system performance",
+      "Reduced server costs by 40%",
+      "Zero downtime during migration",
+      "Implemented real-time analytics dashboard"
+    ],
+    "featured": true
+  },
+  {
+    "_id": "testimonial-mike-chen",
+    "_type": "testimonial",
+    "clientName": "Mike Chen",
+    "clientTitle": "Founder & CEO, GrowthMetrics",
+    "companyWebsite": "https://growthmetrics.io",
+    "testimonialText": "Working with TownesDev was a game-changer for our startup. They not only built our MVP but also helped us architect a system that could scale as we grew. Six months later, we've onboarded 10,000+ users without any major technical issues. Their DevOps setup and monitoring solutions give us complete confidence in our infrastructure.",
+    "pullQuote": "They not only built our MVP but also helped us architect a system that could scale as we grew.",
+    "rating": 5,
+    "serviceType": "System Architecture & DevOps",
+    "projectDuration": "3 months",
+    "keyResults": [
+      "Successfully scaled to 10,000+ users",
+      "99.9% uptime achieved",
+      "Automated CI/CD pipeline reducing deployment time by 80%",
+      "Comprehensive monitoring and alerting system"
+    ],
+    "featured": true
+  },
+  {
+    "_id": "testimonial-lisa-martinez",
+    "_type": "testimonial",
+    "clientName": "Lisa Martinez",
+    "clientTitle": "VP of Engineering, DataSync Corp",
+    "companyWebsite": "https://datasync.com",
+    "testimonialText": "TownesDev integrated our CRM, billing system, and analytics platform seamlessly. What seemed like an impossible task became a smooth, reliable data pipeline that processes millions of records daily. Their expertise in API design and event-driven architecture is outstanding. We've reduced manual data entry by 95% and eliminated sync errors completely.",
+    "pullQuote": "We've reduced manual data entry by 95% and eliminated sync errors completely.",
+    "rating": 5,
+    "serviceType": "API Integration & Middleware",
+    "projectDuration": "2 months",
+    "keyResults": [
+      "95% reduction in manual data entry",
+      "Zero data sync errors",
+      "Real-time data processing for millions of records",
+      "Unified dashboard across all systems"
+    ],
+    "featured": true
+  },
+  {
+    "_id": "testimonial-james-wilson",
+    "_type": "testimonial",
+    "clientName": "James Wilson",
+    "clientTitle": "Operations Director, CloudFirst Industries",
+    "companyWebsite": "https://cloudfirst.industries",
+    "testimonialText": "TownesDev's ongoing maintenance and support has been invaluable. They proactively identified and resolved performance bottlenecks before they became issues, implemented security updates seamlessly, and their monitoring setup gives us complete visibility into our system health. Having them as our technical partner lets our team focus on business growth instead of infrastructure concerns.",
+    "pullQuote": "Having them as our technical partner lets our team focus on business growth instead of infrastructure concerns.",
+    "rating": 5,
+    "serviceType": "Maintenance & Support",
+    "projectDuration": "Ongoing (18 months)",
+    "keyResults": [
+      "99.8% uptime maintained",
+      "50% reduction in critical incidents",
+      "Proactive identification of 15+ potential issues",
+      "Average response time under 2 hours"
+    ],
+    "featured": false
+  },
+  {
+    "_id": "testimonial-rachel-kim",
+    "_type": "testimonial",
+    "clientName": "Rachel Kim",
+    "clientTitle": "Head of Product, InnovateLab",
+    "companyWebsite": "https://innovatelab.tech",
+    "testimonialText": "The technical consultation from TownesDev helped us avoid a costly technology migration mistake. Their code review identified critical security vulnerabilities and performance issues that our internal team missed. The strategic guidance on our tech stack evolution has positioned us perfectly for our next growth phase. Best investment we've made in technical expertise.",
+    "pullQuote": "The technical consultation helped us avoid a costly technology migration mistake.",
+    "rating": 5,
+    "serviceType": "Technical Consultation",
+    "projectDuration": "6 weeks",
+    "keyResults": [
+      "Identified 8 critical security vulnerabilities",
+      "Avoided $200K+ in migration costs",
+      "Established clear 2-year technical roadmap",
+      "Improved team development practices"
+    ],
+    "featured": false
+  }
+]
