@@ -1800,6 +1800,14 @@ export const serviceAsset: SchemaTypeDefinition = {
       description: 'The client who owns this asset',
     },
     {
+      name: 'project',
+      title: 'Project',
+      type: 'reference',
+      to: [{ type: 'websiteProject' }, { type: 'discordProject' }],
+      description:
+        'The project this asset belongs to (Website or Discord). Optional until projects are modeled.',
+    },
+    {
       name: 'type',
       title: 'Asset Type',
       type: 'string',
@@ -1846,6 +1854,185 @@ export const serviceAsset: SchemaTypeDefinition = {
       title: 'Notes',
       type: 'text',
       description: 'Additional notes about the asset',
+    },
+  ],
+}
+
+// Service catalog (web-app, discord, consulting)
+export const service: SchemaTypeDefinition = {
+  name: 'service',
+  title: 'Service',
+  type: 'document',
+  fields: [
+    {
+      name: 'name',
+      title: 'Service Name',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'type',
+      title: 'Service Type',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Web App', value: 'web_app' },
+          { title: 'Discord', value: 'discord' },
+          { title: 'Consulting', value: 'consulting' },
+        ],
+      },
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'defaultAddons',
+      title: 'Default Add-ons',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'plan' }] }],
+      description: 'Plans (tiers/add-ons) commonly bundled with this service',
+    },
+    {
+      name: 'onboardingSteps',
+      title: 'Onboarding Steps',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description:
+        'Checklist of step labels shown in onboarding when this service is selected',
+    },
+    {
+      name: 'notes',
+      title: 'Notes',
+      type: 'text',
+    },
+  ],
+}
+
+// Website project document
+export const websiteProject: SchemaTypeDefinition = {
+  name: 'websiteProject',
+  title: 'Website Project',
+  type: 'document',
+  fields: [
+    {
+      name: 'client',
+      title: 'Client',
+      type: 'reference',
+      to: [{ type: 'client' }],
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'siteSlug',
+      title: 'Site Slug',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+      description: 'Used for tenant routing and preview URLs',
+    },
+    {
+      name: 'theme',
+      title: 'Theme',
+      type: 'object',
+      fields: [
+        { name: 'primaryColor', title: 'Primary Color', type: 'string' },
+        { name: 'accentColor', title: 'Accent Color', type: 'string' },
+        { name: 'font', title: 'Font', type: 'string' },
+      ],
+    },
+    {
+      name: 'pagesEnabled',
+      title: 'Pages Enabled',
+      type: 'array',
+      of: [{ type: 'string' }],
+    },
+    {
+      name: 'social',
+      title: 'Social Links',
+      type: 'object',
+      fields: [
+        { name: 'spotify', title: 'Spotify', type: 'url' },
+        { name: 'appleMusic', title: 'Apple Music', type: 'url' },
+        { name: 'youtube', title: 'YouTube', type: 'url' },
+        { name: 'instagram', title: 'Instagram', type: 'url' },
+        { name: 'bandcamp', title: 'Bandcamp', type: 'url' },
+      ],
+    },
+    {
+      name: 'status',
+      title: 'Status',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Draft', value: 'draft' },
+          { title: 'Provisioning', value: 'provisioning' },
+          { title: 'Ready', value: 'ready' },
+          { title: 'Live', value: 'live' },
+          { title: 'Archived', value: 'archived' },
+        ],
+      },
+      initialValue: 'draft',
+    },
+  ],
+}
+
+// Discord project document
+export const discordProject: SchemaTypeDefinition = {
+  name: 'discordProject',
+  title: 'Discord Project',
+  type: 'document',
+  fields: [
+    {
+      name: 'client',
+      title: 'Client',
+      type: 'reference',
+      to: [{ type: 'client' }],
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'botName',
+      title: 'Bot Name',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'features',
+      title: 'Features',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'feature' }] }],
+      description: 'Enabled features for this bot',
+    },
+    {
+      name: 'guilds',
+      title: 'Guilds',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { name: 'guildId', title: 'Guild ID', type: 'string' },
+            { name: 'name', title: 'Name', type: 'string' },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'hostingTier',
+      title: 'Hosting Tier',
+      type: 'reference',
+      to: [{ type: 'plan' }],
+      description: 'Plan tier for hosting/maintenance',
+    },
+    {
+      name: 'status',
+      title: 'Status',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Draft', value: 'draft' },
+          { title: 'Provisioning', value: 'provisioning' },
+          { title: 'Ready', value: 'ready' },
+          { title: 'Live', value: 'live' },
+          { title: 'Archived', value: 'archived' },
+        ],
+      },
+      initialValue: 'draft',
     },
   ],
 }
@@ -2088,6 +2275,9 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     offboarding,
     emailTemplate,
     invoice,
+    service,
+    websiteProject,
+    discordProject,
     serviceAsset,
     feature,
     entitlement,

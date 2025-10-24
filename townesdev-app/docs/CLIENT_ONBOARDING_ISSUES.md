@@ -227,10 +227,12 @@ Highest priority → lower priority. We’ll keep this as the single running che
 - [x] Define portal gating contract and minimal implementation
 - [x] Add onboardingStatus and hasActiveSubscription to Client schema
 - [x] Update getCurrentClient() to return onboardingStatus/hasActiveSubscription
-- [x] Add portal gating redirects in (portal)/layout.tsx
 - [x] Add placeholder /app/onboarding page with CTAs
+- [x] Implement path-aware gating in middleware (exempt /app/onboarding and /app/plans)
+- [x] Remove layout-level redirects to prevent loops
 - [ ] Add Service schema (catalog) with type and defaultAddons[]
-- [ ] Add WebsiteProject and DiscordProject schemas (+ shared projectCommon object)
+- [x] Add Service schema (catalog) with type and defaultAddons[]
+- [x] Add WebsiteProject and DiscordProject schemas (+ shared projectCommon object)
 - [ ] Wire Studio structure groups when new docs land (Projects, Catalog)
 - [ ] Plans page: surface Plan categories (base/add-on/one-time)
 - [ ] Stripe: map Products/Prices to Plan docs; seed IDs
