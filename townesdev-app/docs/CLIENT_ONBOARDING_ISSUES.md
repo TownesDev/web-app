@@ -183,14 +183,20 @@ Rationale for Project modeling: prefer separate documents for WebsiteProject and
 
 EPIC A: Pricing & Plans in Sanity/Stripe
 
-- [ ] Model Plan (base/add-on/one-time) with Stripe IDs
-- [ ] Model Service (web-app/discord) and default add-ons
-- [ ] Seed initial plans (Base Retainer, Web-App Starter/Pro/Plus, Discord Bronze/Silver/Gold)
-- Acceptance: Plans visible on Plans page, checkout works with base + add-on selection
+- [x] Plan schema: Stripe fields (stripeProductId, stripePriceId) and hoursIncluded exist
+- [x] Plan schema: Add category (base|addon|one-time), interval (month|year), visibility (public|internal)
+- [x] Service schema (catalog): type (web_app|discord|consulting), defaultAddons[]
+- [ ] Seed initial plan/service documents (Base Retainer; Web-App Starter/Pro/Plus; Discord Bronze/Silver/Gold)
+- [ ] Plans page: surface Plan categories (base vs add-ons) clearly
+- [x] Checkout endpoint for base plan (subscription)
+- [ ] Compose checkout with base + selected add-ons (multiple line_items)
+- [x] Webhooks: set client.hasActiveSubscription on subscription lifecycle, set selectedPlan on checkout
+- [ ] Webhooks: sync add-on entitlements (features/services) as they are purchased
+  - Acceptance: Plans visible on Plans page with base vs add-ons; checkout supports base + add-ons; successful payment reflects in Sanity and gates are lifted
 
 EPIC B: Onboarding Wizard
 
-- [ ] Build multi-step wizard in /app/onboarding
+- [x] Build multi-step wizard in /app/onboarding (MVP scaffold; localStorage persistence)
 - [ ] Persist state; resumable; simple preview of theme
 - [ ] Branch per service selection; validate minimum fields
 - Acceptance: Client completes wizard and lands on confirmation with preview link

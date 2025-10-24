@@ -6,6 +6,44 @@ export const plan: SchemaTypeDefinition = {
   type: 'document',
   fields: [
     {
+      name: 'category',
+      title: 'Category',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Base', value: 'base' },
+          { title: 'Add-on', value: 'addon' },
+          { title: 'One-time', value: 'one_time' },
+        ],
+      },
+      description: 'Classify plans as base, add-on, or one-time purchase',
+    },
+    {
+      name: 'interval',
+      title: 'Billing Interval',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Monthly', value: 'month' },
+          { title: 'Yearly', value: 'year' },
+        ],
+      },
+      description: 'Recurring billing interval for subscriptions',
+    },
+    {
+      name: 'visibility',
+      title: 'Visibility',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Public', value: 'public' },
+          { title: 'Internal', value: 'internal' },
+        ],
+      },
+      initialValue: 'public',
+      description: 'Control whether the plan appears on public pricing pages',
+    },
+    {
       name: 'name',
       title: 'Plan Name',
       type: 'string',
