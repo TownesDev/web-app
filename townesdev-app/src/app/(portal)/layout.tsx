@@ -17,6 +17,14 @@ export default async function PortalLayout({
     redirect('/auth/signin')
   }
 
+  // Gate access until onboarding is completed and subscription is active
+  if (client && client.onboardingStatus !== 'completed') {
+    redirect('/app/onboarding')
+  }
+  if (client && client.onboardingStatus === 'completed' && !client.hasActiveSubscription) {
+    redirect('/app/plans')
+  }
+
   return (
     <div lang="en" className="min-h-screen flex flex-col">
       <Header variant="portal" />

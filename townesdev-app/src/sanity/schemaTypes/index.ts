@@ -231,6 +231,30 @@ export const client: SchemaTypeDefinition = {
       description: 'Current status of the client retainer',
     },
     {
+      name: 'onboardingStatus',
+      title: 'Onboarding Status',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Not Started', value: 'not_started' },
+          { title: 'In Progress', value: 'in_progress' },
+          { title: 'Awaiting Payment', value: 'awaiting_payment' },
+          { title: 'Completed', value: 'completed' },
+        ],
+      },
+      initialValue: 'not_started',
+      description:
+        'Tracks the onboarding flow progress to gate access to the portal until complete',
+    },
+    {
+      name: 'hasActiveSubscription',
+      title: 'Has Active Subscription',
+      type: 'boolean',
+      initialValue: false,
+      description:
+        'Derived from Stripe webhooks; when false, portal will prompt to complete billing',
+    },
+    {
       name: 'botTenantId',
       title: 'Bot Platform Tenant ID',
       type: 'string',
