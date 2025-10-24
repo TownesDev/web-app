@@ -45,32 +45,14 @@ export const structure: StructureResolver = (S) =>
       // Section Separator
       S.divider(),
 
-      // Landing Page Section
+      // Landing Page Section - TownesDev Public Site
       S.listItem()
-        .title('Landing Page')
+        .title('Public Website')
         .icon(FileText)
         .child(
           S.list()
-            .title('Landing Page Content')
+            .title('Public Website Content')
             .items([
-              S.listItem()
-                .title('Projects')
-                .icon(FolderOpen)
-                .child(S.documentTypeList('project').title('Projects')),
-              S.listItem()
-                .title('About Me')
-                .icon(User)
-                .child(
-                  S.document().schemaType('aboutMe').documentId('aboutMe')
-                ),
-              S.listItem()
-                .title('Contact Info')
-                .icon(Mail)
-                .child(
-                  S.document()
-                    .schemaType('contactInfo')
-                    .documentId('contactInfo')
-                ),
               S.listItem()
                 .title('Hero Section')
                 .icon(Image)
@@ -80,9 +62,33 @@ export const structure: StructureResolver = (S) =>
                     .documentId('heroSection')
                 ),
               S.listItem()
-                .title('Testimonials')
+                .title('Service Offerings')
+                .icon(FolderOpen)
+                .child(
+                  S.documentTypeList('serviceOffering').title(
+                    'Service Offerings'
+                  )
+                ),
+              S.listItem()
+                .title('Client Testimonials')
                 .icon(MessageSquare)
-                .child(S.documentTypeList('testimonial').title('Testimonials')),
+                .child(
+                  S.documentTypeList('testimonial').title('Client Testimonials')
+                ),
+              S.listItem()
+                .title('About TownesDev')
+                .icon(User)
+                .child(
+                  S.document().schemaType('aboutMe').documentId('aboutMe')
+                ),
+              S.listItem()
+                .title('Contact Information')
+                .icon(Mail)
+                .child(
+                  S.document()
+                    .schemaType('contactInfo')
+                    .documentId('contactInfo')
+                ),
             ])
         ),
 

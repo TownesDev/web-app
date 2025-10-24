@@ -9,43 +9,141 @@ export const qSeoConfig = /* groq */ `
   }
 `
 
-// ────────────────  PUBLIC / MARKETING  ────────────────
+// ────────────────  PUBLIC / MARKETING - Enhanced for TownesDev Brand  ────────────────
 
 export const qHero = /* groq */ `
   *[_type=="heroSection"][0]{
-    headline, subheadline, ctaText, ctaUrl,
-    secondaryCtaText, secondaryCtaUrl, backgroundImage
+    tagline,
+    headline, 
+    subheadline, 
+    logoLight{alt, asset->{url, metadata{lqip,dimensions}}},
+    logoDark{alt, asset->{url, metadata{lqip,dimensions}}},
+    backgroundGradient,
+    primaryCtaText, 
+    primaryCtaUrl,
+    secondaryCtaText, 
+    secondaryCtaUrl, 
+    featuredMetrics[]{
+      label,
+      value,
+      description
+    }
   }
 `
 
-export const qProjects = /* groq */ `
-  *[_type=="project"]|order(order asc){
-    _id, title, slug, description, featured, order,
-    images, technologies, projectUrl, githubUrl
+export const qServiceOfferings = /* groq */ `
+  *[_type=="serviceOffering" && status == "active"]|order(displayOrder asc){
+    _id, 
+    title, 
+    slug,
+    shortDescription, 
+    icon,
+    featuredImage{alt, asset->{url, metadata{lqip,dimensions}}},
+    keyFeatures[]{
+      feature,
+      description
+    },
+    technologies,
+    startingPrice,
+    deliveryTimeframe,
+    featured,
+    displayOrder,
+    status
   }
 `
 
-export const qProjectBySlug = /* groq */ `
-  *[_type=="project" && slug.current==$slug][0]{
-    title, description, content, images, technologies, projectUrl, githubUrl
+export const qServiceOfferingBySlug = /* groq */ `
+  *[_type=="serviceOffering" && slug.current==$slug][0]{
+    title, 
+    shortDescription,
+    description, 
+    icon,
+    featuredImage{alt, asset->{url, metadata{lqip,dimensions}}},
+    gallery[]{
+      ..., caption,
+      asset->{url, metadata{lqip,dimensions}}
+    },
+    technologies, 
+    keyFeatures[]{
+      feature,
+      description
+    },
+    startingPrice,
+    deliveryTimeframe,
+    caseStudyUrl,
+    status
+  }
+`
+
+export const qFeaturedServices = /* groq */ `
+  *[_type=="serviceOffering" && featured == true && status == "active"]|order(displayOrder asc)[0...3]{
+    _id,
+    title,
+    shortDescription,
+    icon,
+    featuredImage{alt, asset->{url, metadata{lqip,dimensions}}},
+    startingPrice,
+    deliveryTimeframe
   }
 `
 
 export const qAbout = /* groq */ `
   *[_type=="aboutMe"][0]{
-    name, title, bio, skills, experience, education, profileImage
+    name, 
+    title, 
+    bio, 
+    skills, 
+    experience, 
+    education, 
+    profileImage{alt, asset->{url, metadata{lqip,dimensions}}}
   }
 `
 
 export const qContact = /* groq */ `
-  *[_type=="contactInfo"][0]{
-    email, phone, location, socialLinks, availability
+  *[_type=="contactInfo" && _id == "contactInfo"][0]{
+    _id,
+    primaryEmail,
+    phoneNumber,
+    businessHours,
+    responseTime,
+    preferredContactMethod,
+    consultationCalendar,
+    officeLocation,
+    socialLinks[]{
+      platform,
+      url
+    }
   }
 `
 
 export const qTestimonials = /* groq */ `
-  *[_type=="testimonial"]|order(_createdAt desc){
-    clientName, clientTitle, testimonial, rating, featured, clientImage
+  *[_type=="testimonial" && verified == true]|order(displayOrder asc, dateReceived desc){
+    _id,
+    clientName, 
+    clientTitle, 
+    companyWebsite,
+    clientPhoto{alt, asset->{url, metadata{lqip,dimensions}}},
+    testimonialText,
+    pullQuote,
+    rating, 
+    serviceType,
+    projectDuration,
+    keyResults,
+    featured,
+    dateReceived
+  }
+`
+
+export const qFeaturedTestimonials = /* groq */ `
+  *[_type=="testimonial" && featured == true && verified == true]|order(displayOrder asc)[0...3]{
+    _id,
+    clientName,
+    clientTitle,
+    clientPhoto{alt, asset->{url, metadata{lqip,dimensions}}},
+    pullQuote,
+    testimonialText,
+    rating,
+    serviceType
   }
 `
 
@@ -177,3 +275,82 @@ export const qOperationSettings = /* groq */ `
 `
 
 export const qSeoSettings = qSeoConfig // alias for clarity
+
+// Combined landing page content query
+export const qLandingPageContent = /* groq */ `
+{
+  "hero": *[_type=="heroSection"][0]{
+    tagline,
+    headline, 
+    subheadline, 
+  logoLight{alt, asset->{url, metadata{lqip,dimensions}}},
+  logoDark{alt, asset->{url, metadata{lqip,dimensions}}},
+    backgroundGradient,
+    primaryCtaText, 
+    primaryCtaUrl,
+    secondaryCtaText, 
+    secondaryCtaUrl, 
+    featuredMetrics[]{
+      label,
+      value,
+      description
+    }
+  },
+  "serviceOfferings": *[_type=="serviceOffering" && status == "active"]|order(displayOrder asc)[0...6]{
+    _id, 
+    title, 
+    slug,
+    shortDescription, 
+    icon,
+  featuredImage{alt, asset->{url, metadata{lqip,dimensions}}},
+    keyFeatures[]{
+      feature,
+      description
+    },
+    technologies,
+    startingPrice,
+    deliveryTimeframe,
+    featured,
+    displayOrder,
+    status
+  },
+  "testimonials": *[_type=="testimonial" && featured == true]|order(_createdAt desc)[0...3]{
+    _id,
+    clientName,
+    clientTitle,
+    companyWebsite,
+  clientPhoto{alt, asset->{url, metadata{lqip,dimensions}}},
+    testimonialText,
+    pullQuote,
+    rating,
+    serviceType,
+    projectDuration,
+    keyResults,
+    featured
+  },
+  "contact": *[_type=="contactInfo" && _id == "contactInfo"][0]{
+    _id,
+    primaryEmail,
+    phoneNumber,
+    businessHours,
+    responseTime,
+    preferredContactMethod,
+    consultationCalendar,
+    officeLocation,
+    socialLinks[]{
+      platform,
+      url
+    }
+  },
+  "about": *[_type=="aboutMe"][0]{
+    _id,
+    name,
+    title,
+    bio,
+    skills,
+    experience,
+    education,
+    profileImage{alt, asset->{url, metadata{lqip,dimensions}}}
+  }
+}
+`

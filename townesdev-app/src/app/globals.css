@@ -141,7 +141,13 @@
   /* TownesDev Brand Fonts */
   --font-heading: 'Sumana', serif;
   --font-body: 'Cairo', sans-serif;
+
+  /* Base light theme */
+  --background: #ffffff;
+  --foreground: #0a0a0a;
 }
+
+/* OS-driven dark mode (media strategy) */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;

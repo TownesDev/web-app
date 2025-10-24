@@ -115,7 +115,11 @@ export function PlanCard({
   }
   return (
     <div
-      className={`bg-white rounded-lg shadow-lg p-6 border-2 flex flex-col ${isPopular ? 'border-blue-500 relative' : 'border-gray-200'}`}
+      className={`bg-white rounded-lg shadow-lg p-6 border-2 flex flex-col ${
+        isPopular
+          ? 'border-blue-500 relative'
+          : 'border-gray-200 dark:border-white/10'
+      }`}
     >
       {isPopular && (
         <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
@@ -126,9 +130,13 @@ export function PlanCard({
       )}
 
       <div className="text-center mb-6">
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">{name}</h3>
+        <h3 className="text-2xl font-bold text-nile-blue-900 mb-2">
+          {name}
+        </h3>
         <div className="text-3xl font-bold text-blue-600 mb-2">${price}</div>
-        <p className="text-gray-600 text-sm">{description}</p>
+        <p className="text-nile-blue-800 text-sm">
+          {description}
+        </p>
       </div>
 
       <ul className="space-y-3 mb-6 flex flex-col flex-1">
@@ -145,7 +153,7 @@ export function PlanCard({
                 clipRule="evenodd"
               />
             </svg>
-            <span className="text-gray-700">
+            <span className="text-nile-blue-700">
               {feature.charAt(0).toUpperCase() + feature.slice(1)}
             </span>
           </li>
@@ -158,7 +166,7 @@ export function PlanCard({
         className={`w-full py-3 px-4 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
           isPopular
             ? 'bg-blue-600 hover:bg-blue-700 text-white'
-            : 'bg-gray-100 hover:bg-gray-200 text-gray-900'
+            : 'bg-nile-blue-100 hover:bg-gray-200 text-nile-blue-900'
         }`}
       >
         {isLoading ? 'Processing...' : 'Get Started'}
