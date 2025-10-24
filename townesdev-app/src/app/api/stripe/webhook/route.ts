@@ -71,6 +71,13 @@ export async function POST(request: NextRequest) {
         break
       }
 
+      case 'customer.subscription.deleted': {
+        console.log('🎯 Processing customer.subscription.deleted')
+        const subscription = event.data.object as Stripe.Subscription
+        await handleSubscriptionDeleted(subscription)
+        break
+      }
+
       default:
         console.log(`ℹ️ Unhandled event type: ${event.type}`)
     }
@@ -273,6 +280,19 @@ async function handlePlanSubscription(session: Stripe.Checkout.Session) {
 
     console.log('Retainer created for subscription:', subscription.id)
 
+    // Mark client as subscribed and set selectedPlan
+    await sanityWrite.mutate([
+      {
+        patch: {
+          id: clientId,
+          set: {
+            hasActiveSubscription: true,
+            selectedPlan: { _type: 'reference', _ref: planId },
+          },
+        },
+      },
+    ])
+
     // Send welcome email to client
     try {
       console.log(
@@ -374,6 +394,21 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   })
 
   try {
+    // Update client subscription status based on Stripe customer linkage
+    if (subscription.customer && typeof subscription.customer === 'string') {
+      const stripeCustomerId = subscription.customer
+      const client = await runQuery(
+        `*[_type=="client" && stripeCustomerId==$stripeCustomerId][0]{_id, hasActiveSubscription}`,
+        { stripeCustomerId }
+      )
+      if (client?._id) {
+        const active = subscription.status === 'active'
+        await sanityWrite.mutate([
+          { patch: { id: client._id, set: { hasActiveSubscription: active } } },
+        ])
+      }
+    }
+
     // Update retainer with new subscription details
     const result = await runQuery(
       `*[_type=="retainer" && stripeSubId==$stripeSubId][0]`,
@@ -433,6 +468,27 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
     }
   } catch (error) {
     console.error('Error updating retainer:', error)
+  }
+}
+
+async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
+  console.log('🔍 Processing subscription deleted:', subscription.id)
+  try {
+    if (subscription.customer && typeof subscription.customer === 'string') {
+      const stripeCustomerId = subscription.customer
+      const client = await runQuery(
+        `*[_type=="client" && stripeCustomerId==$stripeCustomerId][0]{_id}`,
+        { stripeCustomerId }
+      )
+      if (client?._id) {
+        await sanityWrite.mutate([
+          { patch: { id: client._id, set: { hasActiveSubscription: false } } },
+        ])
+        console.log('Client marked unsubscribed:', client._id)
+      }
+    }
+  } catch (error) {
+    console.error('Error handling subscription deleted:', error)
   }
 }
 

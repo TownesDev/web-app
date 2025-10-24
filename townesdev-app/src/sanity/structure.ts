@@ -92,6 +92,33 @@ export const structure: StructureResolver = (S) =>
             ])
         ),
 
+      // Projects Section
+      S.listItem()
+        .title('Projects')
+        .icon(FolderOpen)
+        .child(
+          S.list()
+            .title('Projects')
+            .items([
+              S.listItem()
+                .title('Website Projects')
+                .icon(FileText)
+                .child(
+                  S.documentTypeList('websiteProject').title(
+                    'Website Projects'
+                  )
+                ),
+              S.listItem()
+                .title('Discord Projects')
+                .icon(Server)
+                .child(
+                  S.documentTypeList('discordProject').title(
+                    'Discord Projects'
+                  )
+                ),
+            ])
+        ),
+
       // Section Separator
       S.divider(),
 
@@ -101,6 +128,7 @@ export const structure: StructureResolver = (S) =>
           [
             'client',
             'plan',
+            'service',
             'serviceAsset',
             'feature',
             'entitlement',
@@ -120,6 +148,8 @@ export const structure: StructureResolver = (S) =>
               return item.icon(Users)
             case 'plan':
               return item.icon(Briefcase)
+            case 'service':
+              return item.icon(Star)
             case 'serviceAsset':
               return item.icon(Server)
             case 'feature':
