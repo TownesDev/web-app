@@ -291,11 +291,24 @@ async function handlePlanSubscription(session: Stripe.Checkout.Session) {
     // If add-ons were included in checkout, create retainers for each add-on plan
     if (addOnIds) {
       // Load Sanity-driven mapping table once per webhook call
-      let mappingLookup: Map<string, { _id: string; name: string; key?: string; assetType?: 'web_app' | 'discord_bot' }>
+      let mappingLookup: Map<
+        string,
+        {
+          _id: string
+          name: string
+          key?: string
+          assetType?: 'web_app' | 'discord_bot'
+        }
+      >
       try {
         const mappings = (await runAdminQuery(qPlanFeatureMappings)) as Array<{
           plan?: { _id: string }
-          feature?: { _id: string; name: string; key?: string; assetType?: 'web_app' | 'discord_bot' }
+          feature?: {
+            _id: string
+            name: string
+            key?: string
+            assetType?: 'web_app' | 'discord_bot'
+          }
         }>
         mappingLookup = new Map(
           (mappings || [])
@@ -303,7 +316,10 @@ async function handlePlanSubscription(session: Stripe.Checkout.Session) {
             .map((m) => [m.plan!._id, m.feature!])
         )
       } catch (e) {
-        console.warn('Failed to load plan→feature mappings; will fallback to heuristic', e)
+        console.warn(
+          'Failed to load plan→feature mappings; will fallback to heuristic',
+          e
+        )
         mappingLookup = new Map()
       }
       const ids = String(addOnIds)
@@ -356,18 +372,29 @@ async function handlePlanSubscription(session: Stripe.Checkout.Session) {
           // ──────────────── Plan → Feature entitlement mapping ────────────────
           // Prefer CMS-driven mapping; fallback to heuristic mapping when absent.
           const mappedFeature = mappingLookup.get(addOnId)
-          let featureDoc: { _id: string; name?: string; key?: string; assetType?: 'web_app' | 'discord_bot' } | null = null
+          let featureDoc: {
+            _id: string
+            name?: string
+            key?: string
+            assetType?: 'web_app' | 'discord_bot'
+          } | null = null
 
           if (mappedFeature) {
             featureDoc = mappedFeature
           } else {
             const heuristic = mapPlanToFeature(addOnId)
             if (!heuristic) {
-              console.log('No feature mapping for add-on plan; skipping entitlement')
+              console.log(
+                'No feature mapping for add-on plan; skipping entitlement'
+              )
               continue
             }
             const ensured = await ensureFeature(heuristic)
-            featureDoc = { _id: ensured._id, key: heuristic.key, assetType: heuristic.assetType }
+            featureDoc = {
+              _id: ensured._id,
+              key: heuristic.key,
+              assetType: heuristic.assetType,
+            }
           }
 
           if (!featureDoc?.assetType) {

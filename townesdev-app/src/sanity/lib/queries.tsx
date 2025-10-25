@@ -395,3 +395,24 @@ export const qPlanFeatureMappings = /* groq */ `
     feature->{ _id, name, key, assetType }
   }
 `
+
+// ────────────────  ADMIN: Plans and Features  ────────────────
+
+export const qPlansAll = /* groq */ `
+  *[_type=="plan"]|order(category asc, _createdAt asc){
+    _id,
+    name,
+    category,
+    interval,
+    visibility
+  }
+`
+
+export const qFeaturesAll = /* groq */ `
+  *[_type=="feature"]|order(assetType asc, name asc){
+    _id,
+    name,
+    key,
+    assetType
+  }
+`
