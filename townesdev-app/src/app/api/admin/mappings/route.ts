@@ -24,11 +24,26 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'planId and featureId are required' }, { status: 400 })
   }
 
+  // Guardrails: Ensure referenced docs exist
+  const [planDoc, featureDoc] = await Promise.all([
+    runQuery(`*[_type=="plan" && _id==$id][0]{ _id, name, category }`, { id: planId }),
+    runQuery(`*[_type=="feature" && _id==$id][0]{ _id, name, key, assetType }`, { id: featureId }),
+  ])
+  if (!planDoc) return NextResponse.json({ error: 'Plan not found' }, { status: 404 })
+  if (!featureDoc) return NextResponse.json({ error: 'Feature not found' }, { status: 404 })
+
   // If a mapping for this plan already exists, update it; otherwise create
-  const existing = await runQuery(
-    `*[_type=="planFeatureMapping" && plan._ref==$planId][0]{ _id }`,
+  const existingAll = (await runQuery(
+    `*[_type=="planFeatureMapping" && plan._ref==$planId]{ _id }`,
     { planId }
-  )
+  )) as Array<{ _id: string }>
+
+  const existing = existingAll?.[0]
+  if (Array.isArray(existingAll) && existingAll.length > 1) {
+    // Cleanup duplicates (keep the first)
+    const dupes = existingAll.slice(1).map((d) => ({ delete: { id: d._id } }))
+    if (dupes.length) await sanityWrite.mutate(dupes)
+  }
 
   if (existing?._id) {
     await sanityWrite.mutate([
@@ -64,6 +79,10 @@ export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const id = searchParams.get('id')
   if (!id) return NextResponse.json({ error: 'id is required' }, { status: 400 })
+
+  // Verify mapping exists before delete
+  const existing = await runQuery(`*[_type=="planFeatureMapping" && _id==$id][0]{ _id }`, { id })
+  if (!existing?._id) return NextResponse.json({ error: 'Mapping not found' }, { status: 404 })
 
   await sanityWrite.mutate([{ delete: { id } }])
   return NextResponse.json({ deleted: id })
