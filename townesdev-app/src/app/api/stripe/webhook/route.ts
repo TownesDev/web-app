@@ -9,6 +9,8 @@ import {
   ensureFeature,
   mapPlanToFeature,
 } from '@/lib/entitlements'
+import { runAdminQuery } from '@/lib/admin/client'
+import { qPlanFeatureMappings } from '@/sanity/lib/queries'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-09-30.clover',
@@ -288,6 +290,22 @@ async function handlePlanSubscription(session: Stripe.Checkout.Session) {
 
     // If add-ons were included in checkout, create retainers for each add-on plan
     if (addOnIds) {
+      // Load Sanity-driven mapping table once per webhook call
+      let mappingLookup: Map<string, { _id: string; name: string; key?: string; assetType?: 'web_app' | 'discord_bot' }>
+      try {
+        const mappings = (await runAdminQuery(qPlanFeatureMappings)) as Array<{
+          plan?: { _id: string }
+          feature?: { _id: string; name: string; key?: string; assetType?: 'web_app' | 'discord_bot' }
+        }>
+        mappingLookup = new Map(
+          (mappings || [])
+            .filter((m) => m.plan?._id && m.feature?._id)
+            .map((m) => [m.plan!._id, m.feature!])
+        )
+      } catch (e) {
+        console.warn('Failed to load plan→feature mappings; will fallback to heuristic', e)
+        mappingLookup = new Map()
+      }
       const ids = String(addOnIds)
         .split(',')
         .map((s) => s.trim())
@@ -336,43 +354,55 @@ async function handlePlanSubscription(session: Stripe.Checkout.Session) {
           console.log('Add-on retainer created for plan:', addOn._id)
 
           // ──────────────── Plan → Feature entitlement mapping ────────────────
-          // Derive asset type and feature key from the add-on plan name.
-          const mapping = mapPlanToFeature(addOnId)
-          if (!mapping) {
-            console.log(
-              'No feature mapping for add-on plan; skipping entitlement'
-            )
+          // Prefer CMS-driven mapping; fallback to heuristic mapping when absent.
+          const mappedFeature = mappingLookup.get(addOnId)
+          let featureDoc: { _id: string; name?: string; key?: string; assetType?: 'web_app' | 'discord_bot' } | null = null
+
+          if (mappedFeature) {
+            featureDoc = mappedFeature
           } else {
-            // Ensure asset exists for client for the mapped asset type
-            const asset = await ensureClientAsset(clientId, mapping.assetType)
-            // Ensure feature exists for the mapped feature key
-            const feature = await ensureFeature(mapping)
-            // Create entitlement if it doesn't exist
-            const existingEnt = await runQuery(
-              `*[_type=="entitlement" && client._ref==$clientId && asset._ref==$assetId && feature._ref==$featureId][0]`,
-              { clientId, assetId: asset._id, featureId: feature._id }
-            )
-            if (!existingEnt) {
-              await sanityWrite.mutate([
-                {
-                  create: {
-                    _type: 'entitlement',
-                    client: { _type: 'reference', _ref: clientId },
-                    asset: { _type: 'reference', _ref: asset._id },
-                    feature: { _type: 'reference', _ref: feature._id },
-                    status: 'active',
-                    activatedAt: new Date().toISOString(),
-                  },
-                },
-              ])
-              console.log('Entitlement created:', {
-                clientId,
-                assetId: asset._id,
-                featureId: feature._id,
-              })
-            } else {
-              console.log('Entitlement already exists for client/asset/feature')
+            const heuristic = mapPlanToFeature(addOnId)
+            if (!heuristic) {
+              console.log('No feature mapping for add-on plan; skipping entitlement')
+              continue
             }
+            const ensured = await ensureFeature(heuristic)
+            featureDoc = { _id: ensured._id, key: heuristic.key, assetType: heuristic.assetType }
+          }
+
+          if (!featureDoc?.assetType) {
+            console.log('Mapped feature has no assetType; skipping entitlement')
+            continue
+          }
+
+          // Ensure appropriate client asset exists for the feature's assetType
+          const asset = await ensureClientAsset(clientId, featureDoc.assetType)
+
+          // Create entitlement if it doesn't exist
+          const existingEnt = await runQuery(
+            `*[_type=="entitlement" && client._ref==$clientId && asset._ref==$assetId && feature._ref==$featureId][0]`,
+            { clientId, assetId: asset._id, featureId: featureDoc._id }
+          )
+          if (!existingEnt) {
+            await sanityWrite.mutate([
+              {
+                create: {
+                  _type: 'entitlement',
+                  client: { _type: 'reference', _ref: clientId },
+                  asset: { _type: 'reference', _ref: asset._id },
+                  feature: { _type: 'reference', _ref: featureDoc._id },
+                  status: 'active',
+                  activatedAt: new Date().toISOString(),
+                },
+              },
+            ])
+            console.log('Entitlement created:', {
+              clientId,
+              assetId: asset._id,
+              featureId: featureDoc._id,
+            })
+          } else {
+            console.log('Entitlement already exists for client/asset/feature')
           }
         } catch (addOnErr) {
           console.error('Failed creating add-on retainer:', addOnId, addOnErr)
