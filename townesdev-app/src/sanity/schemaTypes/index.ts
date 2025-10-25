@@ -227,6 +227,13 @@ export const client: SchemaTypeDefinition = {
       description: 'The plan selected by the client',
     },
     {
+      name: 'selectedAddons',
+      title: 'Selected Add-ons',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'plan' }] }],
+      description: 'Add-on plans selected by the client',
+    },
+    {
       name: 'startDate',
       title: 'Start Date',
       type: 'datetime',
@@ -2300,6 +2307,38 @@ export const retainer: SchemaTypeDefinition = {
   ],
 }
 
+// Map Plans to Features (Sanity-driven mapping for arbitrary plan IDs/slugs)
+export const planFeatureMapping: SchemaTypeDefinition = {
+  name: 'planFeatureMapping',
+  title: 'Plan → Feature Mapping',
+  type: 'document',
+  fields: [
+    {
+      name: 'plan',
+      title: 'Plan',
+      type: 'reference',
+      to: [{ type: 'plan' }],
+      validation: (Rule) => Rule.required(),
+      description: 'The plan this mapping applies to',
+    },
+    {
+      name: 'feature',
+      title: 'Feature',
+      type: 'reference',
+      to: [{ type: 'feature' }],
+      validation: (Rule) => Rule.required(),
+      description:
+        'The feature that should be entitled when this plan is active',
+    },
+    {
+      name: 'notes',
+      title: 'Notes',
+      type: 'text',
+      description: 'Optional operational notes about this mapping',
+    },
+  ],
+}
+
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
     user,
@@ -2320,6 +2359,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     feature,
     entitlement,
     retainer,
+    planFeatureMapping,
     // Landing Page schemas - Enhanced for TownesDev Brand
     serviceOffering,
     aboutMe,

@@ -104,17 +104,13 @@ export const structure: StructureResolver = (S) =>
                 .title('Website Projects')
                 .icon(FileText)
                 .child(
-                  S.documentTypeList('websiteProject').title(
-                    'Website Projects'
-                  )
+                  S.documentTypeList('websiteProject').title('Website Projects')
                 ),
               S.listItem()
                 .title('Discord Projects')
                 .icon(Server)
                 .child(
-                  S.documentTypeList('discordProject').title(
-                    'Discord Projects'
-                  )
+                  S.documentTypeList('discordProject').title('Discord Projects')
                 ),
             ])
         ),

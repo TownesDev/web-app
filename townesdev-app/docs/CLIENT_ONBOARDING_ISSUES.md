@@ -186,13 +186,24 @@ EPIC A: Pricing & Plans in Sanity/Stripe
 - [x] Plan schema: Stripe fields (stripeProductId, stripePriceId) and hoursIncluded exist
 - [x] Plan schema: Add category (base|addon|one-time), interval (month|year), visibility (public|internal)
 - [x] Service schema (catalog): type (web_app|discord|consulting), defaultAddons[]
-- [ ] Seed initial plan/service documents (Base Retainer; Web-App Starter/Pro/Plus; Discord Bronze/Silver/Gold)
-- [ ] Plans page: surface Plan categories (base vs add-ons) clearly
+- [x] Seed initial plan/service documents (Base Retainer; Web-App Starter/Pro/Plus; Discord Bronze/Silver/Gold)
+- [x] Plans page: surface Plan categories (base vs add-ons) clearly
 - [x] Checkout endpoint for base plan (subscription)
-- [ ] Compose checkout with base + selected add-ons (multiple line_items)
+- [x] Compose checkout with base + selected add-ons (multiple line_items)
 - [x] Webhooks: set client.hasActiveSubscription on subscription lifecycle, set selectedPlan on checkout
-- [ ] Webhooks: sync add-on entitlements (features/services) as they are purchased
+- [x] Webhooks: sync add-on entitlements (features/services) as they are purchased
+  - Implemented: add-on plan retainers created per line item; client.selectedAddons reflects purchased add-ons
+  - Implemented: plan → feature entitlement mapping (heuristic on seeded plan IDs) creates asset-scoped Feature docs and Entitlement docs idempotently
+  - Notes: Mapping is encapsulated in src/lib/entitlements.ts; can be swapped for CMS-driven mapping later
   - Acceptance: Plans visible on Plans page with base vs add-ons; checkout supports base + add-ons; successful payment reflects in Sanity and gates are lifted
+
+EPIC A+: Admin Entitlements & Mapping
+
+- [x] Sanity-driven mapping document: `planFeatureMapping` (plan → feature)
+- [x] Admin page: `/admin/entitlements` shows per-client assets, entitlements, and mismatches
+- [x] Reconcile API: POST `/api/admin/entitlements/reconcile` creates missing entitlements idempotently
+- [x] Mapping precedence: Admin mapping table is preferred; heuristic fallback remains for convenience
+- [ ] Future: UI to add/edit mappings directly from the admin page
 
 EPIC B: Onboarding Wizard
 
