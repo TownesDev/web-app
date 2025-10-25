@@ -6,6 +6,44 @@ export const plan: SchemaTypeDefinition = {
   type: 'document',
   fields: [
     {
+      name: 'category',
+      title: 'Category',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Base', value: 'base' },
+          { title: 'Add-on', value: 'addon' },
+          { title: 'One-time', value: 'one_time' },
+        ],
+      },
+      description: 'Classify plans as base, add-on, or one-time purchase',
+    },
+    {
+      name: 'interval',
+      title: 'Billing Interval',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Monthly', value: 'month' },
+          { title: 'Yearly', value: 'year' },
+        ],
+      },
+      description: 'Recurring billing interval for subscriptions',
+    },
+    {
+      name: 'visibility',
+      title: 'Visibility',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Public', value: 'public' },
+          { title: 'Internal', value: 'internal' },
+        ],
+      },
+      initialValue: 'public',
+      description: 'Control whether the plan appears on public pricing pages',
+    },
+    {
       name: 'name',
       title: 'Plan Name',
       type: 'string',
@@ -189,6 +227,13 @@ export const client: SchemaTypeDefinition = {
       description: 'The plan selected by the client',
     },
     {
+      name: 'selectedAddons',
+      title: 'Selected Add-ons',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'plan' }] }],
+      description: 'Add-on plans selected by the client',
+    },
+    {
       name: 'startDate',
       title: 'Start Date',
       type: 'datetime',
@@ -229,6 +274,30 @@ export const client: SchemaTypeDefinition = {
         list: ['Active', 'Inactive', 'Cancelled'],
       },
       description: 'Current status of the client retainer',
+    },
+    {
+      name: 'onboardingStatus',
+      title: 'Onboarding Status',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Not Started', value: 'not_started' },
+          { title: 'In Progress', value: 'in_progress' },
+          { title: 'Awaiting Payment', value: 'awaiting_payment' },
+          { title: 'Completed', value: 'completed' },
+        ],
+      },
+      initialValue: 'not_started',
+      description:
+        'Tracks the onboarding flow progress to gate access to the portal until complete',
+    },
+    {
+      name: 'hasActiveSubscription',
+      title: 'Has Active Subscription',
+      type: 'boolean',
+      initialValue: false,
+      description:
+        'Derived from Stripe webhooks; when false, portal will prompt to complete billing',
     },
     {
       name: 'botTenantId',
@@ -1776,6 +1845,14 @@ export const serviceAsset: SchemaTypeDefinition = {
       description: 'The client who owns this asset',
     },
     {
+      name: 'project',
+      title: 'Project',
+      type: 'reference',
+      to: [{ type: 'websiteProject' }, { type: 'discordProject' }],
+      description:
+        'The project this asset belongs to (Website or Discord). Optional until projects are modeled.',
+    },
+    {
       name: 'type',
       title: 'Asset Type',
       type: 'string',
@@ -1822,6 +1899,185 @@ export const serviceAsset: SchemaTypeDefinition = {
       title: 'Notes',
       type: 'text',
       description: 'Additional notes about the asset',
+    },
+  ],
+}
+
+// Service catalog (web-app, discord, consulting)
+export const service: SchemaTypeDefinition = {
+  name: 'service',
+  title: 'Service',
+  type: 'document',
+  fields: [
+    {
+      name: 'name',
+      title: 'Service Name',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'type',
+      title: 'Service Type',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Web App', value: 'web_app' },
+          { title: 'Discord', value: 'discord' },
+          { title: 'Consulting', value: 'consulting' },
+        ],
+      },
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'defaultAddons',
+      title: 'Default Add-ons',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'plan' }] }],
+      description: 'Plans (tiers/add-ons) commonly bundled with this service',
+    },
+    {
+      name: 'onboardingSteps',
+      title: 'Onboarding Steps',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description:
+        'Checklist of step labels shown in onboarding when this service is selected',
+    },
+    {
+      name: 'notes',
+      title: 'Notes',
+      type: 'text',
+    },
+  ],
+}
+
+// Website project document
+export const websiteProject: SchemaTypeDefinition = {
+  name: 'websiteProject',
+  title: 'Website Project',
+  type: 'document',
+  fields: [
+    {
+      name: 'client',
+      title: 'Client',
+      type: 'reference',
+      to: [{ type: 'client' }],
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'siteSlug',
+      title: 'Site Slug',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+      description: 'Used for tenant routing and preview URLs',
+    },
+    {
+      name: 'theme',
+      title: 'Theme',
+      type: 'object',
+      fields: [
+        { name: 'primaryColor', title: 'Primary Color', type: 'string' },
+        { name: 'accentColor', title: 'Accent Color', type: 'string' },
+        { name: 'font', title: 'Font', type: 'string' },
+      ],
+    },
+    {
+      name: 'pagesEnabled',
+      title: 'Pages Enabled',
+      type: 'array',
+      of: [{ type: 'string' }],
+    },
+    {
+      name: 'social',
+      title: 'Social Links',
+      type: 'object',
+      fields: [
+        { name: 'spotify', title: 'Spotify', type: 'url' },
+        { name: 'appleMusic', title: 'Apple Music', type: 'url' },
+        { name: 'youtube', title: 'YouTube', type: 'url' },
+        { name: 'instagram', title: 'Instagram', type: 'url' },
+        { name: 'bandcamp', title: 'Bandcamp', type: 'url' },
+      ],
+    },
+    {
+      name: 'status',
+      title: 'Status',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Draft', value: 'draft' },
+          { title: 'Provisioning', value: 'provisioning' },
+          { title: 'Ready', value: 'ready' },
+          { title: 'Live', value: 'live' },
+          { title: 'Archived', value: 'archived' },
+        ],
+      },
+      initialValue: 'draft',
+    },
+  ],
+}
+
+// Discord project document
+export const discordProject: SchemaTypeDefinition = {
+  name: 'discordProject',
+  title: 'Discord Project',
+  type: 'document',
+  fields: [
+    {
+      name: 'client',
+      title: 'Client',
+      type: 'reference',
+      to: [{ type: 'client' }],
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'botName',
+      title: 'Bot Name',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'features',
+      title: 'Features',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'feature' }] }],
+      description: 'Enabled features for this bot',
+    },
+    {
+      name: 'guilds',
+      title: 'Guilds',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { name: 'guildId', title: 'Guild ID', type: 'string' },
+            { name: 'name', title: 'Name', type: 'string' },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'hostingTier',
+      title: 'Hosting Tier',
+      type: 'reference',
+      to: [{ type: 'plan' }],
+      description: 'Plan tier for hosting/maintenance',
+    },
+    {
+      name: 'status',
+      title: 'Status',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Draft', value: 'draft' },
+          { title: 'Provisioning', value: 'provisioning' },
+          { title: 'Ready', value: 'ready' },
+          { title: 'Live', value: 'live' },
+          { title: 'Archived', value: 'archived' },
+        ],
+      },
+      initialValue: 'draft',
     },
   ],
 }
@@ -2051,6 +2307,38 @@ export const retainer: SchemaTypeDefinition = {
   ],
 }
 
+// Map Plans to Features (Sanity-driven mapping for arbitrary plan IDs/slugs)
+export const planFeatureMapping: SchemaTypeDefinition = {
+  name: 'planFeatureMapping',
+  title: 'Plan → Feature Mapping',
+  type: 'document',
+  fields: [
+    {
+      name: 'plan',
+      title: 'Plan',
+      type: 'reference',
+      to: [{ type: 'plan' }],
+      validation: (Rule) => Rule.required(),
+      description: 'The plan this mapping applies to',
+    },
+    {
+      name: 'feature',
+      title: 'Feature',
+      type: 'reference',
+      to: [{ type: 'feature' }],
+      validation: (Rule) => Rule.required(),
+      description:
+        'The feature that should be entitled when this plan is active',
+    },
+    {
+      name: 'notes',
+      title: 'Notes',
+      type: 'text',
+      description: 'Optional operational notes about this mapping',
+    },
+  ],
+}
+
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
     user,
@@ -2064,10 +2352,14 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     offboarding,
     emailTemplate,
     invoice,
+    service,
+    websiteProject,
+    discordProject,
     serviceAsset,
     feature,
     entitlement,
     retainer,
+    planFeatureMapping,
     // Landing Page schemas - Enhanced for TownesDev Brand
     serviceOffering,
     aboutMe,

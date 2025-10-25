@@ -119,6 +119,7 @@ export async function getCurrentClient() {
   const client = await sanityWrite.fetch(
     `*[_type=="client" && user._ref==$userId][0]{
       _id, name, email, status,
+      onboardingStatus, hasActiveSubscription,
       startDate, maintenanceWindow,
       selectedPlan->{name,price,features}
     }`,

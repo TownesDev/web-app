@@ -53,6 +53,58 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/auth/signin', request.url))
   }
 
+  // Onboarding/billing gating for portal routes, with path exceptions
+  if (pathname.startsWith('/app')) {
+    const exemptPaths = ['/app/onboarding', '/app/plans']
+    const isExempt = exemptPaths.some((p) => pathname.startsWith(p))
+
+    if (!isExempt) {
+      try {
+        const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
+        const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'
+        const apiVersion =
+          process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-01-01'
+        const sanityToken = process.env.SANITY_READ_TOKEN
+
+        if (projectId && sanityToken) {
+          const query = encodeURIComponent(
+            '*[_type=="client" && user._ref==$userId][0]{onboardingStatus,hasActiveSubscription}'
+          )
+          const url = `https://${projectId}.api.sanity.io/${apiVersion}/data/query/${dataset}?query=${query}&%24userId=${encodeURIComponent(
+            payload.id
+          )}`
+          const res = await fetch(url, {
+            headers: { Authorization: `Bearer ${sanityToken}` },
+            // Edge runtime safe
+            cache: 'no-store',
+          })
+          if (res.ok) {
+            const json = (await res.json()) as {
+              result?: {
+                onboardingStatus?: string
+                hasActiveSubscription?: boolean
+              }
+            }
+            const client = json.result
+            if (!client || client.onboardingStatus !== 'completed') {
+              return NextResponse.redirect(
+                new URL('/app/onboarding', request.url)
+              )
+            }
+            if (
+              client.onboardingStatus === 'completed' &&
+              !client.hasActiveSubscription
+            ) {
+              return NextResponse.redirect(new URL('/app/plans', request.url))
+            }
+          }
+        }
+      } catch {
+        // Fail open to avoid accidental loops or hard blocks when CMS is unavailable
+      }
+    }
+  }
+
   // Add user info to headers for downstream use
   const response = NextResponse.next()
   response.headers.set('x-user-id', payload.id)

@@ -4,6 +4,11 @@ import { runQuery, sanityWrite } from '@/lib/client'
 import { getEmailTemplateByName } from '../../../../queries/emailTemplates'
 import { ptToHtml, ptToPlainText, mergeVars } from '../../../../lib/email'
 import { resend, EMAIL_FROM } from '../../../../lib/resendClient'
+import {
+  ensureClientAsset,
+  ensureFeature,
+  mapPlanToFeature,
+} from '@/lib/entitlements'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-09-30.clover',
@@ -71,6 +76,13 @@ export async function POST(request: NextRequest) {
         break
       }
 
+      case 'customer.subscription.deleted': {
+        console.log('🎯 Processing customer.subscription.deleted')
+        const subscription = event.data.object as Stripe.Subscription
+        await handleSubscriptionDeleted(subscription)
+        break
+      }
+
       default:
         console.log(`ℹ️ Unhandled event type: ${event.type}`)
     }
@@ -126,7 +138,7 @@ async function handleFeaturePurchase(session: Stripe.Checkout.Session) {
 }
 
 async function handlePlanSubscription(session: Stripe.Checkout.Session) {
-  const { planId, clientId, assetId } = session.metadata!
+  const { planId, clientId, assetId, addOnIds } = session.metadata!
 
   console.log('🔍 Processing plan subscription:', {
     planId,
@@ -168,33 +180,21 @@ async function handlePlanSubscription(session: Stripe.Checkout.Session) {
       ).current_period_end,
     })
 
-    // Check if retainer already exists (idempotency)
-    const existingRetainer = await runQuery(
-      `*[_type=="retainer" && stripeSubId==$stripeSubId][0]`,
-      { stripeSubId: subscription.id }
-    )
+    // Helper to fetch plan doc
+    const fetchPlan = async (id: string) =>
+      runQuery(`*[_type=="plan" && _id==$id][0]{ _id, name, hoursIncluded }`, {
+        id,
+      })
 
-    if (existingRetainer) {
-      console.log('Retainer already exists for subscription:', subscription.id)
-      return
-    }
-
-    // Get plan details
-    const plan = await runQuery(
-      `*[_type=="plan" && _id==$planId][0]{
-        _id,
-        name,
-        hoursIncluded
-      }`,
-      { planId }
-    )
+    // Get base plan details
+    const plan = await fetchPlan(planId)
 
     if (!plan) {
       console.error('Plan not found:', planId)
       return
     }
 
-    // Create retainer
+    // (Base plan retainer will be created after computing periodStart/End)
     const periodStartTimestamp = (
       subscription as unknown as Stripe.Subscription & {
         current_period_start: number
@@ -247,31 +247,161 @@ async function handlePlanSubscription(session: Stripe.Checkout.Session) {
       return
     }
 
-    const retainerData = {
-      _type: 'retainer',
-      client: { _type: 'reference', _ref: clientId },
-      plan: { _type: 'reference', _ref: planId },
-      stripeSubId: subscription.id,
-      status:
-        subscription.status === 'active'
-          ? 'active'
-          : subscription.status === 'canceled'
-            ? 'canceled'
-            : 'past_due',
-      periodStart: periodStart,
-      periodEnd: periodEnd,
-      hoursIncluded: plan.hoursIncluded || 0,
-      hoursUsed: 0,
-      ...(assetId && { asset: { _type: 'reference', _ref: assetId } }),
+    // Create retainer for base plan if not already present for this subscription+plan
+    const existingBase = await runQuery(
+      `*[_type=="retainer" && stripeSubId==$stripeSubId && plan._ref==$planId][0]`,
+      { stripeSubId: subscription.id, planId: plan._id }
+    )
+
+    if (existingBase) {
+      console.log('Retainer already exists for base plan on subscription:', {
+        subscription: subscription.id,
+        plan: plan._id,
+      })
+    } else {
+      const retainerData = {
+        _type: 'retainer',
+        client: { _type: 'reference', _ref: clientId },
+        plan: { _type: 'reference', _ref: planId },
+        stripeSubId: subscription.id,
+        status:
+          subscription.status === 'active'
+            ? 'active'
+            : subscription.status === 'canceled'
+              ? 'canceled'
+              : 'past_due',
+        periodStart: periodStart,
+        periodEnd: periodEnd,
+        hoursIncluded: plan.hoursIncluded || 0,
+        hoursUsed: 0,
+        ...(assetId && { asset: { _type: 'reference', _ref: assetId } }),
+      }
+
+      await sanityWrite.mutate([
+        {
+          create: retainerData,
+        },
+      ])
+
+      console.log('Retainer created for subscription:', subscription.id)
     }
+
+    // If add-ons were included in checkout, create retainers for each add-on plan
+    if (addOnIds) {
+      const ids = String(addOnIds)
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean)
+
+      for (const addOnId of ids) {
+        try {
+          const addOn = await fetchPlan(addOnId)
+          if (!addOn) {
+            console.warn('Add-on plan not found:', addOnId)
+            continue
+          }
+
+          const existingAddOn = await runQuery(
+            `*[_type=="retainer" && stripeSubId==$stripeSubId && plan._ref==$planId][0]`,
+            { stripeSubId: subscription.id, planId: addOn._id }
+          )
+          if (existingAddOn) {
+            console.log('Add-on retainer already exists:', {
+              subscription: subscription.id,
+              plan: addOn._id,
+            })
+            continue
+          }
+
+          await sanityWrite.mutate([
+            {
+              create: {
+                _type: 'retainer',
+                client: { _type: 'reference', _ref: clientId },
+                plan: { _type: 'reference', _ref: addOn._id },
+                stripeSubId: subscription.id,
+                status:
+                  subscription.status === 'active'
+                    ? 'active'
+                    : subscription.status === 'canceled'
+                      ? 'canceled'
+                      : 'past_due',
+                periodStart,
+                periodEnd,
+                hoursIncluded: addOn.hoursIncluded || 0,
+                hoursUsed: 0,
+              },
+            },
+          ])
+          console.log('Add-on retainer created for plan:', addOn._id)
+
+          // ──────────────── Plan → Feature entitlement mapping ────────────────
+          // Derive asset type and feature key from the add-on plan name.
+          const mapping = mapPlanToFeature(addOnId)
+          if (!mapping) {
+            console.log(
+              'No feature mapping for add-on plan; skipping entitlement'
+            )
+          } else {
+            // Ensure asset exists for client for the mapped asset type
+            const asset = await ensureClientAsset(clientId, mapping.assetType)
+            // Ensure feature exists for the mapped feature key
+            const feature = await ensureFeature(mapping)
+            // Create entitlement if it doesn't exist
+            const existingEnt = await runQuery(
+              `*[_type=="entitlement" && client._ref==$clientId && asset._ref==$assetId && feature._ref==$featureId][0]`,
+              { clientId, assetId: asset._id, featureId: feature._id }
+            )
+            if (!existingEnt) {
+              await sanityWrite.mutate([
+                {
+                  create: {
+                    _type: 'entitlement',
+                    client: { _type: 'reference', _ref: clientId },
+                    asset: { _type: 'reference', _ref: asset._id },
+                    feature: { _type: 'reference', _ref: feature._id },
+                    status: 'active',
+                    activatedAt: new Date().toISOString(),
+                  },
+                },
+              ])
+              console.log('Entitlement created:', {
+                clientId,
+                assetId: asset._id,
+                featureId: feature._id,
+              })
+            } else {
+              console.log('Entitlement already exists for client/asset/feature')
+            }
+          }
+        } catch (addOnErr) {
+          console.error('Failed creating add-on retainer:', addOnId, addOnErr)
+        }
+      }
+    }
+    // Build selectedAddons refs if any
+    const addOnRefs = (
+      addOnIds
+        ? String(addOnIds)
+            .split(',')
+            .map((s) => s.trim())
+            .filter(Boolean)
+            .map((id) => ({ _type: 'reference', _ref: id }))
+        : []
+    ) as Array<{ _type: 'reference'; _ref: string }>
 
     await sanityWrite.mutate([
       {
-        create: retainerData,
+        patch: {
+          id: clientId,
+          set: {
+            hasActiveSubscription: true,
+            selectedPlan: { _type: 'reference', _ref: planId },
+            ...(addOnRefs.length ? { selectedAddons: addOnRefs } : {}),
+          },
+        },
       },
     ])
-
-    console.log('Retainer created for subscription:', subscription.id)
 
     // Send welcome email to client
     try {
@@ -291,6 +421,8 @@ async function handlePlanSubscription(session: Stripe.Checkout.Session) {
     console.error('Error creating retainer:', error)
   }
 }
+
+// ──────────────── Helpers moved to reusable module (src/lib/entitlements.ts) ────────────────
 
 async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
   console.log('🎯 Handling subscription created:', subscription.id)
@@ -374,6 +506,21 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   })
 
   try {
+    // Update client subscription status based on Stripe customer linkage
+    if (subscription.customer && typeof subscription.customer === 'string') {
+      const stripeCustomerId = subscription.customer
+      const client = await runQuery(
+        `*[_type=="client" && stripeCustomerId==$stripeCustomerId][0]{_id, hasActiveSubscription}`,
+        { stripeCustomerId }
+      )
+      if (client?._id) {
+        const active = subscription.status === 'active'
+        await sanityWrite.mutate([
+          { patch: { id: client._id, set: { hasActiveSubscription: active } } },
+        ])
+      }
+    }
+
     // Update retainer with new subscription details
     const result = await runQuery(
       `*[_type=="retainer" && stripeSubId==$stripeSubId][0]`,
@@ -433,6 +580,27 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
     }
   } catch (error) {
     console.error('Error updating retainer:', error)
+  }
+}
+
+async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
+  console.log('🔍 Processing subscription deleted:', subscription.id)
+  try {
+    if (subscription.customer && typeof subscription.customer === 'string') {
+      const stripeCustomerId = subscription.customer
+      const client = await runQuery(
+        `*[_type=="client" && stripeCustomerId==$stripeCustomerId][0]{_id}`,
+        { stripeCustomerId }
+      )
+      if (client?._id) {
+        await sanityWrite.mutate([
+          { patch: { id: client._id, set: { hasActiveSubscription: false } } },
+        ])
+        console.log('Client marked unsubscribed:', client._id)
+      }
+    }
+  } catch (error) {
+    console.error('Error handling subscription deleted:', error)
   }
 }
 

@@ -1,7 +1,7 @@
-import { PlanCard } from '../../../components/PlanCard'
-import { runPublicQuery } from '../../../lib/public/client'
-import { qPlans } from '../../../sanity/lib/queries'
+import { runPublicQuery } from '@/lib/public/client'
+import { qPlans } from '@/sanity/lib/queries'
 import { draftMode } from 'next/headers'
+import { PlansPicker } from '@/components/public/PlansPicker'
 
 interface Plan {
   _id: string
@@ -9,6 +9,9 @@ interface Plan {
   price: string
   features: string[]
   description: string
+  category: 'base' | 'addon' | 'one_time' | string
+  interval?: 'month' | 'year'
+  visibility?: 'public' | 'internal'
   stripeProductId?: string
   stripePriceId?: string
   hoursIncluded?: number
@@ -24,6 +27,9 @@ export const revalidate = 3600 // Revalidate every hour for marketing content
 
 export default async function PlansPage() {
   const plans = await getPlans()
+  const basePlans = plans.filter((p) => p.category === 'base')
+  const addOnPlans = plans.filter((p) => p.category === 'addon')
+  const oneTimePlans = plans.filter((p) => p.category === 'one_time')
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
@@ -38,29 +44,11 @@ export default async function PlansPage() {
             customization.
           </p>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {plans.map((plan, index) => (
-            <PlanCard
-              key={plan._id}
-              name={plan.name}
-              price={plan.price}
-              features={plan.features}
-              description={plan.description}
-              isPopular={index === 1} // Make the middle plan "popular"
-              planId={plan._id}
-            />
-          ))}
-        </div>
-
-        <div className="text-center mt-12">
-          <p className="text-gray-600 mb-4">
-            Need a custom solution? Contact us for enterprise pricing.
-          </p>
-          <button className="bg-gray-800 hover:bg-gray-900 text-white px-8 py-3 rounded-lg font-medium transition-colors">
-            Contact Sales
-          </button>
-        </div>
+        <PlansPicker
+          basePlans={basePlans}
+          addOnPlans={addOnPlans}
+          oneTimePlans={oneTimePlans}
+        />
       </div>
     </div>
   )

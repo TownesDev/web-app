@@ -148,8 +148,18 @@ export const qFeaturedTestimonials = /* groq */ `
 `
 
 export const qPlans = /* groq */ `
-  *[_type=="plan"]|order(_createdAt asc){
-    _id, name, price, features, description, stripeProductId, stripePriceId, hoursIncluded
+  *[_type=="plan" && visibility == "public"]|order(category asc, _createdAt asc){
+    _id,
+    name,
+    price,
+    features,
+    description,
+    category,
+    interval,
+    visibility,
+    stripeProductId,
+    stripePriceId,
+    hoursIncluded
   }
 `
 
@@ -353,4 +363,35 @@ export const qLandingPageContent = /* groq */ `
     profileImage{alt, asset->{url, metadata{lqip,dimensions}}}
   }
 }
+`
+
+// ────────────────  ADMIN ENTITLEMENTS  ────────────────
+
+export const qAdminEntitlementsOverview = /* groq */ `
+  *[_type=="client"]|order(name asc){
+    _id,
+    name,
+    email,
+    selectedPlan->{_id, name, category},
+    selectedAddons[]->{_id, name, category},
+    "assets": *[_type=="serviceAsset" && client._ref==^._id]{ _id, name, type },
+    "entitlements": *[_type=="entitlement" && client._ref==^._id]{
+      _id,
+      asset->{ _id, name, type },
+      feature->{ _id, name, key, assetType }
+    },
+    "retainers": *[_type=="retainer" && client._ref==^._id]{
+      _id,
+      status,
+      plan->{ _id, name, category }
+    }
+  }
+`
+
+export const qPlanFeatureMappings = /* groq */ `
+  *[_type=="planFeatureMapping"]{
+    _id,
+    plan->{ _id, name, category },
+    feature->{ _id, name, key, assetType }
+  }
 `
