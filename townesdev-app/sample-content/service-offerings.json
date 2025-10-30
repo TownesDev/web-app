@@ -1,0 +1,253 @@
+[
+  {
+    "_id": "service-custom-development",
+    "_type": "serviceOffering",
+    "title": "Custom Software Development",
+    "slug": {
+      "current": "custom-software-development"
+    },
+    "shortDescription": "Tailored solutions built from the ground up to meet your specific business requirements and scale with your growth.",
+    "description": "We specialize in creating bespoke software applications that align perfectly with your business processes. From concept to deployment, our development approach focuses on clean architecture, maintainable code, and future-proof solutions.",
+    "icon": "💻",
+    "keyFeatures": [
+      {
+        "feature": "Full-Stack Development",
+        "description": "End-to-end development using modern frameworks like Next.js, React, Node.js, and PostgreSQL"
+      },
+      {
+        "feature": "API-First Architecture",
+        "description": "RESTful and GraphQL APIs designed for scalability and third-party integrations"
+      },
+      {
+        "feature": "Cloud-Native Solutions",
+        "description": "Built for AWS, Azure, or Google Cloud with containerization and microservices"
+      },
+      {
+        "feature": "Security by Design",
+        "description": "OWASP compliance, encryption, and secure authentication patterns"
+      }
+    ],
+    "technologies": [
+      "TypeScript",
+      "React",
+      "Next.js",
+      "Node.js",
+      "PostgreSQL",
+      "AWS",
+      "Docker"
+    ],
+    "startingPrice": "$15,000",
+    "deliveryTimeframe": "8-16 weeks",
+    "featured": true,
+    "displayOrder": 1,
+    "status": "active"
+  },
+  {
+    "_id": "service-system-architecture",
+    "_type": "serviceOffering",
+    "title": "System Architecture & Design",
+    "slug": {
+      "current": "system-architecture-design"
+    },
+    "shortDescription": "Strategic technical planning and architectural blueprints that ensure your systems can handle growth and complexity.",
+    "description": "We help you design robust, scalable system architectures that can evolve with your business. Our architects bring enterprise-level experience to create technical roadmaps and implementation strategies.",
+    "icon": "🏗️",
+    "keyFeatures": [
+      {
+        "feature": "Technical Strategy",
+        "description": "Comprehensive analysis of your current systems and future requirements"
+      },
+      {
+        "feature": "Scalability Planning",
+        "description": "Architecture designed to handle 10x growth without major rewrites"
+      },
+      {
+        "feature": "Technology Selection",
+        "description": "Expert guidance on choosing the right tools and frameworks for your use case"
+      },
+      {
+        "feature": "Documentation & Training",
+        "description": "Detailed technical documentation and team knowledge transfer"
+      }
+    ],
+    "technologies": [
+      "AWS",
+      "Kubernetes",
+      "Terraform",
+      "Redis",
+      "Elasticsearch",
+      "Monitoring"
+    ],
+    "startingPrice": "$8,000",
+    "deliveryTimeframe": "4-8 weeks",
+    "featured": true,
+    "displayOrder": 2,
+    "status": "active"
+  },
+  {
+    "_id": "service-devops-automation",
+    "_type": "serviceOffering",
+    "title": "DevOps & Automation",
+    "slug": {
+      "current": "devops-automation"
+    },
+    "shortDescription": "Streamline your development workflow with CI/CD pipelines, infrastructure as code, and automated deployment strategies.",
+    "description": "Transform your development and deployment processes with modern DevOps practices. We implement robust CI/CD pipelines, infrastructure automation, and monitoring solutions that reduce manual work and increase reliability.",
+    "icon": "⚙️",
+    "keyFeatures": [
+      {
+        "feature": "CI/CD Pipelines",
+        "description": "Automated testing, building, and deployment workflows using GitHub Actions or GitLab CI"
+      },
+      {
+        "feature": "Infrastructure as Code",
+        "description": "Terraform and CloudFormation templates for reproducible infrastructure"
+      },
+      {
+        "feature": "Container Orchestration",
+        "description": "Docker containerization and Kubernetes deployment strategies"
+      },
+      {
+        "feature": "Monitoring & Alerting",
+        "description": "Comprehensive observability with metrics, logs, and performance monitoring"
+      }
+    ],
+    "technologies": [
+      "Docker",
+      "Kubernetes",
+      "Terraform",
+      "GitHub Actions",
+      "Prometheus",
+      "Grafana"
+    ],
+    "startingPrice": "$5,000",
+    "deliveryTimeframe": "3-6 weeks",
+    "featured": true,
+    "displayOrder": 3,
+    "status": "active"
+  },
+  {
+    "_id": "service-api-integration",
+    "_type": "serviceOffering",
+    "title": "API Integration & Middleware",
+    "slug": {
+      "current": "api-integration-middleware"
+    },
+    "shortDescription": "Connect your systems seamlessly with robust API integrations, middleware solutions, and data synchronization.",
+    "description": "We specialize in connecting disparate systems through well-designed APIs and middleware solutions. Whether you need to integrate with third-party services or build internal data pipelines, we ensure reliable and secure data flow.",
+    "icon": "🔗",
+    "keyFeatures": [
+      {
+        "feature": "Third-Party Integrations",
+        "description": "CRM, payment processors, marketing tools, and enterprise software connections"
+      },
+      {
+        "feature": "Data Synchronization",
+        "description": "Real-time and batch data sync between multiple systems"
+      },
+      {
+        "feature": "API Gateway Management",
+        "description": "Rate limiting, authentication, and request/response transformation"
+      },
+      {
+        "feature": "Event-Driven Architecture",
+        "description": "Message queues and event streaming for decoupled system communication"
+      }
+    ],
+    "technologies": [
+      "REST",
+      "GraphQL",
+      "RabbitMQ",
+      "Apache Kafka",
+      "Redis",
+      "Webhooks"
+    ],
+    "startingPrice": "$3,000",
+    "deliveryTimeframe": "2-4 weeks",
+    "featured": false,
+    "displayOrder": 4,
+    "status": "active"
+  },
+  {
+    "_id": "service-maintenance-support",
+    "_type": "serviceOffering",
+    "title": "Maintenance & Support",
+    "slug": {
+      "current": "maintenance-support"
+    },
+    "shortDescription": "Ongoing maintenance, updates, and technical support to keep your systems running smoothly and securely.",
+    "description": "Keep your applications running at peak performance with our comprehensive maintenance and support services. We provide proactive monitoring, security updates, performance optimization, and rapid incident response.",
+    "icon": "🛠️",
+    "keyFeatures": [
+      {
+        "feature": "Proactive Monitoring",
+        "description": "24/7 system monitoring with automated alerts and health checks"
+      },
+      {
+        "feature": "Security Updates",
+        "description": "Regular security patches and vulnerability assessments"
+      },
+      {
+        "feature": "Performance Optimization",
+        "description": "Database tuning, caching strategies, and code optimization"
+      },
+      {
+        "feature": "Incident Response",
+        "description": "Rapid response to critical issues with detailed post-incident analysis"
+      }
+    ],
+    "technologies": [
+      "Monitoring",
+      "Security",
+      "Performance",
+      "Backup",
+      "Documentation"
+    ],
+    "startingPrice": "$2,500/month",
+    "deliveryTimeframe": "Ongoing",
+    "featured": false,
+    "displayOrder": 5,
+    "status": "active"
+  },
+  {
+    "_id": "service-technical-consultation",
+    "_type": "serviceOffering",
+    "title": "Technical Consultation",
+    "slug": {
+      "current": "technical-consultation"
+    },
+    "shortDescription": "Strategic guidance and expert advice to help you make informed technical decisions and avoid costly mistakes.",
+    "description": "Leverage our experience to make better technical decisions. We provide strategic consultation on technology choices, architecture decisions, team structure, and development processes.",
+    "icon": "💡",
+    "keyFeatures": [
+      {
+        "feature": "Technology Assessment",
+        "description": "Evaluation of current tech stack and recommendations for improvements"
+      },
+      {
+        "feature": "Code Reviews",
+        "description": "Comprehensive code audits with security, performance, and maintainability focus"
+      },
+      {
+        "feature": "Team Mentoring",
+        "description": "Developer training and best practices workshops"
+      },
+      {
+        "feature": "Project Planning",
+        "description": "Technical roadmaps, sprint planning, and resource allocation guidance"
+      }
+    ],
+    "technologies": [
+      "Strategy",
+      "Planning",
+      "Training",
+      "Documentation",
+      "Best Practices"
+    ],
+    "startingPrice": "$150/hour",
+    "deliveryTimeframe": "Flexible",
+    "featured": false,
+    "displayOrder": 6,
+    "status": "active"
+  }
+]

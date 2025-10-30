@@ -13,6 +13,9 @@ import {
   Menu,
   X,
   FileBarChart,
+  ShieldCheck,
+  Link2,
+  Wrench,
 } from 'lucide-react'
 
 interface NavItem {
@@ -46,6 +49,21 @@ const navItems: NavItem[] = [
     href: '/admin/reports',
     label: 'Reports',
     icon: FileBarChart,
+  },
+  {
+    href: '/admin/entitlements',
+    label: 'Entitlements',
+    icon: ShieldCheck,
+  },
+  {
+    href: '/admin/entitlements/mappings',
+    label: 'Mappings',
+    icon: Link2,
+  },
+  {
+    href: '/admin/provision',
+    label: 'Provision',
+    icon: Wrench,
   },
   {
     href: '/admin/email-templates',

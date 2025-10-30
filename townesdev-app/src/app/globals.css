@@ -42,6 +42,8 @@
   --color-picton-blue-800: #095b7d;
   --color-picton-blue-900: #184b64;
   --color-picton-blue-950: #093043;
+  
+
 
   --color-comet-50: #f9fafc;
   --color-comet-100: #f2f4f7;
@@ -141,7 +143,13 @@
   /* TownesDev Brand Fonts */
   --font-heading: 'Sumana', serif;
   --font-body: 'Cairo', sans-serif;
+
+  /* Base light theme */
+  --background: #ffffff;
+  --foreground: #0a0a0a;
 }
+
+/* OS-driven dark mode (media strategy) */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;

@@ -19,7 +19,7 @@ export default function MaintenanceCover() {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 backdrop-blur-sm bg-black/30" />
-      <div className="relative z-10 max-w-2xl w-full mx-4 p-8 bg-white dark:bg-nile-blue-900 rounded-lg shadow-2xl">
+      <div className="relative z-10 max-w-2xl w-full mx-4 p-8 bg-white rounded-lg shadow-2xl">
         <div className="flex flex-col items-center text-center gap-4">
           <div className="w-48 h-24 relative">
             <Image
@@ -29,10 +29,10 @@ export default function MaintenanceCover() {
               className="object-contain"
             />
           </div>
-          <h1 className="text-4xl font-bold text-nile-blue-900 dark:text-white">
+          <h1 className="text-4xl font-bold text-nile-blue-900">
             TownesDev — Coming Soon
           </h1>
-          <p className="text-gray-600 dark:text-gray-300 max-w-xl">
+          <p className="text-gray-700 max-w-xl">
             We’re polishing things behind the scenes. If you were invited to
             test, click the tester button below to access the portal.
           </p>

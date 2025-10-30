@@ -1,8 +1,8 @@
-import { getSession } from '../../../../lib/session'
-import { getClientByUserId } from '../../../../lib/stripe'
-import { sanity } from '../../../../lib/client'
+import { getSession } from '@/lib/session'
+import { getClientByUserId } from '@/lib/stripe'
+import { runQuery } from '@/lib/client'
 import { redirect } from 'next/navigation'
-import { BillingPortalButton } from './BillingPortalButton'
+import { BillingPortalButton } from '@/components/BillingPortalButton'
 
 interface Retainer {
   _id: string
@@ -25,7 +25,7 @@ interface Retainer {
 
 async function getClientRetainers(clientId: string): Promise<Retainer[]> {
   console.log('Querying retainers for clientId:', clientId)
-  const retainers = await sanity.fetch(
+  const retainers = await runQuery(
     `*[_type=="retainer" && client._ref==$clientId]{
       _id,
       status,

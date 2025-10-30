@@ -1,0 +1,36 @@
+[
+  {
+    "_id": "heroSection-sample",
+    "_type": "heroSection",
+    "tagline": "Code. Systems. Foundations.",
+    "headline": "Building Digital Systems That Actually Work",
+    "subheadline": "Independent development studio focused on reliable architectures, clean code, and sustainable solutions. We don't just build software—we craft digital foundations that scale with your business.",
+    "backgroundGradient": "from-nile-blue-50 to-white",
+    "primaryCtaText": "Start Your Project",
+    "primaryCtaUrl": "/auth/signup",
+    "secondaryCtaText": "View Our Work",
+    "secondaryCtaUrl": "/portfolio",
+    "featuredMetrics": [
+      {
+        "label": "Projects Delivered",
+        "value": "50+",
+        "description": "Custom solutions built for growing businesses"
+      },
+      {
+        "label": "Client Satisfaction",
+        "value": "98%",
+        "description": "Based on project completion surveys"
+      },
+      {
+        "label": "Years Experience",
+        "value": "10+",
+        "description": "Proven track record in enterprise development"
+      },
+      {
+        "label": "Technologies Mastered",
+        "value": "25+",
+        "description": "Full-stack expertise across modern frameworks"
+      }
+    ]
+  }
+]

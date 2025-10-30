@@ -2,6 +2,7 @@
 
 import { getCurrentClient } from '../../../../lib/auth'
 import { notFound } from 'next/navigation'
+import { BillingPortalButton } from '@/components/BillingPortalButton'
 
 export default async function ProfilePage() {
   const client = await getCurrentClient()
@@ -39,6 +40,18 @@ export default async function ProfilePage() {
                   {client.email}
                 </p>
               </div>
+            </div>
+
+            {/* Billing management */}
+            <div className="border border-gray-200 rounded-lg p-4">
+              <h2 className="text-lg font-semibold text-gray-900 mb-2">
+                Billing & Payments
+              </h2>
+              <p className="text-gray-600 mb-4">
+                Update payment methods, view invoices, and manage your
+                subscription from your Stripe billing portal.
+              </p>
+              <BillingPortalButton />
             </div>
 
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">

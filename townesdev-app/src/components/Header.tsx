@@ -43,7 +43,52 @@ export default function Header({ variant }: HeaderProps) {
         // Navigation moved to AdminSidebar
         return null
       default:
-        return null
+        return (
+          <nav aria-label="Public site">
+            <ul className="hidden md:flex items-center gap-6 ml-8">
+              <li>
+                <Link
+                  href="/#home"
+                  className="text-nile-blue-100 hover:text-white text-sm font-medium"
+                >
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/#services"
+                  className="text-nile-blue-100 hover:text-white text-sm font-medium"
+                >
+                  Services
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/#about"
+                  className="text-nile-blue-100 hover:text-white text-sm font-medium"
+                >
+                  About
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/plans"
+                  className="text-nile-blue-100 hover:text-white text-sm font-medium"
+                >
+                  Plans
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/#contact"
+                  className="text-nile-blue-100 hover:text-white text-sm font-medium"
+                >
+                  Contact
+                </Link>
+              </li>
+            </ul>
+          </nav>
+        )
     }
   }
 
@@ -83,8 +128,9 @@ export default function Header({ variant }: HeaderProps) {
         {getQuickNav()}
       </div>
 
-      {/* Auth Status */}
-      <AuthStatus />
+      <div className="flex items-center gap-3">
+        <AuthStatus />
+      </div>
     </header>
   )
 }

@@ -46,18 +46,18 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { planId } = await request.json()
-    console.log('🔍 Plan ID received:', planId)
+    const { planId, addOnIds } = await request.json()
+    console.log('🔍 Plan ID received:', planId, 'addOnIds:', addOnIds)
 
     if (!planId) {
       console.log('❌ Missing planId')
       return NextResponse.json({ error: 'Missing planId' }, { status: 400 })
     }
 
-    // Get plan details
+    // Get base plan details
     const plan = await runQuery(
       `*[_type=="plan" && _id==$planId][0]{
-        _id, name, price, description
+        _id, name, price, description, category, interval, stripePriceId
       }`,
       { planId }
     )
@@ -71,68 +71,105 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Plan not found' }, { status: 404 })
     }
 
-    // Parse price - extract the first sequence of digits from any format
-    console.log(
-      '🔍 Raw plan.price:',
-      JSON.stringify(plan.price),
-      'length:',
-      plan.price.length,
-      'type:',
-      typeof plan.price
-    )
-    const priceMatch = plan.price.match(/(\d+)/)
-    console.log('🔍 Price parsing:', {
-      price: plan.price,
-      match: priceMatch,
-      extracted: priceMatch?.[1],
-    })
-
-    if (!priceMatch || !priceMatch[1]) {
-      console.log(
-        '❌ Invalid plan price format:',
-        plan.price,
-        '- expected to contain a number like "300", "$300", "$300/month", or "300/month"'
-      )
+    if (plan.category && plan.category !== 'base') {
+      console.log('❌ Selected plan is not a base plan:', plan.category)
       return NextResponse.json(
-        {
-          error:
-            'Invalid plan price format - expected to contain a number like "300", "$300", "$300/month", or "300/month"',
-        },
+        { error: 'Selected plan is not a base plan' },
         { status: 400 }
       )
     }
 
-    const priceInCents = parseInt(priceMatch[1]) * 100
-    console.log('🔍 Price conversion:', {
-      priceString: priceMatch[1],
-      priceInCents,
-    })
+    // Build line items: base + optional add-ons
+    const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = []
+
+    // Helper to fallback to price_data if no Stripe Price ID
+    const buildPriceData = (
+      name: string,
+      description: string | undefined,
+      price: string,
+      interval?: string
+    ): Stripe.Checkout.SessionCreateParams.LineItem => {
+      const match = typeof price === 'string' ? price.match(/(\d+)/) : null
+      if (!match?.[1]) {
+        throw new Error(`Invalid price format for ${name}`)
+      }
+      const unit_amount = parseInt(match[1], 10) * 100
+      return {
+        price_data: {
+          currency: 'usd',
+          product_data: { name, description },
+          unit_amount,
+          recurring: {
+            interval:
+              (interval as 'day' | 'week' | 'month' | 'year') || 'month',
+          },
+        },
+        quantity: 1,
+      }
+    }
+
+    if (plan.stripePriceId) {
+      line_items.push({ price: plan.stripePriceId, quantity: 1 })
+    } else {
+      line_items.push(
+        buildPriceData(
+          `${plan.name} Retainer`,
+          plan.description,
+          plan.price,
+          plan.interval || 'month'
+        )
+      )
+    }
+
+    // Add-ons
+    let addOns: Array<{
+      _id: string
+      name: string
+      price: string
+      description?: string
+      category?: string
+      interval?: string
+      stripePriceId?: string
+    }> = []
+    if (Array.isArray(addOnIds) && addOnIds.length > 0) {
+      addOns = await runQuery(
+        `*[_type=="plan" && _id in $ids]{ _id, name, price, description, category, interval, stripePriceId }`,
+        { ids: addOnIds }
+      )
+      const invalid = addOns.find((p) => p.category !== 'addon')
+      if (invalid) {
+        return NextResponse.json(
+          { error: 'One or more selected add-ons are invalid' },
+          { status: 400 }
+        )
+      }
+      for (const a of addOns) {
+        if (a.stripePriceId)
+          line_items.push({ price: a.stripePriceId, quantity: 1 })
+        else
+          line_items.push(
+            buildPriceData(
+              a.name,
+              a.description,
+              a.price,
+              a.interval || 'month'
+            )
+          )
+      }
+    }
 
     // Create Stripe Checkout Session for subscription
     console.log('🔍 Creating Stripe checkout session...')
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
-      line_items: [
-        {
-          price_data: {
-            currency: 'usd',
-            product_data: {
-              name: `${plan.name} Retainer`,
-              description: plan.description,
-            },
-            unit_amount: priceInCents,
-            recurring: {
-              interval: 'month',
-            },
-          },
-          quantity: 1,
-        },
-      ],
+      line_items,
       mode: 'subscription',
       success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/app?welcome=true`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/plans?canceled=true`,
       metadata: {
         planId: plan._id,
+        addOnIds:
+          Array.isArray(addOnIds) && addOnIds.length ? addOnIds.join(',') : '',
         clientId: client._id,
       },
     })

@@ -1,8 +1,8 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/session'
 import { getClientByUserId, stripe } from '@/lib/stripe'
 
-export async function POST() {
+export async function POST(req: NextRequest) {
   try {
     // Get the authenticated user
     const session = await getSession()
@@ -29,9 +29,17 @@ export async function POST() {
     }
 
     // Create billing portal session
+    // Build a safe return URL with a runtime fallback to the request origin
+    const origin =
+      req.headers.get('origin') || new URL(req.url).origin || undefined
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || origin
+    const returnUrl = baseUrl
+      ? `${baseUrl.replace(/\/$/, '')}/app/plans`
+      : undefined
+
     const portalSession = await stripe.billingPortal.sessions.create({
       customer: client.stripeCustomerId,
-      return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/app/plans`,
+      ...(returnUrl ? { return_url: returnUrl } : {}),
     })
 
     return NextResponse.json({ url: portalSession.url })

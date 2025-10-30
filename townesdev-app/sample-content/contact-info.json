@@ -1,0 +1,27 @@
+[
+  {
+    "_id": "contact-info-main",
+    "_type": "contactInfo",
+    "primaryEmail": "hello@townesdev.com",
+    "phoneNumber": "+1 (555) 123-4567",
+    "businessHours": "Monday - Friday, 9:00 AM - 6:00 PM EST",
+    "responseTime": "Within 4 hours during business hours",
+    "preferredContactMethod": "email",
+    "consultationCalendar": "https://calendly.com/townesdev/consultation",
+    "officeLocation": "Remote-first, based in Charlotte, NC",
+    "socialLinks": [
+      {
+        "platform": "github",
+        "url": "https://github.com/TownesDev"
+      },
+      {
+        "platform": "linkedin",
+        "url": "https://linkedin.com/company/townesdev"
+      },
+      {
+        "platform": "twitter",
+        "url": "https://twitter.com/townesdev"
+      }
+    ]
+  }
+]

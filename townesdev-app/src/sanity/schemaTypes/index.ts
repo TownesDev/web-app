@@ -6,6 +6,44 @@ export const plan: SchemaTypeDefinition = {
   type: 'document',
   fields: [
     {
+      name: 'category',
+      title: 'Category',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Base', value: 'base' },
+          { title: 'Add-on', value: 'addon' },
+          { title: 'One-time', value: 'one_time' },
+        ],
+      },
+      description: 'Classify plans as base, add-on, or one-time purchase',
+    },
+    {
+      name: 'interval',
+      title: 'Billing Interval',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Monthly', value: 'month' },
+          { title: 'Yearly', value: 'year' },
+        ],
+      },
+      description: 'Recurring billing interval for subscriptions',
+    },
+    {
+      name: 'visibility',
+      title: 'Visibility',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Public', value: 'public' },
+          { title: 'Internal', value: 'internal' },
+        ],
+      },
+      initialValue: 'public',
+      description: 'Control whether the plan appears on public pricing pages',
+    },
+    {
       name: 'name',
       title: 'Plan Name',
       type: 'string',
@@ -189,6 +227,13 @@ export const client: SchemaTypeDefinition = {
       description: 'The plan selected by the client',
     },
     {
+      name: 'selectedAddons',
+      title: 'Selected Add-ons',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'plan' }] }],
+      description: 'Add-on plans selected by the client',
+    },
+    {
       name: 'startDate',
       title: 'Start Date',
       type: 'datetime',
@@ -229,6 +274,30 @@ export const client: SchemaTypeDefinition = {
         list: ['Active', 'Inactive', 'Cancelled'],
       },
       description: 'Current status of the client retainer',
+    },
+    {
+      name: 'onboardingStatus',
+      title: 'Onboarding Status',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Not Started', value: 'not_started' },
+          { title: 'In Progress', value: 'in_progress' },
+          { title: 'Awaiting Payment', value: 'awaiting_payment' },
+          { title: 'Completed', value: 'completed' },
+        ],
+      },
+      initialValue: 'not_started',
+      description:
+        'Tracks the onboarding flow progress to gate access to the portal until complete',
+    },
+    {
+      name: 'hasActiveSubscription',
+      title: 'Has Active Subscription',
+      type: 'boolean',
+      initialValue: false,
+      description:
+        'Derived from Stripe webhooks; when false, portal will prompt to complete billing',
     },
     {
       name: 'botTenantId',
@@ -924,81 +993,190 @@ export const seoConfig: SchemaTypeDefinition = {
   ],
 }
 
-// Landing Page Schemas
-export const project: SchemaTypeDefinition = {
-  name: 'project',
-  title: 'Project',
+// Landing Page Schemas - Enhanced for TownesDev Brand
+export const serviceOffering: SchemaTypeDefinition = {
+  name: 'serviceOffering',
+  title: 'Service Offering',
   type: 'document',
-  icon: () => '📁',
+  icon: () => '⚡',
   fields: [
     {
       name: 'title',
-      title: 'Project Title',
+      title: 'Service Title',
       type: 'string',
-      description: 'The title of the project',
+      description: 'Name of the service (e.g., "Discord Bot Development")',
+      validation: (Rule) => Rule.required(),
     },
     {
       name: 'slug',
-      title: 'Slug',
+      title: 'URL Slug',
       type: 'slug',
       options: {
         source: 'title',
         maxLength: 96,
       },
-      description: 'URL-friendly version of the title',
+      description: 'URL-friendly version of the service name',
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'shortDescription',
+      title: 'Short Description',
+      type: 'string',
+      description: 'Brief one-line description for cards/previews',
+      validation: (Rule) => Rule.required().max(120),
     },
     {
       name: 'description',
-      title: 'Description',
-      type: 'text',
-      description: 'Brief description of the project',
-    },
-    {
-      name: 'content',
-      title: 'Content',
+      title: 'Detailed Description',
       type: 'array',
       of: [{ type: 'block' }],
-      description: 'Detailed project content',
+      description: 'Comprehensive service description with rich content',
+      validation: (Rule) => Rule.required(),
     },
     {
-      name: 'images',
-      title: 'Project Images',
+      name: 'icon',
+      title: 'Service Icon',
+      type: 'string',
+      options: {
+        list: [
+          { title: '🤖 Bot/Automation', value: 'bot' },
+          { title: '🌐 Web Development', value: 'web' },
+          { title: '📱 Mobile Apps', value: 'mobile' },
+          { title: '🛒 E-commerce', value: 'ecommerce' },
+          { title: '⚙️ System Integration', value: 'integration' },
+          { title: '🔧 Custom Solutions', value: 'custom' },
+        ],
+      },
+      description: 'Icon category for visual representation',
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'featuredImage',
+      title: 'Featured Image',
+      type: 'image',
+      options: {
+        hotspot: true,
+      },
+      description: 'Hero image for the service detail page',
+    },
+    {
+      name: 'gallery',
+      title: 'Service Gallery',
       type: 'array',
-      of: [{ type: 'image' }],
-      description: 'Images showcasing the project',
+      of: [
+        {
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            {
+              name: 'caption',
+              title: 'Image Caption',
+              type: 'string',
+            },
+          ],
+        },
+      ],
+      description: 'Showcase images demonstrating the service',
+      validation: (Rule) => Rule.max(8),
     },
     {
       name: 'technologies',
-      title: 'Technologies Used',
+      title: 'Technologies & Tools',
       type: 'array',
       of: [{ type: 'string' }],
-      description: 'Technologies and tools used in this project',
+      description: 'Key technologies used in delivering this service',
+      options: {
+        list: [
+          'TypeScript',
+          'React',
+          'Next.js',
+          'Node.js',
+          'Python',
+          'Discord.js',
+          'Sanity CMS',
+          'Stripe',
+          'Vercel',
+          'AWS',
+          'PostgreSQL',
+          'MongoDB',
+          'Tailwind CSS',
+          'Figma',
+          'Docker',
+          'GitHub Actions',
+        ],
+      },
     },
     {
-      name: 'projectUrl',
-      title: 'Project URL',
-      type: 'url',
-      description: 'Link to live project or demo',
+      name: 'keyFeatures',
+      title: 'Key Features',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { name: 'feature', title: 'Feature Name', type: 'string' },
+            { name: 'description', title: 'Feature Description', type: 'text' },
+          ],
+        },
+      ],
+      description: 'Main features/benefits of this service',
+      validation: (Rule) => Rule.min(3).max(6),
     },
     {
-      name: 'githubUrl',
-      title: 'GitHub URL',
+      name: 'startingPrice',
+      title: 'Starting Price',
+      type: 'string',
+      description: 'Starting price range (e.g., "From $2,500")',
+    },
+    {
+      name: 'deliveryTimeframe',
+      title: 'Delivery Timeframe',
+      type: 'string',
+      description: 'Typical project timeline (e.g., "4-6 weeks")',
+    },
+    {
+      name: 'caseStudyUrl',
+      title: 'Case Study URL',
       type: 'url',
-      description: 'Link to GitHub repository',
+      description: 'Link to detailed case study or portfolio piece',
     },
     {
       name: 'featured',
-      title: 'Featured Project',
+      title: 'Featured Service',
       type: 'boolean',
-      description: 'Whether this is a featured project on the homepage',
+      description: 'Show this service prominently on homepage',
+      initialValue: false,
     },
     {
-      name: 'order',
+      name: 'displayOrder',
       title: 'Display Order',
       type: 'number',
-      description: 'Order in which projects should be displayed',
+      description: 'Order for homepage display (lower numbers first)',
+      validation: (Rule) => Rule.min(0),
+    },
+    {
+      name: 'status',
+      title: 'Service Status',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Active - Accepting New Projects', value: 'active' },
+          { title: 'Limited Availability', value: 'limited' },
+          { title: 'Coming Soon', value: 'coming-soon' },
+          { title: 'Legacy - Maintenance Only', value: 'legacy' },
+        ],
+      },
+      description: 'Current availability status for this service',
+      initialValue: 'active',
     },
   ],
+  preview: {
+    select: {
+      title: 'title',
+      subtitle: 'shortDescription',
+      media: 'featuredImage',
+    },
+  },
 }
 
 export const aboutMe: SchemaTypeDefinition = {
@@ -1083,22 +1261,57 @@ export const contactInfo: SchemaTypeDefinition = {
   icon: () => '📧',
   fields: [
     {
-      name: 'email',
-      title: 'Email Address',
+      name: 'primaryEmail',
+      title: 'Primary Email Address',
       type: 'string',
-      description: 'Your contact email address',
+      description: 'Main business email address',
+      validation: (Rule) => Rule.required().email(),
     },
     {
-      name: 'phone',
+      name: 'phoneNumber',
       title: 'Phone Number',
       type: 'string',
-      description: 'Your phone number',
+      description: 'Business phone number',
     },
     {
-      name: 'location',
-      title: 'Location',
+      name: 'businessHours',
+      title: 'Business Hours',
       type: 'string',
-      description: 'Your current location',
+      description:
+        'When you are available for business (e.g., "Monday - Friday, 9 AM - 6 PM EST")',
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'responseTime',
+      title: 'Response Time',
+      type: 'string',
+      description:
+        'How quickly you typically respond (e.g., "Within 4 hours during business hours")',
+    },
+    {
+      name: 'preferredContactMethod',
+      title: 'Preferred Contact Method',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Email', value: 'email' },
+          { title: 'Phone', value: 'phone' },
+          { title: 'Calendar Booking', value: 'calendar' },
+        ],
+      },
+      description: 'Your preferred way for clients to contact you',
+    },
+    {
+      name: 'consultationCalendar',
+      title: 'Consultation Calendar Link',
+      type: 'url',
+      description: 'Link to calendar booking system (e.g., Calendly, Acuity)',
+    },
+    {
+      name: 'officeLocation',
+      title: 'Office Location',
+      type: 'string',
+      description: 'Your business location or "Remote-first" description',
     },
     {
       name: 'socialLinks',
@@ -1108,22 +1321,30 @@ export const contactInfo: SchemaTypeDefinition = {
         {
           type: 'object',
           fields: [
-            { name: 'platform', title: 'Platform', type: 'string' },
-            { name: 'url', title: 'URL', type: 'url' },
-            { name: 'icon', title: 'Icon', type: 'string' },
+            {
+              name: 'platform',
+              title: 'Platform',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'GitHub', value: 'github' },
+                  { title: 'LinkedIn', value: 'linkedin' },
+                  { title: 'Twitter', value: 'twitter' },
+                  { title: 'Discord', value: 'discord' },
+                  { title: 'Website', value: 'website' },
+                ],
+              },
+            },
+            {
+              name: 'url',
+              title: 'URL',
+              type: 'url',
+              validation: (Rule) => Rule.required(),
+            },
           ],
         },
       ],
-      description: 'Your social media profiles',
-    },
-    {
-      name: 'availability',
-      title: 'Availability Status',
-      type: 'string',
-      options: {
-        list: ['Available', 'Busy', 'Not Available'],
-      },
-      description: 'Your current availability for new projects',
+      description: 'Links to your social media profiles and websites',
     },
   ],
 }
@@ -1135,94 +1356,238 @@ export const heroSection: SchemaTypeDefinition = {
   icon: () => '🎯',
   fields: [
     {
-      name: 'headline',
-      title: 'Headline',
+      name: 'tagline',
+      title: 'Brand Tagline',
       type: 'string',
-      description: 'Main headline for the hero section',
+      description: 'Brand tagline (e.g., "Code. Systems. Foundations.")',
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'headline',
+      title: 'Main Headline',
+      type: 'string',
+      description: 'Primary value proposition headline',
+      // Optional: remove `required` so editors can omit the main headline
+      validation: (Rule) => Rule.max(100),
     },
     {
       name: 'subheadline',
-      title: 'Subheadline',
-      type: 'string',
-      description: 'Supporting text under the headline',
+      title: 'Supporting Description',
+      type: 'text',
+      description: 'Detailed value proposition and positioning statement',
+      validation: (Rule) => Rule.required().max(300),
     },
     {
-      name: 'backgroundImage',
-      title: 'Background Image',
+      name: 'logoLight',
+      title: 'Logo (Light Mode)',
       type: 'image',
-      description: 'Background image for the hero section',
+      description: 'TownesDev logo for light backgrounds',
+      validation: (Rule) => Rule.required(),
     },
     {
-      name: 'ctaText',
-      title: 'Call to Action Text',
-      type: 'string',
-      description: 'Text for the main call-to-action button',
+      name: 'logoDark',
+      title: 'Logo (Dark Mode)',
+      type: 'image',
+      description: 'TownesDev logo for dark backgrounds',
     },
     {
-      name: 'ctaUrl',
-      title: 'Call to Action URL',
+      name: 'backgroundGradient',
+      title: 'Background Style',
       type: 'string',
-      description: 'URL for the call-to-action button',
+      options: {
+        list: [
+          { title: 'Nile Blue Gradient', value: 'gradient-nile' },
+          { title: 'Neutral Gradient', value: 'gradient-neutral' },
+          { title: 'Brand Gradient', value: 'gradient-brand' },
+          { title: 'Solid White', value: 'solid-white' },
+        ],
+      },
+      description: 'Background styling for hero section',
+      initialValue: 'gradient-nile',
+    },
+    {
+      name: 'primaryCtaText',
+      title: 'Primary CTA Text',
+      type: 'string',
+      description: 'Main call-to-action button text',
+      validation: (Rule) => Rule.required(),
+      initialValue: 'Start Your Project',
+    },
+    {
+      name: 'primaryCtaUrl',
+      title: 'Primary CTA URL',
+      type: 'string',
+      description: 'URL for primary call-to-action',
+      validation: (Rule) => Rule.required(),
+      initialValue: '/auth/signup',
     },
     {
       name: 'secondaryCtaText',
       title: 'Secondary CTA Text',
       type: 'string',
-      description: 'Text for secondary call-to-action',
+      description: 'Secondary call-to-action button text',
+      initialValue: 'Client Portal',
     },
     {
       name: 'secondaryCtaUrl',
       title: 'Secondary CTA URL',
       type: 'string',
       description: 'URL for secondary call-to-action',
+      initialValue: '/app',
+    },
+    {
+      name: 'featuredMetrics',
+      title: 'Featured Metrics',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { name: 'label', title: 'Metric Label', type: 'string' },
+            { name: 'value', title: 'Metric Value', type: 'string' },
+            { name: 'description', title: 'Description', type: 'string' },
+          ],
+        },
+      ],
+      description:
+        'Key metrics to highlight (e.g., "99.9% Uptime", "50+ Projects")',
+      validation: (Rule) => Rule.max(4),
     },
   ],
 }
 
 export const testimonial: SchemaTypeDefinition = {
   name: 'testimonial',
-  title: 'Testimonial',
+  title: 'Client Testimonial',
   type: 'document',
-  icon: () => '📝',
+  icon: () => '⭐',
   fields: [
     {
       name: 'clientName',
       title: 'Client Name',
       type: 'string',
-      description: 'Name of the person giving the testimonial',
+      description: 'Full name of the person providing the testimonial',
+      validation: (Rule) => Rule.required(),
     },
     {
       name: 'clientTitle',
-      title: 'Client Title/Company',
+      title: 'Title & Company',
       type: 'string',
-      description: "Client's job title or company name",
+      description: 'Job title and company name (e.g., "CTO at TechCorp")',
+      validation: (Rule) => Rule.required(),
     },
     {
-      name: 'clientImage',
-      title: 'Client Image',
+      name: 'companyWebsite',
+      title: 'Company Website',
+      type: 'url',
+      description: 'Optional link to client company website',
+    },
+    {
+      name: 'clientPhoto',
+      title: 'Client Photo',
       type: 'image',
-      description: 'Photo of the client',
+      options: {
+        hotspot: true,
+      },
+      description: 'Professional headshot of the client',
     },
     {
-      name: 'testimonial',
-      title: 'Testimonial Text',
+      name: 'testimonialText',
+      title: 'Testimonial Content',
       type: 'text',
-      description: 'The testimonial content',
+      description: 'The full testimonial text from the client',
+      validation: (Rule) => Rule.required().min(50).max(500),
+    },
+    {
+      name: 'pullQuote',
+      title: 'Pull Quote',
+      type: 'string',
+      description: 'Short impactful quote for cards/previews (optional)',
+      validation: (Rule) => Rule.max(150),
     },
     {
       name: 'rating',
-      title: 'Rating',
+      title: 'Star Rating',
       type: 'number',
-      validation: (Rule) => Rule.min(1).max(5),
+      validation: (Rule) => Rule.required().min(1).max(5).integer(),
       description: 'Rating out of 5 stars',
     },
     {
+      name: 'serviceType',
+      title: 'Service Provided',
+      type: 'string',
+      options: {
+        list: [
+          'Discord Bot Development',
+          'Web Application Development',
+          'E-commerce Solutions',
+          'Mobile App Development',
+          'System Integration',
+          'Custom Software Development',
+          'Consulting & Strategy',
+        ],
+      },
+      description: 'Primary service this testimonial relates to',
+    },
+    {
+      name: 'projectDuration',
+      title: 'Project Duration',
+      type: 'string',
+      description: 'How long the project took (e.g., "3 months", "6 weeks")',
+    },
+    {
+      name: 'keyResults',
+      title: 'Key Results Achieved',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'Specific outcomes or metrics from the project',
+      validation: (Rule) => Rule.max(4),
+    },
+    {
       name: 'featured',
-      title: 'Featured',
+      title: 'Featured Testimonial',
       type: 'boolean',
-      description: 'Whether to feature this testimonial prominently',
+      description: 'Display prominently on homepage and key pages',
+      initialValue: false,
+    },
+    {
+      name: 'displayOrder',
+      title: 'Display Priority',
+      type: 'number',
+      description: 'Order for displaying testimonials (lower numbers first)',
+      validation: (Rule) => Rule.min(0),
+    },
+    {
+      name: 'dateReceived',
+      title: 'Date Received',
+      type: 'date',
+      description: 'When this testimonial was received',
+    },
+    {
+      name: 'verified',
+      title: 'Verified Testimonial',
+      type: 'boolean',
+      description: 'Confirmed authentic testimonial from real client',
+      initialValue: false,
     },
   ],
+  preview: {
+    select: {
+      title: 'clientName',
+      subtitle: 'clientTitle',
+      media: 'clientPhoto',
+      rating: 'rating',
+    },
+    prepare(selection) {
+      const { title, subtitle, rating, media } = selection
+      const stars = rating ? '⭐'.repeat(rating) : ''
+      return {
+        title: title || 'Anonymous',
+        subtitle: `${subtitle || 'Unknown Company'} ${stars}`,
+        media,
+      }
+    },
+  },
 }
 
 export const invoice: SchemaTypeDefinition = {
@@ -1480,6 +1845,14 @@ export const serviceAsset: SchemaTypeDefinition = {
       description: 'The client who owns this asset',
     },
     {
+      name: 'project',
+      title: 'Project',
+      type: 'reference',
+      to: [{ type: 'websiteProject' }, { type: 'discordProject' }],
+      description:
+        'The project this asset belongs to (Website or Discord). Optional until projects are modeled.',
+    },
+    {
       name: 'type',
       title: 'Asset Type',
       type: 'string',
@@ -1527,6 +1900,247 @@ export const serviceAsset: SchemaTypeDefinition = {
       type: 'text',
       description: 'Additional notes about the asset',
     },
+  ],
+}
+
+// Service catalog (web-app, discord, consulting)
+export const service: SchemaTypeDefinition = {
+  name: 'service',
+  title: 'Service',
+  type: 'document',
+  fields: [
+    {
+      name: 'name',
+      title: 'Service Name',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'type',
+      title: 'Service Type',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Web App', value: 'web_app' },
+          { title: 'Discord', value: 'discord' },
+          { title: 'Consulting', value: 'consulting' },
+        ],
+      },
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'defaultAddons',
+      title: 'Default Add-ons',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'plan' }] }],
+      description: 'Plans (tiers/add-ons) commonly bundled with this service',
+    },
+    {
+      name: 'onboardingSteps',
+      title: 'Onboarding Steps',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description:
+        'Checklist of step labels shown in onboarding when this service is selected',
+    },
+    {
+      name: 'notes',
+      title: 'Notes',
+      type: 'text',
+    },
+  ],
+}
+
+// Website project document
+export const websiteProject: SchemaTypeDefinition = {
+  name: 'websiteProject',
+  title: 'Website Project',
+  type: 'document',
+  fields: [
+    {
+      name: 'client',
+      title: 'Client',
+      type: 'reference',
+      to: [{ type: 'client' }],
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'siteSlug',
+      title: 'Site Slug',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+      description: 'Used for tenant routing and preview URLs',
+    },
+    {
+      name: 'theme',
+      title: 'Theme',
+      type: 'object',
+      fields: [
+        { name: 'primaryColor', title: 'Primary Color', type: 'string' },
+        { name: 'accentColor', title: 'Accent Color', type: 'string' },
+        { name: 'font', title: 'Font', type: 'string' },
+      ],
+    },
+    {
+      name: 'pagesEnabled',
+      title: 'Pages Enabled',
+      type: 'array',
+      of: [{ type: 'string' }],
+    },
+    {
+      name: 'social',
+      title: 'Social Links',
+      type: 'object',
+      fields: [
+        { name: 'spotify', title: 'Spotify', type: 'url' },
+        { name: 'appleMusic', title: 'Apple Music', type: 'url' },
+        { name: 'youtube', title: 'YouTube', type: 'url' },
+        { name: 'instagram', title: 'Instagram', type: 'url' },
+        { name: 'bandcamp', title: 'Bandcamp', type: 'url' },
+      ],
+    },
+    {
+      name: 'status',
+      title: 'Status',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Draft', value: 'draft' },
+          { title: 'Provisioning', value: 'provisioning' },
+          { title: 'Ready', value: 'ready' },
+          { title: 'Live', value: 'live' },
+          { title: 'Archived', value: 'archived' },
+        ],
+      },
+      initialValue: 'draft',
+    },
+  ],
+}
+
+// Discord project document
+export const discordProject: SchemaTypeDefinition = {
+  name: 'discordProject',
+  title: 'Discord Project',
+  type: 'document',
+  fields: [
+    {
+      name: 'client',
+      title: 'Client',
+      type: 'reference',
+      to: [{ type: 'client' }],
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'botName',
+      title: 'Bot Name',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'features',
+      title: 'Features',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'feature' }] }],
+      description: 'Enabled features for this bot',
+    },
+    {
+      name: 'guilds',
+      title: 'Guilds',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { name: 'guildId', title: 'Guild ID', type: 'string' },
+            { name: 'name', title: 'Name', type: 'string' },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'hostingTier',
+      title: 'Hosting Tier',
+      type: 'reference',
+      to: [{ type: 'plan' }],
+      description: 'Plan tier for hosting/maintenance',
+    },
+    {
+      name: 'status',
+      title: 'Status',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Draft', value: 'draft' },
+          { title: 'Provisioning', value: 'provisioning' },
+          { title: 'Ready', value: 'ready' },
+          { title: 'Live', value: 'live' },
+          { title: 'Archived', value: 'archived' },
+        ],
+      },
+      initialValue: 'draft',
+    },
+  ],
+}
+
+// Per-tenant site settings (scoped to a websiteProject)
+export const siteSettings: SchemaTypeDefinition = {
+  name: 'siteSettings',
+  title: 'Site Settings',
+  type: 'document',
+  fields: [
+    {
+      name: 'project',
+      title: 'Website Project',
+      type: 'reference',
+      to: [{ type: 'websiteProject' }],
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'contactEmail',
+      title: 'Contact Email',
+      type: 'string',
+      validation: (Rule) => Rule.email(),
+    },
+    { name: 'businessHours', title: 'Business Hours', type: 'string' },
+    {
+      name: 'socialLinks',
+      title: 'Social Links',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { name: 'platform', title: 'Platform', type: 'string' },
+            { name: 'url', title: 'URL', type: 'url' },
+          ],
+        },
+      ],
+    },
+  ],
+}
+
+// Per-tenant pages (scoped to a websiteProject)
+export const websitePage: SchemaTypeDefinition = {
+  name: 'websitePage',
+  title: 'Website Page',
+  type: 'document',
+  fields: [
+    {
+      name: 'project',
+      title: 'Website Project',
+      type: 'reference',
+      to: [{ type: 'websiteProject' }],
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'slug',
+      title: 'Page Slug',
+      type: 'string',
+      description: 'home, about, contact, shop, menu, music, shows, blog, etc.',
+      validation: (Rule) => Rule.required(),
+    },
+    { name: 'title', title: 'Title', type: 'string' },
+    { name: 'body', title: 'Body', type: 'text' },
   ],
 }
 
@@ -1755,6 +2369,38 @@ export const retainer: SchemaTypeDefinition = {
   ],
 }
 
+// Map Plans to Features (Sanity-driven mapping for arbitrary plan IDs/slugs)
+export const planFeatureMapping: SchemaTypeDefinition = {
+  name: 'planFeatureMapping',
+  title: 'Plan → Feature Mapping',
+  type: 'document',
+  fields: [
+    {
+      name: 'plan',
+      title: 'Plan',
+      type: 'reference',
+      to: [{ type: 'plan' }],
+      validation: (Rule) => Rule.required(),
+      description: 'The plan this mapping applies to',
+    },
+    {
+      name: 'feature',
+      title: 'Feature',
+      type: 'reference',
+      to: [{ type: 'feature' }],
+      validation: (Rule) => Rule.required(),
+      description:
+        'The feature that should be entitled when this plan is active',
+    },
+    {
+      name: 'notes',
+      title: 'Notes',
+      type: 'text',
+      description: 'Optional operational notes about this mapping',
+    },
+  ],
+}
+
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
     user,
@@ -1768,12 +2414,18 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     offboarding,
     emailTemplate,
     invoice,
+    service,
+    websiteProject,
+    discordProject,
     serviceAsset,
+    siteSettings,
+    websitePage,
     feature,
     entitlement,
     retainer,
-    // Landing Page schemas
-    project,
+    planFeatureMapping,
+    // Landing Page schemas - Enhanced for TownesDev Brand
+    serviceOffering,
     aboutMe,
     contactInfo,
     heroSection,

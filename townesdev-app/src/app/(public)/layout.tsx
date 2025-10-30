@@ -35,7 +35,10 @@ export default async function PublicLayout({
   const bypass = cookieStore.get('maintenance-bypass')?.value
 
   return (
-    <div lang="en" className="min-h-screen flex flex-col">
+    <div
+      lang="en"
+      className="min-h-screen flex flex-col bg-white text-nile-blue-900"
+    >
       <PreviewBanner />
       <Header variant="public" />
       <main className="flex-grow">{children}</main>
