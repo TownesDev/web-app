@@ -8,6 +8,7 @@
 
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
+import { Bot, Globe } from 'lucide-react'
 
 interface Client {
   _id: string
@@ -18,6 +19,7 @@ interface Client {
     name: string
     price: string
   }
+  assets?: Array<{ type: 'web_app' | 'discord_bot' | string }>
 }
 
 interface AdminClientsTableProps {
@@ -128,6 +130,12 @@ export default function AdminClientsTable({ clients }: AdminClientsTableProps) {
                 scope="col"
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
+                Services
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Actions
               </th>
             </tr>
@@ -167,6 +175,49 @@ export default function AdminClientsTable({ clients }: AdminClientsTableProps) {
                         {client.selectedPlan.price}
                       </div>
                     )}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex flex-wrap items-center gap-2">
+                      {client.assets && client.assets.length > 0 ? (
+                        Array.from(
+                          new Set(client.assets.map((a) => a.type))
+                        ).map((t) => {
+                          const Icon =
+                            t === 'web_app'
+                              ? Globe
+                              : t === 'discord_bot'
+                                ? Bot
+                                : null
+                          const label =
+                            t === 'web_app'
+                              ? 'Web App'
+                              : t === 'discord_bot'
+                                ? 'Discord'
+                                : t
+                          return (
+                            <span
+                              key={t}
+                              className="inline-flex items-center justify-center rounded-full border border-gray-300 bg-white p-1.5 shadow-sm"
+                              title={label}
+                              aria-label={`Service: ${label}`}
+                            >
+                              {Icon ? (
+                                <Icon
+                                  className="h-4 w-4 text-gray-700"
+                                  aria-hidden="true"
+                                />
+                              ) : (
+                                <span className="text-xs text-gray-700">
+                                  {label}
+                                </span>
+                              )}
+                            </span>
+                          )
+                        })
+                      ) : (
+                        <span className="text-sm text-gray-400">—</span>
+                      )}
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex space-x-2">

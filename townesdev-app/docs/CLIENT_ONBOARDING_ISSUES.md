@@ -203,7 +203,7 @@ EPIC A+: Admin Entitlements & Mapping
 - [x] Admin page: `/admin/entitlements` shows per-client assets, entitlements, and mismatches
 - [x] Reconcile API: POST `/api/admin/entitlements/reconcile` creates missing entitlements idempotently
 - [x] Mapping precedence: Admin mapping table is preferred; heuristic fallback remains for convenience
-- [ ] Future: UI to add/edit mappings directly from the admin page
+- [x] UI to add/edit mappings directly from the admin page (`/admin/entitlements/mappings`)
 
 EPIC B: Onboarding Wizard
 
@@ -221,7 +221,7 @@ EPIC C: Provisioning Pipeline
 
 EPIC D: Billing Integration
 
-- [ ] Checkout session for base + selected add-ons (+ one-time)
+- [x] Checkout session for base + selected add-ons (+ one-time)
 - [ ] Webhooks update Sanity and entitlements; customer portal link in /app
 - Acceptance: Subscription is active, add-ons reflected in portal and enforced
 

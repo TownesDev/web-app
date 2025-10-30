@@ -439,12 +439,48 @@ export default function OnboardingPage() {
               </p>
             )}
             <div className="pt-2">
-              <a
-                href="/app/plans"
-                className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-              >
-                Proceed to billing
-              </a>
+              <div className="flex gap-3">
+                <a
+                  href="/app/plans"
+                  className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                >
+                  Proceed to billing
+                </a>
+                <button
+                  onClick={async () => {
+                    try {
+                      const res = await fetch('/api/clients/provision', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          web: {
+                            pages: data.web.pages,
+                            theme: {
+                              primaryColor: data.brand.primaryColor,
+                              font: data.brand.font,
+                            },
+                            vertical: data.basics.vertical,
+                          },
+                          discord: {
+                            botName: data.discord.botName,
+                            enabled: data.services.discord,
+                          },
+                        }),
+                      })
+                      if (!res.ok) throw new Error('Provisioning failed')
+                      // Optionally: const result = await res.json()
+                      window.location.href = '/app'
+                    } catch {
+                      alert(
+                        'Provisioning failed. Please try again from your dashboard later.'
+                      )
+                    }
+                  }}
+                  className="inline-flex items-center rounded-md border border-gray-300 px-4 py-2 text-gray-800 hover:bg-gray-50"
+                >
+                  Finish & Provision
+                </button>
+              </div>
             </div>
           </div>
         )}

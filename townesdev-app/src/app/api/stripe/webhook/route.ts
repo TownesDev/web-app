@@ -90,6 +90,10 @@ export async function POST(request: NextRequest) {
     }
 
     console.log('✅ Webhook processing completed successfully')
+    // TODO(provisioning): After confirming successful subscription, automatically trigger
+    // project provisioning for the client (websiteProject/discordProject) instead of relying
+    // on manual onboarding action. A simple approach: invoke the provisioning logic here
+    // using the clientId/planId from metadata, with idempotent safeguards.
     return NextResponse.json({ received: true })
   } catch (error) {
     console.error('❌ Webhook processing error:', error)
@@ -288,6 +292,103 @@ async function handlePlanSubscription(session: Stripe.Checkout.Session) {
       console.log('Retainer created for subscription:', subscription.id)
     }
 
+    // ──────────────── Base plan → Feature entitlement mapping ────────────────
+    // Prefer CMS-driven mapping; fallback to heuristic mapping when absent.
+    try {
+      let mappingLookup: Map<
+        string,
+        {
+          _id: string
+          name: string
+          key?: string
+          assetType?: 'web_app' | 'discord_bot'
+        }
+      >
+      try {
+        const mappings = (await runAdminQuery(qPlanFeatureMappings)) as Array<{
+          plan?: { _id: string }
+          feature?: {
+            _id: string
+            name: string
+            key?: string
+            assetType?: 'web_app' | 'discord_bot'
+          }
+        }>
+        mappingLookup = new Map(
+          (mappings || [])
+            .filter((m) => m.plan?._id && m.feature?._id)
+            .map((m) => [m.plan!._id, m.feature!])
+        )
+      } catch (e) {
+        console.warn(
+          'Failed to load plan→feature mappings; will fallback to heuristic',
+          e
+        )
+        mappingLookup = new Map()
+      }
+
+      const mappedFeature = mappingLookup.get(planId)
+      let featureDoc: {
+        _id: string
+        name?: string
+        key?: string
+        assetType?: 'web_app' | 'discord_bot'
+      } | null = null
+
+      if (mappedFeature) {
+        featureDoc = mappedFeature
+      } else {
+        const heuristic = mapPlanToFeature(planId)
+        if (!heuristic) {
+          console.log('No feature mapping for base plan; skipping entitlement')
+        } else {
+          const ensured = await ensureFeature(heuristic)
+          featureDoc = {
+            _id: ensured._id,
+            key: heuristic.key,
+            assetType: heuristic.assetType,
+          }
+        }
+      }
+
+      if (featureDoc?.assetType) {
+        // Ensure appropriate client asset exists for the feature's assetType
+        const asset = await ensureClientAsset(clientId, featureDoc.assetType)
+
+        // Create entitlement if it doesn't exist
+        const existingEnt = await runQuery(
+          `*[_type=="entitlement" && client._ref==$clientId && asset._ref==$assetId && feature._ref==$featureId][0]`,
+          { clientId, assetId: asset._id, featureId: featureDoc._id }
+        )
+        if (!existingEnt) {
+          await sanityWrite.mutate([
+            {
+              create: {
+                _type: 'entitlement',
+                client: { _type: 'reference', _ref: clientId },
+                asset: { _type: 'reference', _ref: asset._id },
+                feature: { _type: 'reference', _ref: featureDoc._id },
+                status: 'active',
+                activatedAt: new Date().toISOString(),
+              },
+            },
+          ])
+          console.log('Base plan entitlement created:', {
+            clientId,
+            assetId: asset._id,
+            featureId: featureDoc._id,
+          })
+        } else {
+          console.log('Base plan entitlement already exists')
+        }
+      }
+    } catch (entMapErr) {
+      console.warn(
+        'Base plan mapping entitlement failed (non-fatal):',
+        entMapErr
+      )
+    }
+
     // If add-ons were included in checkout, create retainers for each add-on plan
     if (addOnIds) {
       // Load Sanity-driven mapping table once per webhook call
@@ -435,6 +536,45 @@ async function handlePlanSubscription(session: Stripe.Checkout.Session) {
           console.error('Failed creating add-on retainer:', addOnId, addOnErr)
         }
       }
+    }
+    // ──────────────── Auto-provision status bump (idempotent) ────────────────
+    try {
+      // If a previewed websiteProject exists, bump it to ready on successful subscription
+      const project = await runQuery(
+        `*[_type=="websiteProject" && client._ref==$clientId][0]{ _id, status }`,
+        { clientId }
+      )
+      if (project?._id) {
+        // Only bump if currently draft/provisioning
+        const bumpNeeded =
+          project.status === 'provisioning' ||
+          project.status === 'draft' ||
+          !project.status
+        if (bumpNeeded) {
+          await sanityWrite.mutate([
+            { patch: { id: project._id, set: { status: 'ready' } } },
+          ])
+        }
+
+        // Ensure web_app asset is active and linked to project
+        const asset = await ensureClientAsset(clientId, 'web_app')
+        await sanityWrite.mutate([
+          {
+            patch: {
+              id: asset._id,
+              set: {
+                status: 'active',
+                project: { _type: 'reference', _ref: project._id },
+              },
+              setIfMissing: {
+                project: { _type: 'reference', _ref: project._id },
+              },
+            },
+          },
+        ])
+      }
+    } catch (provisionErr) {
+      console.warn('Webhook status bump failed (non-fatal):', provisionErr)
     }
     // Build selectedAddons refs if any
     const addOnRefs = (

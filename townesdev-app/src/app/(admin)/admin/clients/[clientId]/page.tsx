@@ -8,17 +8,18 @@ import { runAdminQuery } from '@/lib/admin/client'
 import { qClientById } from '../../../../../sanity/lib/queries'
 import Link from 'next/link'
 import { BotManagementSection } from '../../../../../components/BotManagementSection'
+import { WebsiteProjectSection } from '../../../../../components/WebsiteProjectSection'
 
 interface ClientDetailPageProps {
-  params: {
+  params: Promise<{
     clientId: string
-  }
+  }>
 }
 
 export default async function ClientDetailPage({
   params,
 }: ClientDetailPageProps) {
-  const { clientId } = params
+  const { clientId } = await params
 
   // Require clients:read capability
   await requireCapability('clients:read')
@@ -86,8 +87,10 @@ export default async function ClientDetailPage({
         </div>
       </div>
 
-      {/* Bot Management Section */}
-      <BotManagementSection clientId={clientId} client={client} />
+      <div className="space-y-8">
+        <WebsiteProjectSection clientId={clientId} />
+        <BotManagementSection clientId={clientId} client={client} />
+      </div>
     </div>
   )
 }

@@ -32,13 +32,17 @@ export default function PlanFeatureMappings({
   const filteredPlans = useMemo(() => {
     if (!planFilter.trim()) return plans
     const f = planFilter.toLowerCase()
-    return plans.filter((p) => `${p.name} ${p.category || ''}`.toLowerCase().includes(f))
+    return plans.filter((p) =>
+      `${p.name} ${p.category || ''}`.toLowerCase().includes(f)
+    )
   }, [plans, planFilter])
 
   const filteredFeatures = useMemo(() => {
     if (!featureFilter.trim()) return features
     const f = featureFilter.toLowerCase()
-    return features.filter((x) => `${x.name} ${x.key || ''} ${x.assetType || ''}`.toLowerCase().includes(f))
+    return features.filter((x) =>
+      `${x.name} ${x.key || ''} ${x.assetType || ''}`.toLowerCase().includes(f)
+    )
   }, [features, featureFilter])
 
   const existingForSelectedPlan = useMemo(() => {
@@ -52,7 +56,10 @@ export default function PlanFeatureMappings({
       setError('Please select a plan and a feature')
       return
     }
-    if (existingForSelectedPlan && existingForSelectedPlan.feature?._id === featureId) {
+    if (
+      existingForSelectedPlan &&
+      existingForSelectedPlan.feature?._id === featureId
+    ) {
       setError('Selected plan already maps to this feature')
       return
     }
@@ -76,7 +83,8 @@ export default function PlanFeatureMappings({
   }
 
   const onDelete = (id: string) => {
-    if (!window.confirm('Delete this mapping? This action cannot be undone.')) return
+    if (!window.confirm('Delete this mapping? This action cannot be undone.'))
+      return
     startTransition(async () => {
       await fetch(`/api/admin/mappings?id=${encodeURIComponent(id)}`, {
         method: 'DELETE',
@@ -89,10 +97,14 @@ export default function PlanFeatureMappings({
     <div className="space-y-6">
       {/* Create/Update form */}
       <section className="border rounded-lg p-5 bg-white shadow-sm">
-        <h2 className="text-xl font-semibold text-nile-blue-900 mb-4">Add or Update Mapping</h2>
+        <h2 className="text-xl font-semibold text-nile-blue-900 mb-4">
+          Add or Update Mapping
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-nile-blue-900">Plan</label>
+            <label className="block text-sm font-medium text-nile-blue-900">
+              Plan
+            </label>
             <input
               className="mt-1 w-full rounded-md border px-3 py-2 text-nile-blue-900 placeholder-nile-blue-700"
               placeholder="Filter plans…"
@@ -114,12 +126,16 @@ export default function PlanFeatureMappings({
             </select>
             {existingForSelectedPlan && (
               <p className="mt-2 text-xs text-sandy-brown-900 bg-sandy-brown-50 border border-sandy-brown-300 rounded px-2 py-1">
-                This plan already maps to <strong>{existingForSelectedPlan.feature?.name}</strong>. Saving will update the mapping.
+                This plan already maps to{' '}
+                <strong>{existingForSelectedPlan.feature?.name}</strong>. Saving
+                will update the mapping.
               </p>
             )}
           </div>
           <div>
-            <label className="block text-sm font-medium text-nile-blue-900">Feature</label>
+            <label className="block text-sm font-medium text-nile-blue-900">
+              Feature
+            </label>
             <input
               className="mt-1 w-full rounded-md border px-3 py-2 text-nile-blue-900 placeholder-nile-blue-700"
               placeholder="Filter features…"
@@ -141,7 +157,9 @@ export default function PlanFeatureMappings({
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-nile-blue-900">Notes (optional)</label>
+            <label className="block text-sm font-medium text-nile-blue-900">
+              Notes (optional)
+            </label>
             <input
               className="mt-1 w-full rounded-md border px-3 py-2 text-nile-blue-900 placeholder-nile-blue-700"
               placeholder="Operational notes"
@@ -168,24 +186,43 @@ export default function PlanFeatureMappings({
 
       {/* Existing mappings */}
       <section className="border rounded-lg p-5 bg-white shadow-sm">
-        <h2 className="text-xl font-semibold text-nile-blue-900 mb-4">Existing Mappings</h2>
+        <h2 className="text-xl font-semibold text-nile-blue-900 mb-4">
+          Existing Mappings
+        </h2>
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm">
             <caption className="sr-only">Plan to Feature mappings</caption>
             <thead>
               <tr className="text-left text-nile-blue-900">
-                <th scope="col" className="px-3 py-2">Plan</th>
-                <th scope="col" className="px-3 py-2">Feature</th>
-                <th scope="col" className="px-3 py-2">Notes</th>
-                <th scope="col" className="px-3 py-2">Actions</th>
+                <th scope="col" className="px-3 py-2">
+                  Plan
+                </th>
+                <th scope="col" className="px-3 py-2">
+                  Feature
+                </th>
+                <th scope="col" className="px-3 py-2">
+                  Notes
+                </th>
+                <th scope="col" className="px-3 py-2">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
               {mappings.length ? (
-                mappings.map((m) => <EditableRow key={m._id} mapping={m} features={features} onDelete={onDelete} />)
+                mappings.map((m) => (
+                  <EditableRow
+                    key={m._id}
+                    mapping={m}
+                    features={features}
+                    onDelete={onDelete}
+                  />
+                ))
               ) : (
                 <tr>
-                  <td className="px-3 py-2" colSpan={4}>No mappings yet.</td>
+                  <td className="px-3 py-2" colSpan={4}>
+                    No mappings yet.
+                  </td>
                 </tr>
               )}
             </tbody>
@@ -264,16 +301,25 @@ function EditableRow({
             >
               {pending ? 'Saving…' : 'Save'}
             </button>
-            <button onClick={() => setEditing(false)} className="text-gray-700 hover:underline">
+            <button
+              onClick={() => setEditing(false)}
+              className="text-gray-700 hover:underline"
+            >
               Cancel
             </button>
           </>
         ) : (
-          <button onClick={() => setEditing(true)} className="text-nile-blue-900 hover:underline">
+          <button
+            onClick={() => setEditing(true)}
+            className="text-nile-blue-900 hover:underline"
+          >
             Edit
           </button>
         )}
-        <button onClick={() => onDelete(mapping._id)} className="text-red-700 hover:underline">
+        <button
+          onClick={() => onDelete(mapping._id)}
+          className="text-red-700 hover:underline"
+        >
           Delete
         </button>
       </td>

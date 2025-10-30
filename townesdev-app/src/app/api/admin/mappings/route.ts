@@ -21,16 +21,26 @@ export async function POST(req: NextRequest) {
   }
 
   if (!planId || !featureId) {
-    return NextResponse.json({ error: 'planId and featureId are required' }, { status: 400 })
+    return NextResponse.json(
+      { error: 'planId and featureId are required' },
+      { status: 400 }
+    )
   }
 
   // Guardrails: Ensure referenced docs exist
   const [planDoc, featureDoc] = await Promise.all([
-    runQuery(`*[_type=="plan" && _id==$id][0]{ _id, name, category }`, { id: planId }),
-    runQuery(`*[_type=="feature" && _id==$id][0]{ _id, name, key, assetType }`, { id: featureId }),
+    runQuery(`*[_type=="plan" && _id==$id][0]{ _id, name, category }`, {
+      id: planId,
+    }),
+    runQuery(
+      `*[_type=="feature" && _id==$id][0]{ _id, name, key, assetType }`,
+      { id: featureId }
+    ),
   ])
-  if (!planDoc) return NextResponse.json({ error: 'Plan not found' }, { status: 404 })
-  if (!featureDoc) return NextResponse.json({ error: 'Feature not found' }, { status: 404 })
+  if (!planDoc)
+    return NextResponse.json({ error: 'Plan not found' }, { status: 404 })
+  if (!featureDoc)
+    return NextResponse.json({ error: 'Feature not found' }, { status: 404 })
 
   // If a mapping for this plan already exists, update it; otherwise create
   const existingAll = (await runQuery(
@@ -57,7 +67,11 @@ export async function POST(req: NextRequest) {
         },
       },
     ])
-    return NextResponse.json({ _id: existing._id, plan: planId, feature: featureId })
+    return NextResponse.json({
+      _id: existing._id,
+      plan: planId,
+      feature: featureId,
+    })
   }
 
   const create = await sanityWrite.mutate([
@@ -78,11 +92,16 @@ export async function DELETE(req: NextRequest) {
   await requireStaff()
   const { searchParams } = new URL(req.url)
   const id = searchParams.get('id')
-  if (!id) return NextResponse.json({ error: 'id is required' }, { status: 400 })
+  if (!id)
+    return NextResponse.json({ error: 'id is required' }, { status: 400 })
 
   // Verify mapping exists before delete
-  const existing = await runQuery(`*[_type=="planFeatureMapping" && _id==$id][0]{ _id }`, { id })
-  if (!existing?._id) return NextResponse.json({ error: 'Mapping not found' }, { status: 404 })
+  const existing = await runQuery(
+    `*[_type=="planFeatureMapping" && _id==$id][0]{ _id }`,
+    { id }
+  )
+  if (!existing?._id)
+    return NextResponse.json({ error: 'Mapping not found' }, { status: 404 })
 
   await sanityWrite.mutate([{ delete: { id } }])
   return NextResponse.json({ deleted: id })

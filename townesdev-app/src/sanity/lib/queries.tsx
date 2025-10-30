@@ -264,7 +264,8 @@ export const qOffboardingByClient = /* groq */ `
 
 export const qAllClients = /* groq */ `
   *[_type=="client"]|order(_createdAt desc){
-    _id, name, email, status, selectedPlan->{name,price}
+    _id, name, email, status, selectedPlan->{name,price},
+    "assets": *[_type=="serviceAsset" && client._ref==^._id]{ type }
   }
 `
 

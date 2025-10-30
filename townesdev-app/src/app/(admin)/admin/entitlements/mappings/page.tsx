@@ -24,9 +24,14 @@ export default async function PlanFeatureMappingsPage() {
         Plan → Feature Mappings
       </h1>
       <p className="text-base text-slate-700">
-        Create or update mappings to control which feature is entitled for each plan.
+        Create or update mappings to control which feature is entitled for each
+        plan.
       </p>
-      <PlanFeatureMappings mappings={mappings || []} plans={plans || []} features={features || []} />
+      <PlanFeatureMappings
+        mappings={mappings || []}
+        plans={plans || []}
+        features={features || []}
+      />
     </div>
   )
 }

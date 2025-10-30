@@ -2082,6 +2082,68 @@ export const discordProject: SchemaTypeDefinition = {
   ],
 }
 
+// Per-tenant site settings (scoped to a websiteProject)
+export const siteSettings: SchemaTypeDefinition = {
+  name: 'siteSettings',
+  title: 'Site Settings',
+  type: 'document',
+  fields: [
+    {
+      name: 'project',
+      title: 'Website Project',
+      type: 'reference',
+      to: [{ type: 'websiteProject' }],
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'contactEmail',
+      title: 'Contact Email',
+      type: 'string',
+      validation: (Rule) => Rule.email(),
+    },
+    { name: 'businessHours', title: 'Business Hours', type: 'string' },
+    {
+      name: 'socialLinks',
+      title: 'Social Links',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { name: 'platform', title: 'Platform', type: 'string' },
+            { name: 'url', title: 'URL', type: 'url' },
+          ],
+        },
+      ],
+    },
+  ],
+}
+
+// Per-tenant pages (scoped to a websiteProject)
+export const websitePage: SchemaTypeDefinition = {
+  name: 'websitePage',
+  title: 'Website Page',
+  type: 'document',
+  fields: [
+    {
+      name: 'project',
+      title: 'Website Project',
+      type: 'reference',
+      to: [{ type: 'websiteProject' }],
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'slug',
+      title: 'Page Slug',
+      type: 'string',
+      description: 'home, about, contact, shop, menu, music, shows, blog, etc.',
+      validation: (Rule) => Rule.required(),
+    },
+    { name: 'title', title: 'Title', type: 'string' },
+    { name: 'body', title: 'Body', type: 'text' },
+  ],
+}
+
 export const feature: SchemaTypeDefinition = {
   name: 'feature',
   title: 'Feature',
@@ -2356,6 +2418,8 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     websiteProject,
     discordProject,
     serviceAsset,
+    siteSettings,
+    websitePage,
     feature,
     entitlement,
     retainer,
