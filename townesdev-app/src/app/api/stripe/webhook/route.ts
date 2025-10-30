@@ -68,7 +68,9 @@ export async function POST(request: NextRequest) {
             eventId: event.id,
             eventType: event.type,
             sessionId:
-              (event.data?.object as any)?.id || (event.data?.object as any)?.session || null,
+              ((event.data?.object as unknown) as { id?: string; session?: string })?.id ||
+              ((event.data?.object as unknown) as { id?: string; session?: string })?.session ||
+              null,
             status: 'processing',
             correlationId,
             createdAt: new Date().toISOString(),

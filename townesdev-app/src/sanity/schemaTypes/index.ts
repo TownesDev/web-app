@@ -2409,7 +2409,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
       title: 'Stripe Event',
       type: 'document',
       fields: [
-        { name: 'eventId', title: 'Stripe Event ID', type: 'string', validation: (Rule: any) => Rule.required() },
+        { name: 'eventId', title: 'Stripe Event ID', type: 'string', validation: (Rule) => Rule.required() },
         { name: 'eventType', title: 'Event Type', type: 'string' },
         { name: 'sessionId', title: 'Session ID', type: 'string' },
         { name: 'client', title: 'Client', type: 'reference', to: [{ type: 'client' }] },
