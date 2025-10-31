@@ -19,6 +19,7 @@
     "test:ci": "npm run typecheck && npm run lint && npm run test:coverage && npm run build",
     "snapshot": "node -e \"require('fs').copyFileSync('src/sanity/schemaTypes/index.ts', 'schematypes.txt')\" && node tools/snapshot.mjs",
     "seed:onboarding-plans": "node tools/sanity/ensure-onboarding-plans.mjs"
+    ,"webhooks:list-stuck":"node scripts/list-stuck-webhooks.mjs"
   },
   "dependencies": {
     "@react-email/render": "^1.3.2",

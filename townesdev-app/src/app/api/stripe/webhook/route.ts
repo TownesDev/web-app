@@ -48,64 +48,130 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Webhook error' }, { status: 400 })
   }
 
-  // Duplicate suppression: check if we've processed this Stripe event.id already
+  // Duplicate suppression and atomic processing record creation.
+  // Use a deterministic document _id so Sanity's createIfNotExists provides
+  // an atomic create-or-noop behavior to short-circuit concurrent deliveries.
+  const stripeEventDocId = `stripeEvent.${event.id}`
+  const createdAt = new Date().toISOString()
+  const sessionId =
+    (event.data?.object as unknown as { id?: string; session?: string })?.id ||
+    (event.data?.object as unknown as { id?: string; session?: string })
+      ?.session ||
+    null
+
   try {
-    const existing = await runQuery(
-      `*[_type=="stripeEvent" && eventId==$eventId][0]{ _id, status, processedAt }`,
-      { eventId: event.id }
+    // Attempt to create the stripeEvent doc if it doesn't already exist.
+    // If it already exists, createIfNotExists is a no-op on the server.
+    const lockExpiresAt = new Date(Date.now() + 15 * 60 * 1000).toISOString()
+    await sanityWrite.mutate([
+      {
+        createIfNotExists: {
+          _id: stripeEventDocId,
+          _type: 'stripeEvent',
+          eventId: event.id,
+          eventType: event.type,
+          sessionId,
+          status: 'processing',
+          correlationId,
+          processingLockOwner: correlationId,
+          lockExpiresAt,
+          createdAt,
+          raw: JSON.stringify(event),
+        },
+      },
+    ])
+
+    // Re-read the document to determine whether we should proceed or short-circuit.
+    const doc = await runQuery(
+      `*[_id==$id][0]{ _id, eventId, eventType, status, processedAt, createdAt, processingLockOwner, lockExpiresAt }`,
+      { id: stripeEventDocId }
     )
 
-    if (existing) {
-      logInfo('webhook.duplicate_suppressed', {
-        eventId: event.id,
-        eventType: event.type,
-        status: existing.status,
-        processedAt: existing.processedAt,
-        correlationId,
-      })
-      // Safe to acknowledge receipt
-      return NextResponse.json({ received: true })
-    }
+    if (doc) {
+      // If the doc indicates processing by another worker (pre-existing "processing"),
+      // or the event was already completed (success/failed), then acknowledge and stop.
+      if (doc.status && doc.status !== 'processing') {
+        logInfo('webhook.duplicate_suppressed', {
+          eventId: event.id,
+          eventType: event.type,
+          status: doc.status,
+          processedAt: doc.processedAt,
+          correlationId,
+          docId: stripeEventDocId,
+        })
+        return NextResponse.json({ received: true })
+      }
 
-    // Create a processing record (best-effort) to mark the event as in-flight
-    try {
-      await sanityWrite.mutate([
-        {
-          create: {
-            _type: 'stripeEvent',
+
+      // If doc.status is 'processing' and the lock is still valid, short-circuit.
+      // If the lock is expired, attempt to claim it by patching processingLockOwner
+      // and lockExpiresAt so this worker can proceed.
+      if (doc.status === 'processing') {
+        const now = new Date()
+        const lockExpires = doc.lockExpiresAt ? new Date(doc.lockExpiresAt) : null
+
+        if (lockExpires && lockExpires > now) {
+          // Another worker owns the lock and it's still valid — short-circuit.
+          logInfo('webhook.duplicate_suppressed', {
             eventId: event.id,
             eventType: event.type,
-            sessionId:
-              (
-                event.data?.object as unknown as {
-                  id?: string
-                  session?: string
-                }
-              )?.id ||
-              (
-                event.data?.object as unknown as {
-                  id?: string
-                  session?: string
-                }
-              )?.session ||
-              null,
-            status: 'processing',
+            status: doc.status,
+            lockExpiresAt: doc.lockExpiresAt,
+            processingLockOwner: doc.processingLockOwner,
             correlationId,
-            createdAt: new Date().toISOString(),
-            raw: JSON.stringify(event),
-          },
-        },
-      ])
-    } catch (createErr) {
-      logError('stripeEvent.create_failed', {
-        error: String(createErr),
+            docId: stripeEventDocId,
+          })
+          return NextResponse.json({ received: true })
+        }
+
+        // Lock is expired or missing — claim it for this invocation.
+        try {
+          const newLockExpires = new Date(Date.now() + 15 * 60 * 1000).toISOString()
+          await sanityWrite.mutate([
+            {
+              patch: {
+                id: stripeEventDocId,
+                set: {
+                  processingLockOwner: correlationId,
+                  lockExpiresAt: newLockExpires,
+                  correlationId,
+                },
+              },
+            },
+          ])
+          logInfo('webhook.lock_claimed', {
+            eventId: event.id,
+            docId: stripeEventDocId,
+            newLockExpires,
+            correlationId,
+          })
+        } catch (claimErr) {
+          logError('webhook.lock_claim_failed', {
+            error: String(claimErr),
+            eventId: event.id,
+            correlationId,
+            docId: stripeEventDocId,
+          })
+          return NextResponse.json({ received: true })
+        }
+      }
+
+      // Otherwise we either created the doc just now, or it's safe to proceed.
+      logInfo('webhook.event_recorded', {
+        eventId: event.id,
+        eventType: event.type,
+        docId: stripeEventDocId,
+        sessionId,
         correlationId,
+        rawSize: String(JSON.stringify(event)).length,
       })
     }
-  } catch (dupCheckErr) {
-    // If duplicate check fails we'll still try to continue processing, but log it
-    logError('webhook.duplicate_check_failed', {
-      error: String(dupCheckErr),
+  } catch (dupErr) {
+    // If anything goes wrong with persistence, log and continue processing the event
+    // (we still want to attempt provisioning even if our telemetry store failed).
+    logError('webhook.event_record_persistence_failed', {
+      error: String(dupErr),
+      eventId: event.id,
       correlationId,
     })
   }
@@ -168,30 +234,26 @@ export async function POST(request: NextRequest) {
       correlationId,
     })
 
-    // Mark processing success in Sanity (best-effort)
+    // Mark processing success in Sanity (best-effort). Use the deterministic
+    // stripeEvent doc id so we avoid an extra query and keep behavior atomic.
     try {
-      const rec = await runQuery(
-        `*[_type=="stripeEvent" && eventId==$eventId][0]{_id}`,
-        { eventId: event.id }
-      )
-      if (rec?._id) {
-        await sanityWrite.mutate([
-          {
-            patch: {
-              id: rec._id,
-              set: {
-                status: 'success',
-                processedAt: new Date().toISOString(),
-                outcome: event.type,
-              },
+      await sanityWrite.mutate([
+        {
+          patch: {
+            id: stripeEventDocId,
+            set: {
+              status: 'success',
+              processedAt: new Date().toISOString(),
+              outcome: event.type,
             },
           },
-        ])
-      }
+        },
+      ])
     } catch (markOkErr) {
       logError('stripeEvent.mark_success_failed', {
         error: String(markOkErr),
         correlationId,
+        docId: stripeEventDocId,
       })
     }
 
@@ -209,28 +271,23 @@ export async function POST(request: NextRequest) {
 
     // Mark processing failure in Sanity (best-effort)
     try {
-      const rec = await runQuery(
-        `*[_type=="stripeEvent" && eventId==$eventId][0]{_id}`,
-        { eventId: event.id }
-      )
-      if (rec?._id) {
-        await sanityWrite.mutate([
-          {
-            patch: {
-              id: rec._id,
-              set: {
-                status: 'failed',
-                processedAt: new Date().toISOString(),
-                outcome: String(error),
-              },
+      await sanityWrite.mutate([
+        {
+          patch: {
+            id: stripeEventDocId,
+            set: {
+              status: 'failed',
+              processedAt: new Date().toISOString(),
+              outcome: String(error),
             },
           },
-        ])
-      }
+        },
+      ])
     } catch (markErr) {
       logError('stripeEvent.mark_failed_failed', {
         error: String(markErr),
         correlationId,
+        docId: stripeEventDocId,
       })
     }
 
