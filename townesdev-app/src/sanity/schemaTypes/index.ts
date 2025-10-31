@@ -2403,6 +2403,24 @@ export const planFeatureMapping: SchemaTypeDefinition = {
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
+    // Stripe event log for webhook idempotency, auditing and replay
+    {
+      name: 'stripeEvent',
+      title: 'Stripe Event',
+      type: 'document',
+      fields: [
+        { name: 'eventId', title: 'Stripe Event ID', type: 'string', validation: (Rule) => Rule.required() },
+        { name: 'eventType', title: 'Event Type', type: 'string' },
+        { name: 'sessionId', title: 'Session ID', type: 'string' },
+        { name: 'client', title: 'Client', type: 'reference', to: [{ type: 'client' }] },
+        { name: 'status', title: 'Status', type: 'string', options: { list: [{ title: 'processing', value: 'processing' }, { title: 'success', value: 'success' }, { title: 'failed', value: 'failed' }] }, initialValue: 'processing' },
+        { name: 'outcome', title: 'Outcome', type: 'text' },
+        { name: 'correlationId', title: 'Correlation ID', type: 'string' },
+        { name: 'raw', title: 'Raw Event', type: 'text' },
+        { name: 'createdAt', title: 'Created At', type: 'datetime', readOnly: true },
+        { name: 'processedAt', title: 'Processed At', type: 'datetime' },
+      ],
+    },
     user,
     seoConfig,
     operationConfig,

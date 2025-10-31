@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { runQuery, sanityWrite } from '@/lib/client'
+import { logInfo, logError } from '@/lib/structuredLogger'
+import { randomUUID } from 'crypto'
 import { getEmailTemplateByName } from '../../../../queries/emailTemplates'
 import { ptToHtml, ptToPlainText, mergeVars } from '../../../../lib/email'
 import { resend, EMAIL_FROM } from '../../../../lib/resendClient'
@@ -19,7 +21,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
 export async function POST(request: NextRequest) {
-  console.log('🔄 Webhook received:', request.method, request.url)
+  const correlationId = randomUUID()
+  logInfo('webhook.received', { method: request.method, url: request.url, correlationId })
 
   const body = await request.text()
   const sig = request.headers.get('stripe-signature')!
@@ -28,13 +31,59 @@ export async function POST(request: NextRequest) {
 
   try {
     event = stripe.webhooks.constructEvent(body, sig, endpointSecret)
-    console.log('✅ Webhook event verified:', event.type)
+    logInfo('webhook.verified', { eventType: event.type, eventId: event.id, correlationId })
   } catch (err: unknown) {
-    console.error(
-      `❌ Webhook signature verification failed.`,
-      err instanceof Error ? err.message : String(err)
-    )
+    logError('webhook.signature_verification_failed', {
+      error: err instanceof Error ? err.message : String(err),
+      correlationId,
+    })
     return NextResponse.json({ error: 'Webhook error' }, { status: 400 })
+  }
+
+  // Duplicate suppression: check if we've processed this Stripe event.id already
+  try {
+    const existing = await runQuery(
+      `*[_type=="stripeEvent" && eventId==$eventId][0]{ _id, status, processedAt }`,
+      { eventId: event.id }
+    )
+
+    if (existing) {
+      logInfo('webhook.duplicate_suppressed', {
+        eventId: event.id,
+        eventType: event.type,
+        status: existing.status,
+        processedAt: existing.processedAt,
+        correlationId,
+      })
+      // Safe to acknowledge receipt
+      return NextResponse.json({ received: true })
+    }
+
+    // Create a processing record (best-effort) to mark the event as in-flight
+    try {
+      await sanityWrite.mutate([
+        {
+          create: {
+            _type: 'stripeEvent',
+            eventId: event.id,
+            eventType: event.type,
+            sessionId:
+              ((event.data?.object as unknown) as { id?: string; session?: string })?.id ||
+              ((event.data?.object as unknown) as { id?: string; session?: string })?.session ||
+              null,
+            status: 'processing',
+            correlationId,
+            createdAt: new Date().toISOString(),
+            raw: JSON.stringify(event),
+          },
+        },
+      ])
+    } catch (createErr) {
+      logError('stripeEvent.create_failed', { error: String(createErr), correlationId })
+    }
+  } catch (dupCheckErr) {
+    // If duplicate check fails we'll still try to continue processing, but log it
+    logError('webhook.duplicate_check_failed', { error: String(dupCheckErr), correlationId })
   }
 
   try {
@@ -89,18 +138,46 @@ export async function POST(request: NextRequest) {
         console.log(`ℹ️ Unhandled event type: ${event.type}`)
     }
 
-    console.log('✅ Webhook processing completed successfully')
+    logInfo('webhook.processing_completed', { eventId: event.id, eventType: event.type, correlationId })
+
+    // Mark processing success in Sanity (best-effort)
+    try {
+      const rec = await runQuery(`*[_type=="stripeEvent" && eventId==$eventId][0]{_id}`, { eventId: event.id })
+      if (rec?._id) {
+        await sanityWrite.mutate([
+          {
+            patch: { id: rec._id, set: { status: 'success', processedAt: new Date().toISOString(), outcome: event.type } },
+          },
+        ])
+      }
+    } catch (markOkErr) {
+      logError('stripeEvent.mark_success_failed', { error: String(markOkErr), correlationId })
+    }
+
     // TODO(provisioning): After confirming successful subscription, automatically trigger
     // project provisioning for the client (websiteProject/discordProject) instead of relying
     // on manual onboarding action. A simple approach: invoke the provisioning logic here
     // using the clientId/planId from metadata, with idempotent safeguards.
+
     return NextResponse.json({ received: true })
   } catch (error) {
-    console.error('❌ Webhook processing error:', error)
-    return NextResponse.json(
-      { error: 'Webhook processing failed' },
-      { status: 500 }
-    )
+    logError('webhook.processing_error', { error: String(error), correlationId })
+
+    // Mark processing failure in Sanity (best-effort)
+    try {
+      const rec = await runQuery(`*[_type=="stripeEvent" && eventId==$eventId][0]{_id}`, { eventId: event.id })
+      if (rec?._id) {
+        await sanityWrite.mutate([
+          {
+            patch: { id: rec._id, set: { status: 'failed', processedAt: new Date().toISOString(), outcome: String(error) } },
+          },
+        ])
+      }
+    } catch (markErr) {
+      logError('stripeEvent.mark_failed_failed', { error: String(markErr), correlationId })
+    }
+
+    return NextResponse.json({ error: 'Webhook processing failed' }, { status: 500 })
   }
 }
 
