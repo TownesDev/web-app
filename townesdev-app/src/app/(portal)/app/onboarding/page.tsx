@@ -20,6 +20,7 @@ type WizardData = {
   services: {
     basePlanId?: string
     addons: string[]
+    oneTime: string[]
     webApp: boolean
     discord: boolean
   }
@@ -30,7 +31,13 @@ type WizardData = {
 const DEFAULT_DATA: WizardData = {
   basics: { name: '', email: '', elevatorPitch: '', vertical: '' },
   brand: { logoUrl: '', primaryColor: '#2e5b7e', font: 'Inter' },
-  services: { basePlanId: undefined, addons: [], webApp: true, discord: false },
+  services: {
+    basePlanId: undefined,
+    addons: [],
+    oneTime: [],
+    webApp: true,
+    discord: false,
+  },
   web: { pages: ['home', 'about', 'contact'], domainIntent: '', links: {} },
   discord: { botName: '', intents: [], features: [] },
 }
@@ -48,6 +55,7 @@ type PlanRecord = {
   hoursIncluded: number | null
   stripeProductId: string | null
   stripePriceId: string | null
+  appliesTo?: Array<'web' | 'discord'>
 }
 
 type PlanCatalog = {
@@ -74,6 +82,7 @@ const FALLBACK_PLAN_CATALOG: PlanCatalog = {
       hoursIncluded: 3,
       stripeProductId: null,
       stripePriceId: null,
+      appliesTo: [],
     },
     {
       _id: 'plan.base-retainer-plus',
@@ -91,6 +100,7 @@ const FALLBACK_PLAN_CATALOG: PlanCatalog = {
       hoursIncluded: 6,
       stripeProductId: null,
       stripePriceId: null,
+      appliesTo: [],
     },
   ],
   addon: [
@@ -105,6 +115,7 @@ const FALLBACK_PLAN_CATALOG: PlanCatalog = {
       hoursIncluded: 0,
       stripeProductId: null,
       stripePriceId: null,
+      appliesTo: ['web'],
     },
     {
       _id: 'plan.webapp-pro',
@@ -122,6 +133,7 @@ const FALLBACK_PLAN_CATALOG: PlanCatalog = {
       hoursIncluded: 0,
       stripeProductId: null,
       stripePriceId: null,
+      appliesTo: ['web'],
     },
     {
       _id: 'plan.webapp-plus',
@@ -139,6 +151,7 @@ const FALLBACK_PLAN_CATALOG: PlanCatalog = {
       hoursIncluded: 0,
       stripeProductId: null,
       stripePriceId: null,
+      appliesTo: ['web'],
     },
     {
       _id: 'plan.discord-bronze',
@@ -151,6 +164,7 @@ const FALLBACK_PLAN_CATALOG: PlanCatalog = {
       hoursIncluded: 0,
       stripeProductId: null,
       stripePriceId: null,
+      appliesTo: ['discord'],
     },
     {
       _id: 'plan.discord-silver',
@@ -167,6 +181,7 @@ const FALLBACK_PLAN_CATALOG: PlanCatalog = {
       hoursIncluded: 0,
       stripeProductId: null,
       stripePriceId: null,
+      appliesTo: ['discord'],
     },
     {
       _id: 'plan.discord-gold',
@@ -184,6 +199,7 @@ const FALLBACK_PLAN_CATALOG: PlanCatalog = {
       hoursIncluded: 0,
       stripeProductId: null,
       stripePriceId: null,
+      appliesTo: ['discord'],
     },
   ],
   oneTime: [
@@ -198,6 +214,7 @@ const FALLBACK_PLAN_CATALOG: PlanCatalog = {
       hoursIncluded: 0,
       stripeProductId: null,
       stripePriceId: null,
+      appliesTo: ['web'],
     },
     {
       _id: 'plan.setup-discord',
@@ -210,6 +227,7 @@ const FALLBACK_PLAN_CATALOG: PlanCatalog = {
       hoursIncluded: 0,
       stripeProductId: null,
       stripePriceId: null,
+      appliesTo: ['discord'],
     },
   ],
 }
@@ -277,21 +295,38 @@ const BRAND_SCHEMA = z.object({
 
 const SERVICES_SCHEMA = z
   .object({
-    basePlanId: z
-      .string()
-      .trim()
-      .min(
-        1,
-        'Select your launch plan so we can tee up the right provisioning script.'
-      ),
+    basePlanId: z.string().optional(),
     webApp: z.boolean(),
     discord: z.boolean(),
+    oneTime: z.array(z.string()).optional(),
   })
-  .refine((value) => value.webApp || value.discord, {
-    message:
-      'Pick at least one service to start with. You can add the other later.',
-    path: ['serviceSelection'],
-  })
+  .refine(
+    (value) =>
+      value.webApp ||
+      value.discord ||
+      (Array.isArray(value.oneTime) && value.oneTime.length > 0),
+    {
+      message: 'Pick at least one service or one-time item to start with.',
+      path: ['serviceSelection'],
+    }
+  )
+  .refine(
+    (value) => {
+      // If user selected web or discord hosting, require a recurring base plan
+      if (value.webApp || value.discord) {
+        const id =
+          typeof value.basePlanId === 'string' ? value.basePlanId.trim() : ''
+        // Accept a non-empty plan id OR an explicit "no recurring plan" selection
+        return id.length > 0 || id === NO_PLAN_VALUE
+      }
+      return true
+    },
+    {
+      message:
+        'Select your launch plan so we can tee up the right provisioning script.',
+      path: ['basePlanId'],
+    }
+  )
 
 const WEB_SCHEMA = z.object({
   domainIntent: z
@@ -341,6 +376,7 @@ const INITIAL_WEB_TOUCHED: WebTouched = {
 }
 
 const MANUAL_PLAN_VALUE = '__manual__'
+const NO_PLAN_VALUE = '__none__'
 const PROGRESS_ENDPOINT = '/api/onboarding/progress'
 const SERVER_PERSIST_TIMEOUT = 800
 const BASE_PLAN_DETAILS_ID = 'onboarding-base-plan-details'
@@ -402,6 +438,26 @@ const describePlanOption = (plan: PlanRecord) => {
     Boolean
   ) as string[]
   return meta.length > 0 ? `${plan.name} — ${meta.join(' · ')}` : plan.name
+}
+
+const planAppliesTo = (
+  plan: PlanRecord
+): { web: boolean; discord: boolean } => {
+  // Prefer explicit mapping from Sanity (appliesTo). If present, use it strictly.
+  if (Array.isArray(plan.appliesTo) && plan.appliesTo.length > 0) {
+    return {
+      web: plan.appliesTo.includes('web'),
+      discord: plan.appliesTo.includes('discord'),
+    }
+  }
+
+  // Fallback deterministic inference for older/unnamed docs (keeps backward compatibility)
+  const id = (plan._id || '').toLowerCase()
+  const name = (plan.name || '').toLowerCase()
+  const web = id.includes('web') || name.includes('web') || id.includes('site')
+  const discord =
+    id.includes('discord') || name.includes('discord') || name.includes('bot')
+  return { web, discord }
 }
 
 const formatHoursIncluded = (hours: number | null) => {
@@ -726,6 +782,7 @@ export default function OnboardingPage() {
     const currentId = data.services.basePlanId
     if (typeof currentId === 'undefined') return ''
     if (currentId === '') return MANUAL_PLAN_VALUE
+    if (currentId === NO_PLAN_VALUE) return NO_PLAN_VALUE
     return basePlanRecords.some((plan) => plan._id === currentId)
       ? currentId
       : ''
@@ -1312,6 +1369,9 @@ export default function OnboardingPage() {
                     {describePlanOption(plan)}
                   </option>
                 ))}
+                <option value={NO_PLAN_VALUE}>
+                  No recurring plan (one-time only)
+                </option>
                 <option value={MANUAL_PLAN_VALUE}>
                   Enter plan ID manually
                 </option>
@@ -1464,6 +1524,148 @@ export default function OnboardingPage() {
                   {serviceSelectionError}
                 </p>
               )}
+            </div>
+            <div>
+              <label
+                id="onboarding-addons-label"
+                className="block text-sm font-medium text-gray-800"
+              >
+                Add-ons
+              </label>
+              <div className="mt-2 grid gap-2">
+                {planCatalog.addon
+                  .filter((plan) => {
+                    const applies = planAppliesTo(plan)
+                    if (applies.web && applies.discord)
+                      return data.services.webApp || data.services.discord
+                    if (applies.web) return data.services.webApp
+                    if (applies.discord) return data.services.discord
+                    // if we can't determine, show by default
+                    return data.services.webApp || data.services.discord
+                  })
+                  .map((plan) => {
+                    const checked = data.services.addons.includes(plan._id)
+                    return (
+                      <label
+                        key={plan._id}
+                        className="flex items-start gap-3 rounded-md border px-3 py-2"
+                      >
+                        <input
+                          type="checkbox"
+                          aria-checked={checked}
+                          checked={checked}
+                          onChange={() => {
+                            setData((d) => {
+                              const has = d.services.addons.includes(plan._id)
+                              const next = has
+                                ? d.services.addons.filter(
+                                    (id) => id !== plan._id
+                                  )
+                                : [...d.services.addons, plan._id]
+                              return {
+                                ...d,
+                                services: { ...d.services, addons: next },
+                              }
+                            })
+                          }}
+                        />
+                        <div className="flex-1 text-sm text-gray-800">
+                          <div className="font-medium">
+                            {describePlanOption(plan)}
+                          </div>
+                          {plan.description && (
+                            <div className="text-xs text-gray-600">
+                              {plan.description}
+                            </div>
+                          )}
+                          {plan.features.length > 0 && (
+                            <details className="mt-2 text-xs text-gray-600">
+                              <summary className="cursor-pointer font-medium text-xs text-gray-700">
+                                Details
+                              </summary>
+                              <ul className="mt-1 list-disc pl-5 space-y-1">
+                                {plan.features.map((f) => (
+                                  <li key={f}>{f}</li>
+                                ))}
+                              </ul>
+                            </details>
+                          )}
+                        </div>
+                      </label>
+                    )
+                  })}
+              </div>
+            </div>
+
+            <div>
+              <label
+                id="onboarding-one-time-label"
+                className="block text-sm font-medium text-gray-800"
+              >
+                One-time items
+              </label>
+              <div className="mt-2 grid gap-2">
+                {planCatalog.oneTime
+                  .filter((plan) => {
+                    const applies = planAppliesTo(plan)
+                    if (applies.web && applies.discord)
+                      return data.services.webApp || data.services.discord
+                    if (applies.web) return data.services.webApp
+                    if (applies.discord) return data.services.discord
+                    return true
+                  })
+                  .map((plan) => {
+                    const checked = data.services.oneTime.includes(plan._id)
+                    return (
+                      <label
+                        key={plan._id}
+                        className="flex items-start gap-3 rounded-md border px-3 py-2"
+                      >
+                        <input
+                          type="checkbox"
+                          aria-checked={checked}
+                          checked={checked}
+                          onChange={() => {
+                            setData((d) => {
+                              const has = d.services.oneTime.includes(plan._id)
+                              const next = has
+                                ? d.services.oneTime.filter(
+                                    (id) => id !== plan._id
+                                  )
+                                : [...d.services.oneTime, plan._id]
+                              return {
+                                ...d,
+                                services: { ...d.services, oneTime: next },
+                              }
+                            })
+                          }}
+                        />
+                        <div className="flex-1 text-sm text-gray-800">
+                          <div className="font-medium">
+                            {describePlanOption(plan)}
+                          </div>
+                          {plan.description && (
+                            <div className="text-xs text-gray-600">
+                              {plan.description}
+                            </div>
+                          )}
+                          {plan.features.length > 0 && (
+                            <details className="mt-2 text-xs text-gray-600">
+                              <summary className="cursor-pointer font-medium text-xs text-gray-700">
+                                Details
+                              </summary>
+                              <ul className="mt-1 list-disc pl-5 space-y-1">
+                                {plan.features.map((f) => (
+                                  <li key={f}>{f}</li>
+                                ))}
+                              </ul>
+                            </details>
+                          )}
+                        </div>
+                      </label>
+                    )
+                  })}
+              </div>
             </div>
           </div>
         )}
@@ -1642,6 +1844,28 @@ export default function OnboardingPage() {
             <p>
               <strong>Base plan:</strong> {reviewBasePlanLabel}
             </p>
+            {data.services.addons.length > 0 && (
+              <p>
+                <strong>Add-ons:</strong>{' '}
+                {data.services.addons
+                  .map(
+                    (id) =>
+                      planCatalog.addon.find((p) => p._id === id)?.name || id
+                  )
+                  .join(', ')}
+              </p>
+            )}
+            {data.services.oneTime.length > 0 && (
+              <p>
+                <strong>One-time items:</strong>{' '}
+                {data.services.oneTime
+                  .map(
+                    (id) =>
+                      planCatalog.oneTime.find((p) => p._id === id)?.name || id
+                  )
+                  .join(', ')}
+              </p>
+            )}
             <p>
               <strong>Web pages:</strong> {data.web.pages.join(', ')}
             </p>
