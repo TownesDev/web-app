@@ -1,6 +1,10 @@
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error'
 
-export function log(level: LogLevel, message: string, meta: Record<string, unknown> = {}) {
+export function log(
+  level: LogLevel,
+  message: string,
+  meta: Record<string, unknown> = {}
+) {
   const entry = {
     timestamp: new Date().toISOString(),
     level,

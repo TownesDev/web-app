@@ -4,8 +4,8 @@ Agent: td-agent-01
 Date: 2025-10-30
 Branch: feat/td-agent-01-hardening-stripe-webhooks
 
-Summary
--------
+## Summary
+
 This work improves webhook idempotency, observability, and recoverability for Stripe events by:
 
 - Adding a persistence document (`stripeEvent`) in Sanity to record processed event IDs, timestamps, client refs, and outcomes.
@@ -13,8 +13,8 @@ This work improves webhook idempotency, observability, and recoverability for St
 - Adding a small structured JSON logger used by the webhook for consistent logs with `correlationId`, `eventId`, and `eventType`.
 - Adding unit tests that demonstrate duplicate suppression and processing-record creation, and a runbook describing retry/replay and alerting guidance.
 
-Files changed
--------------
+## Files changed
+
 - Added: `townesdev-app/src/lib/structuredLogger.ts` — structured JSON logger
 - Modified: `townesdev-app/src/app/api/stripe/webhook/route.ts` — idempotency checks, structured logs, persistence writes
 - Modified: `townesdev-app/src/sanity/schemaTypes/index.ts` — added `stripeEvent` schema type
@@ -22,31 +22,31 @@ Files changed
 - Added: `townesdev-app/docs/stripe-webhooks-runbook.md` — operational runbook
 - Added: `.td/REPORT.md` (this file)
 
-Quality gates
--------------
+## Quality gates
+
 - TypeScript typecheck: PASS
 - ESLint: PASS
 - Jest: PASS (7 test suites, 28 tests)
 
-Verification
-------------
+## Verification
+
 1. Ran `npm run typecheck` — no type errors.
 2. Ran `npm run lint` — no lint errors.
 3. Ran `npm test` — all tests passed. Unit tests include mocks for Sanity and Stripe to verify duplicate suppression and processing record creation.
 
-Operational notes
------------------
+## Operational notes
+
 - The `stripeEvent` document is used as an application-level de-duplication store. Sanity does not enforce uniqueness at the DB level, so the handler checks and writes atomically from the app side; monitoring should watch for duplicate processing signals.
 - Logs are emitted as single-line JSON; configure ingestion to alert on `webhook.signature_verification_failed`, `webhook.processing_error`, and `stripeEvent.create_failed`.
 
-Follow-ups (recommended)
-------------------------
+## Follow-ups (recommended)
+
 1. Add a small reconciliation job to compare Stripe events to `stripeEvent` documents and surface mismatches.
 2. Optionally add a durable replay queue (S3/SQS) if Sanity write reliability becomes a concern.
 3. Wire structured logs into observability (Datadog/CloudWatch/ELK) and create dashboards/alerts.
 
-Commit history
---------------
+## Commit history
+
 - td-agent-01: harden stripe webhooks — add stripeEvent schema, structured logging, duplicate suppression
 - td-agent-01: tests + runbook for stripe webhook idempotency and observability
 - td-agent-01: tests+runbook+report (this commit)

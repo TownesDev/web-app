@@ -22,7 +22,11 @@ const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
 export async function POST(request: NextRequest) {
   const correlationId = randomUUID()
-  logInfo('webhook.received', { method: request.method, url: request.url, correlationId })
+  logInfo('webhook.received', {
+    method: request.method,
+    url: request.url,
+    correlationId,
+  })
 
   const body = await request.text()
   const sig = request.headers.get('stripe-signature')!
@@ -31,7 +35,11 @@ export async function POST(request: NextRequest) {
 
   try {
     event = stripe.webhooks.constructEvent(body, sig, endpointSecret)
-    logInfo('webhook.verified', { eventType: event.type, eventId: event.id, correlationId })
+    logInfo('webhook.verified', {
+      eventType: event.type,
+      eventId: event.id,
+      correlationId,
+    })
   } catch (err: unknown) {
     logError('webhook.signature_verification_failed', {
       error: err instanceof Error ? err.message : String(err),
@@ -68,8 +76,18 @@ export async function POST(request: NextRequest) {
             eventId: event.id,
             eventType: event.type,
             sessionId:
-              ((event.data?.object as unknown) as { id?: string; session?: string })?.id ||
-              ((event.data?.object as unknown) as { id?: string; session?: string })?.session ||
+              (
+                event.data?.object as unknown as {
+                  id?: string
+                  session?: string
+                }
+              )?.id ||
+              (
+                event.data?.object as unknown as {
+                  id?: string
+                  session?: string
+                }
+              )?.session ||
               null,
             status: 'processing',
             correlationId,
@@ -79,11 +97,17 @@ export async function POST(request: NextRequest) {
         },
       ])
     } catch (createErr) {
-      logError('stripeEvent.create_failed', { error: String(createErr), correlationId })
+      logError('stripeEvent.create_failed', {
+        error: String(createErr),
+        correlationId,
+      })
     }
   } catch (dupCheckErr) {
     // If duplicate check fails we'll still try to continue processing, but log it
-    logError('webhook.duplicate_check_failed', { error: String(dupCheckErr), correlationId })
+    logError('webhook.duplicate_check_failed', {
+      error: String(dupCheckErr),
+      correlationId,
+    })
   }
 
   try {
@@ -138,20 +162,37 @@ export async function POST(request: NextRequest) {
         console.log(`ℹ️ Unhandled event type: ${event.type}`)
     }
 
-    logInfo('webhook.processing_completed', { eventId: event.id, eventType: event.type, correlationId })
+    logInfo('webhook.processing_completed', {
+      eventId: event.id,
+      eventType: event.type,
+      correlationId,
+    })
 
     // Mark processing success in Sanity (best-effort)
     try {
-      const rec = await runQuery(`*[_type=="stripeEvent" && eventId==$eventId][0]{_id}`, { eventId: event.id })
+      const rec = await runQuery(
+        `*[_type=="stripeEvent" && eventId==$eventId][0]{_id}`,
+        { eventId: event.id }
+      )
       if (rec?._id) {
         await sanityWrite.mutate([
           {
-            patch: { id: rec._id, set: { status: 'success', processedAt: new Date().toISOString(), outcome: event.type } },
+            patch: {
+              id: rec._id,
+              set: {
+                status: 'success',
+                processedAt: new Date().toISOString(),
+                outcome: event.type,
+              },
+            },
           },
         ])
       }
     } catch (markOkErr) {
-      logError('stripeEvent.mark_success_failed', { error: String(markOkErr), correlationId })
+      logError('stripeEvent.mark_success_failed', {
+        error: String(markOkErr),
+        correlationId,
+      })
     }
 
     // TODO(provisioning): After confirming successful subscription, automatically trigger
@@ -161,23 +202,42 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ received: true })
   } catch (error) {
-    logError('webhook.processing_error', { error: String(error), correlationId })
+    logError('webhook.processing_error', {
+      error: String(error),
+      correlationId,
+    })
 
     // Mark processing failure in Sanity (best-effort)
     try {
-      const rec = await runQuery(`*[_type=="stripeEvent" && eventId==$eventId][0]{_id}`, { eventId: event.id })
+      const rec = await runQuery(
+        `*[_type=="stripeEvent" && eventId==$eventId][0]{_id}`,
+        { eventId: event.id }
+      )
       if (rec?._id) {
         await sanityWrite.mutate([
           {
-            patch: { id: rec._id, set: { status: 'failed', processedAt: new Date().toISOString(), outcome: String(error) } },
+            patch: {
+              id: rec._id,
+              set: {
+                status: 'failed',
+                processedAt: new Date().toISOString(),
+                outcome: String(error),
+              },
+            },
           },
         ])
       }
     } catch (markErr) {
-      logError('stripeEvent.mark_failed_failed', { error: String(markErr), correlationId })
+      logError('stripeEvent.mark_failed_failed', {
+        error: String(markErr),
+        correlationId,
+      })
     }
 
-    return NextResponse.json({ error: 'Webhook processing failed' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Webhook processing failed' },
+      { status: 500 }
+    )
   }
 }
 

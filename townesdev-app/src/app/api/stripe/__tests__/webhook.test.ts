@@ -63,13 +63,11 @@ describe('Stripe webhook handler', () => {
     }))
 
     jest.mock('@/lib/client', () => ({
-      runQuery: jest
-        .fn()
-        .mockResolvedValue({
-          _id: 'evt.rec',
-          status: 'success',
-          processedAt: new Date().toISOString(),
-        }),
+      runQuery: jest.fn().mockResolvedValue({
+        _id: 'evt.rec',
+        status: 'success',
+        processedAt: new Date().toISOString(),
+      }),
       sanityWrite: { mutate: jest.fn() },
     }))
 
@@ -77,13 +75,11 @@ describe('Stripe webhook handler', () => {
     jest.mock('stripe', () => {
       return jest.fn().mockImplementation(() => ({
         webhooks: {
-          constructEvent: jest
-            .fn()
-            .mockImplementation(() => ({
-              id: 'evt_1',
-              type: 'checkout.session.completed',
-              data: { object: { id: 'cs_1' } },
-            })),
+          constructEvent: jest.fn().mockImplementation(() => ({
+            id: 'evt_1',
+            type: 'checkout.session.completed',
+            data: { object: { id: 'cs_1' } },
+          })),
         },
       }))
     })
@@ -163,18 +159,16 @@ describe('Stripe webhook handler', () => {
     jest.mock('stripe', () => {
       return jest.fn().mockImplementation(() => ({
         webhooks: {
-          constructEvent: jest
-            .fn()
-            .mockImplementation(() => ({
-              id: 'evt_2',
-              type: 'checkout.session.completed',
-              data: {
-                object: {
-                  id: 'cs_2',
-                  metadata: { planId: 'plan.x', clientId: 'client.1' },
-                },
+          constructEvent: jest.fn().mockImplementation(() => ({
+            id: 'evt_2',
+            type: 'checkout.session.completed',
+            data: {
+              object: {
+                id: 'cs_2',
+                metadata: { planId: 'plan.x', clientId: 'client.1' },
               },
-            })),
+            },
+          })),
         },
       }))
     })

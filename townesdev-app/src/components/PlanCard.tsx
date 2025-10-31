@@ -130,13 +130,9 @@ export function PlanCard({
       )}
 
       <div className="text-center mb-6">
-        <h3 className="text-2xl font-bold text-nile-blue-900 mb-2">
-          {name}
-        </h3>
+        <h3 className="text-2xl font-bold text-nile-blue-900 mb-2">{name}</h3>
         <div className="text-3xl font-bold text-blue-600 mb-2">${price}</div>
-        <p className="text-nile-blue-800 text-sm">
-          {description}
-        </p>
+        <p className="text-nile-blue-800 text-sm">{description}</p>
       </div>
 
       <ul className="space-y-3 mb-6 flex flex-col flex-1">
