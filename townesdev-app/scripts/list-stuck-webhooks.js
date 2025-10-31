@@ -13,14 +13,15 @@ const argv = yargs(hideBin(process.argv))
   .option('hours', { type: 'number', default: 2 })
   .option('mark-failed', { type: 'boolean', default: false })
   .option('extend-lock-minutes', { type: 'number' })
-  .help()
-  .argv
+  .help().argv
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET
 const token = process.env.SANITY_AUTH_TOKEN
 if (!projectId || !dataset || !token) {
-  console.error('Missing env vars. Set NEXT_PUBLIC_SANITY_PROJECT_ID, NEXT_PUBLIC_SANITY_DATASET, and SANITY_AUTH_TOKEN')
+  console.error(
+    'Missing env vars. Set NEXT_PUBLIC_SANITY_PROJECT_ID, NEXT_PUBLIC_SANITY_DATASET, and SANITY_AUTH_TOKEN'
+  )
   process.exit(2)
 }
 
@@ -40,16 +41,18 @@ async function listStuck(hours) {
 }
 
 async function markFailed(id, note) {
-  const patch = [{
-    patch: {
-      id,
-      set: {
-        status: 'failed',
-        processedAt: new Date().toISOString(),
-        outcome: note || 'marked_failed_by_admin',
+  const patch = [
+    {
+      patch: {
+        id,
+        set: {
+          status: 'failed',
+          processedAt: new Date().toISOString(),
+          outcome: note || 'marked_failed_by_admin',
+        },
       },
     },
-  }]
+  ]
   return client.mutate(patch)
 }
 
@@ -72,15 +75,21 @@ async function extendLock(id, minutes) {
     return
   }
 
-  console.log(`Found ${items.length} stuck processing events (older than ${argv.hours} hours):`)
+  console.log(
+    `Found ${items.length} stuck processing events (older than ${argv.hours} hours):`
+  )
   for (const it of items) {
-    console.log(`- ${it._id} eventId=${it.eventId} eventType=${it.eventType} createdAt=${it.createdAt} lockExpiresAt=${it.lockExpiresAt} owner=${it.processingLockOwner} corr=${it.correlationId}`)
+    console.log(
+      `- ${it._id} eventId=${it.eventId} eventType=${it.eventType} createdAt=${it.createdAt} lockExpiresAt=${it.lockExpiresAt} owner=${it.processingLockOwner} corr=${it.correlationId}`
+    )
   }
 
   if (argv['extend-lock-minutes']) {
     for (const it of items) {
       await extendLock(it._id, argv['extend-lock-minutes'])
-      console.log(`Extended lock for ${it._id} by ${argv['extend-lock-minutes']} minutes`)
+      console.log(
+        `Extended lock for ${it._id} by ${argv['extend-lock-minutes']} minutes`
+      )
     }
   }
 

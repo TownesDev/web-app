@@ -21,6 +21,8 @@ test('onboarding -> review shows checkout CTA', async ({ page }) => {
   await expect(page.locator('text=Review')).toBeVisible({ timeout: 5000 })
 
   // Assert there is a Checkout or Continue to Checkout CTA
-  const checkoutBtn = page.locator('button:has-text("Checkout"), a:has-text("Checkout")')
+  const checkoutBtn = page.locator(
+    'button:has-text("Checkout"), a:has-text("Checkout")'
+  )
   await expect(checkoutBtn.first()).toBeVisible()
 })

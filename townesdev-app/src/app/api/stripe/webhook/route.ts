@@ -102,13 +102,14 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ received: true })
       }
 
-
       // If doc.status is 'processing' and the lock is still valid, short-circuit.
       // If the lock is expired, attempt to claim it by patching processingLockOwner
       // and lockExpiresAt so this worker can proceed.
       if (doc.status === 'processing') {
         const now = new Date()
-        const lockExpires = doc.lockExpiresAt ? new Date(doc.lockExpiresAt) : null
+        const lockExpires = doc.lockExpiresAt
+          ? new Date(doc.lockExpiresAt)
+          : null
 
         if (lockExpires && lockExpires > now) {
           // Another worker owns the lock and it's still valid — short-circuit.
@@ -126,7 +127,9 @@ export async function POST(request: NextRequest) {
 
         // Lock is expired or missing — claim it for this invocation.
         try {
-          const newLockExpires = new Date(Date.now() + 15 * 60 * 1000).toISOString()
+          const newLockExpires = new Date(
+            Date.now() + 15 * 60 * 1000
+          ).toISOString()
           await sanityWrite.mutate([
             {
               patch: {
