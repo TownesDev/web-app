@@ -105,8 +105,9 @@ describe('Stripe webhook handler', () => {
       expect.stringContaining('webhook.duplicate_suppressed'),
       expect.objectContaining({ eventId: 'evt_1' })
     )
-    // Should not have attempted to create a new stripeEvent record because it already existed
-    expect(sanityWrite.mutate).not.toHaveBeenCalled()
+    // We should have attempted the createIfNotExists call (atomic), even if the
+    // document pre-existed; sanityWrite.mutate should have been invoked.
+    expect(sanityWrite.mutate).toHaveBeenCalled()
   })
 
   it('creates a processing record when first seeing an event', async () => {
