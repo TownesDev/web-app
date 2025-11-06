@@ -1,0 +1,26 @@
+{
+  "id": "guides/api-guidelines",
+  "title": "API Guidelines",
+  "description": "",
+  "source": "@site/../docs/guides/api-guidelines.md",
+  "sourceDirName": "guides",
+  "slug": "/api-guidelines",
+  "permalink": "/api-guidelines",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "title": "API Guidelines",
+    "slug": "/api-guidelines"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Guides",
+    "permalink": "/guides/"
+  },
+  "next": {
+    "title": "Email to Incident Integration",
+    "permalink": "/guides/email-integration"
+  }
+}

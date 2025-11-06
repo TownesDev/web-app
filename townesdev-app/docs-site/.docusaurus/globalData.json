@@ -1,0 +1,248 @@
+{
+  "docusaurus-plugin-content-docs": {
+    "default": {
+      "path": "/",
+      "versions": [
+        {
+          "name": "current",
+          "label": "Next",
+          "isLast": true,
+          "path": "/",
+          "mainDocId": "README",
+          "docs": [
+            {
+              "id": "accessibility/README",
+              "path": "/accessibility-testing",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "architecture/auth",
+              "path": "/architecture/auth",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "architecture/bot-integration",
+              "path": "/architecture/bot-integration",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "architecture/caching",
+              "path": "/architecture/caching",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "architecture/data-layer",
+              "path": "/architecture/data-layer",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "architecture/multi-service",
+              "path": "/architecture/multi-service",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "architecture/overview",
+              "path": "/architecture/overview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "architecture/payments",
+              "path": "/architecture/payments",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "architecture/performance",
+              "path": "/architecture/performance",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "architecture/README",
+              "path": "/architecture-overview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "architecture/route-groups",
+              "path": "/architecture/route-groups",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "audit/checkpoint-review",
+              "path": "/audit/checkpoint-review",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "audit/DOCS_AUDIT_COMPREHENSIVE",
+              "path": "/audit/DOCS_AUDIT_COMPREHENSIVE",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "audit/README",
+              "path": "/audit/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "audit/repo-issues",
+              "path": "/audit/repo-issues",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "development/advanced-features",
+              "path": "/development/advanced-features",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "development/ai-agents",
+              "path": "/development/ai-agents",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "development/onboarding-status",
+              "path": "/development/onboarding-status",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "development/pdf-reports",
+              "path": "/development/pdf-reports",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "development/performance-optimization",
+              "path": "/development/performance-optimization",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "development/README",
+              "path": "/development/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "development/testing-pdf-email",
+              "path": "/development/testing-pdf-email",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "guides/api-guidelines",
+              "path": "/api-guidelines",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "guides/email-integration",
+              "path": "/guides/email-integration",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "guides/launch-roadmap-2026",
+              "path": "/guides/launch-roadmap-2026",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "guides/monitoring",
+              "path": "/guides/monitoring",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "guides/onboarding-plan",
+              "path": "/onboarding-plan",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "guides/portal-flow",
+              "path": "/guides/portal-flow",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "guides/README",
+              "path": "/guides/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "guides/sanity-preview",
+              "path": "/guides/sanity-preview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "guides/security",
+              "path": "/guides/security",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "guides/standards",
+              "path": "/guides/standards",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "guides/stripe-webhooks-runbook",
+              "path": "/guides/stripe-webhooks-runbook",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "guides/testing",
+              "path": "/guides/testing",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "guides/workflow",
+              "path": "/guides/workflow",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "README",
+              "path": "/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "READY_FOR_LAUNCH",
+              "path": "/READY_FOR_LAUNCH",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "setup/deployment",
+              "path": "/setup/deployment",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "setup/environment",
+              "path": "/setup/environment",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "setup/local-development",
+              "path": "/setup/local-development",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "setup/README",
+              "path": "/setup",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "setup/sanity",
+              "path": "/setup/sanity",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "setup/ts-server-deploy",
+              "path": "/setup/ts-server-deploy",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "SOT",
+              "path": "/SOT",
+              "sidebar": "tutorialSidebar"
+            }
+          ],
+          "draftIds": [],
+          "sidebars": {
+            "tutorialSidebar": {
+              "link": {
+                "path": "/architecture-overview",
+                "label": "Architecture"
+              }
+            }
+          }
+        }
+      ],
+      "breadcrumbs": true
+    }
+  }
+}

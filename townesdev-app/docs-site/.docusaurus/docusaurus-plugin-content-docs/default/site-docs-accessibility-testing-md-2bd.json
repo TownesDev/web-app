@@ -1,0 +1,14 @@
+{
+  "id": "ACCESSIBILITY_TESTING",
+  "title": "ACCESSIBILITY_TESTING",
+  "description": "This file has been consolidated into accessibility-testing.md. Please consult docs/accessibility-testing.md for the accessibility checklist and testing notes.",
+  "source": "@site/../docs/ACCESSIBILITY_TESTING.md",
+  "sourceDirName": ".",
+  "slug": "/ACCESSIBILITY_TESTING",
+  "permalink": "/ACCESSIBILITY_TESTING",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {}
+}

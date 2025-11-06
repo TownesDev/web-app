@@ -1,0 +1,26 @@
+{
+  "id": "guides/onboarding-plan",
+  "title": "Client Onboarding (Web App + Discord)",
+  "description": "This document defines the end-to-end client onboarding flow, pricing/plan structure (base retainer + service add-ons), Sanity schemas, Stripe integration, RBAC, site generation, and operational considerations. It is designed to work for any client vertical (musician, bakery, thrift store, etc.) and to scale to higher-demand clients.",
+  "source": "@site/../docs/guides/onboarding-plan.md",
+  "sourceDirName": "guides",
+  "slug": "/onboarding-plan",
+  "permalink": "/onboarding-plan",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "title": "Client Onboarding (Web App + Discord)",
+    "slug": "/onboarding-plan"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "monitoring",
+    "permalink": "/guides/monitoring"
+  },
+  "next": {
+    "title": "Client Portal User Guide",
+    "permalink": "/guides/portal-flow"
+  }
+}

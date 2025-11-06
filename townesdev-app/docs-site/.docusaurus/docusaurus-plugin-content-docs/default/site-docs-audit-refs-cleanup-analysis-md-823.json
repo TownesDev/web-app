@@ -1,0 +1,23 @@
+{
+  "id": "audit/refs-cleanup-analysis",
+  "title": "Refs Folder Cleanup & Remaining Work Analysis",
+  "description": "Date: November 4, 2025",
+  "source": "@site/../docs/audit/refs-cleanup-analysis.md",
+  "sourceDirName": "audit",
+  "slug": "/audit/refs-cleanup-analysis",
+  "permalink": "/audit/refs-cleanup-analysis",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Documentation & Code Audit (snapshot)",
+    "permalink": "/audit/docs-audit"
+  },
+  "next": {
+    "title": "Refs Folder Analysis & Migration Summary",
+    "permalink": "/audit/refs-folder-migration"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "id": "guides/email-integration",
+  "title": "Email to Incident Integration",
+  "description": "---",
+  "source": "@site/../docs/guides/email-integration.md",
+  "sourceDirName": "guides",
+  "slug": "/guides/email-integration",
+  "permalink": "/guides/email-integration",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "API Guidelines",
+    "permalink": "/api-guidelines"
+  },
+  "next": {
+    "title": "TownesDev Launch Roadmap - Jan 1, 2026",
+    "permalink": "/guides/launch-roadmap-2026"
+  }
+}

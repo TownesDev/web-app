@@ -1,0 +1,25 @@
+{
+  "id": "development/README",
+  "title": "Development Guides",
+  "description": "Tools and patterns for developing and optimizing the application: testing, performance, and report generation.",
+  "source": "@site/../docs/development/README.md",
+  "sourceDirName": "development",
+  "slug": "/development/",
+  "permalink": "/development/",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "title": "Development Guides"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Deploying the docs site to TSERVER (Windows)",
+    "permalink": "/setup/ts-server-deploy"
+  },
+  "next": {
+    "title": "Advanced Features & Improvements",
+    "permalink": "/development/advanced-features"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "id": "guides/security",
+  "title": "security",
+  "description": "",
+  "source": "@site/../docs/guides/security.md",
+  "sourceDirName": "guides",
+  "slug": "/guides/security",
+  "permalink": "/guides/security",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Sanity Preview Mode",
+    "permalink": "/guides/sanity-preview"
+  },
+  "next": {
+    "title": "standards",
+    "permalink": "/guides/standards"
+  }
+}

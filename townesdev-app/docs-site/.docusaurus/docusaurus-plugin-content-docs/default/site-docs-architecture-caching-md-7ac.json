@@ -1,0 +1,23 @@
+{
+  "id": "architecture/caching",
+  "title": "Caching Strategy",
+  "description": "Overview",
+  "source": "@site/../docs/architecture/caching.md",
+  "sourceDirName": "architecture",
+  "slug": "/architecture/caching",
+  "permalink": "/architecture/caching",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Bot Platform Integration",
+    "permalink": "/architecture/bot-integration"
+  },
+  "next": {
+    "title": "Data Layer Architecture",
+    "permalink": "/architecture/data-layer"
+  }
+}

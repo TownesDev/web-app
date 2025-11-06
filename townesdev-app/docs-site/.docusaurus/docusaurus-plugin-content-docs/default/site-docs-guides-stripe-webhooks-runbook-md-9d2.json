@@ -1,0 +1,23 @@
+{
+  "id": "guides/stripe-webhooks-runbook",
+  "title": "Stripe Webhooks Runbook",
+  "description": "Purpose: increase reliability and observability of Stripe webhook handling. This runbook explains retry behavior, safe replay, alerting, and operational guidance.",
+  "source": "@site/../docs/guides/stripe-webhooks-runbook.md",
+  "sourceDirName": "guides",
+  "slug": "/guides/stripe-webhooks-runbook",
+  "permalink": "/guides/stripe-webhooks-runbook",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "standards",
+    "permalink": "/guides/standards"
+  },
+  "next": {
+    "title": "Testing Guide",
+    "permalink": "/guides/testing"
+  }
+}

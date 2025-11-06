@@ -1,0 +1,23 @@
+{
+  "id": "performance-optimization",
+  "title": "Performance Monitoring & Optimization Opportunities",
+  "description": "🚀 Current Performance Wins",
+  "source": "@site/../docs/performance-optimization.md",
+  "sourceDirName": ".",
+  "slug": "/performance-optimization",
+  "permalink": "/performance-optimization",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "PDF Reports Generation",
+    "permalink": "/pdf-reports"
+  },
+  "next": {
+    "title": "Repository Issues & Prioritized Tasks",
+    "permalink": "/repo-issues"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "id": "architecture/payments",
+  "title": "payments",
+  "description": "",
+  "source": "@site/../docs/architecture/payments.md",
+  "sourceDirName": "architecture",
+  "slug": "/architecture/payments",
+  "permalink": "/architecture/payments",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Architecture Overview",
+    "permalink": "/architecture/overview"
+  },
+  "next": {
+    "title": "performance",
+    "permalink": "/architecture/performance"
+  }
+}

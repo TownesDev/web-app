@@ -1,0 +1,23 @@
+{
+  "id": "onboarding/onboarding-plan",
+  "title": "onboarding-plan",
+  "description": "---",
+  "source": "@site/../docs/onboarding/onboarding-plan.md",
+  "sourceDirName": "onboarding",
+  "slug": "/onboarding/onboarding-plan",
+  "permalink": "/onboarding/onboarding-plan",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "workflow",
+    "permalink": "/guides/workflow"
+  },
+  "next": {
+    "title": "Audit & Issues",
+    "permalink": "/audit/"
+  }
+}

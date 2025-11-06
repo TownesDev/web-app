@@ -1,0 +1,25 @@
+{
+  "id": "guides/README",
+  "title": "Guides",
+  "description": "Collection of focused how-to and runbook style documents: portal flows, API guidance, monitoring, and other operational guides.",
+  "source": "@site/../docs/guides/README.md",
+  "sourceDirName": "guides",
+  "slug": "/guides/",
+  "permalink": "/guides/",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "title": "Guides"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Testing Guide: PDF Reports & Email Incidents",
+    "permalink": "/development/testing-pdf-email"
+  },
+  "next": {
+    "title": "API Guidelines",
+    "permalink": "/api-guidelines"
+  }
+}

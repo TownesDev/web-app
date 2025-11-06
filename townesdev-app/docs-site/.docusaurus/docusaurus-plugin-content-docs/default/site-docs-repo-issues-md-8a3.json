@@ -1,0 +1,14 @@
+{
+  "id": "REPO_ISSUES",
+  "title": "REPO_ISSUES",
+  "description": "This file has been consolidated into repo-issues.md. Please consult docs/repo-issues.md for the prioritized tasks and acceptance criteria.",
+  "source": "@site/../docs/REPO_ISSUES.md",
+  "sourceDirName": ".",
+  "slug": "/REPO_ISSUES",
+  "permalink": "/REPO_ISSUES",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {}
+}

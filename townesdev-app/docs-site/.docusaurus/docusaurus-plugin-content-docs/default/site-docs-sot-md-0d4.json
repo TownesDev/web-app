@@ -1,0 +1,19 @@
+{
+  "id": "SOT",
+  "title": "Source of Truth (SOT) - TownesDev Platform",
+  "description": "Last Updated: November 4, 2025",
+  "source": "@site/../docs/SOT.md",
+  "sourceDirName": ".",
+  "slug": "/SOT",
+  "permalink": "/SOT",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "TownesDev - Ready for Launch",
+    "permalink": "/READY_FOR_LAUNCH"
+  }
+}

@@ -1,0 +1,100 @@
+/* Minimal custom CSS for Docusaurus site. */
+
+:root {
+  --ifm-color-primary: #1e2e3e; /* deep navy (brand primary) */
+  --td-accent: #d8dde2; /* cool gray accent for dark-mode links */
+}
+
+/* Small body padding for readability */
+body {
+  padding: 8px;
+}
+
+/* Dark mode link color overrides to ensure high contrast */
+.theme-dark a,
+.theme-dark .navbar__link,
+.theme-dark .markdown a {
+  color: var(--td-accent) !important;
+}
+
+.theme-dark .markdown a:hover,
+.theme-dark .navbar__link:hover,
+.theme-dark a:hover {
+  color: #ffffff !important;
+  text-decoration: underline;
+}
+
+/* Light mode: keep brand primary for links */
+.theme-light a,
+.theme-light .navbar__link,
+.theme-light .markdown a {
+  color: var(--ifm-color-primary) !important;
+}
+/* Minimal custom CSS for Docusaurus site. Kept intentionally empty. */
+
+:root {
+  --ifm-color-primary: #1e2e3e;
+}
+
+/* Small body padding for readability */
+body {
+  padding: 8px;
+}
+/* Minimal custom CSS for Docusaurus site. */
+
+:root {
+  --ifm-color-primary: #1e2e3e; /* deep navy (brand primary) */
+  --td-accent: #d8dde2; /* cool gray accent for dark-mode links */
+}
+
+/* Small body padding for readability */
+body {
+  padding: 8px;
+}
+
+/* Dark mode link color overrides to ensure high contrast */
+/* Minimal custom CSS for Docusaurus site. */
+
+:root {
+  --ifm-color-primary: #1e2e3e; /* deep navy (brand primary) */
+  --td-accent: #d8dde2; /* cool gray accent for dark-mode links */
+}
+
+/* Small body padding for readability */
+body {
+  padding: 8px;
+}
+
+/* Dark mode link color overrides to ensure high contrast */
+/* Minimal custom CSS for Docusaurus site. */
+
+:root {
+  --ifm-color-primary: #1e2e3e; /* deep navy (brand primary) */
+  --td-accent: #d8dde2; /* cool gray accent for dark-mode links */
+}
+
+/* Small body padding for readability */
+body {
+  padding: 8px;
+}
+
+/* Dark mode link color overrides to ensure high contrast */
+.theme-dark a,
+.theme-dark .navbar__link,
+.theme-dark .markdown a {
+  color: var(--td-accent) !important;
+}
+
+.theme-dark .markdown a:hover,
+.theme-dark .navbar__link:hover,
+.theme-dark a:hover {
+  color: #ffffff !important;
+  text-decoration: underline;
+}
+
+/* Light mode: keep brand primary for links */
+.theme-light a,
+.theme-light .navbar__link,
+.theme-light .markdown a {
+  color: var(--ifm-color-primary) !important;
+}

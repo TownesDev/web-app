@@ -1,0 +1,23 @@
+{
+  "id": "onboarding-plan",
+  "title": "onboarding-plan",
+  "description": "---",
+  "source": "@site/../docs/onboarding-plan.md",
+  "sourceDirName": ".",
+  "slug": "/onboarding-plan",
+  "permalink": "/onboarding-plan",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "workflow",
+    "permalink": "/guides/workflow"
+  },
+  "next": {
+    "title": "PDF Reports Generation",
+    "permalink": "/pdf-reports"
+  }
+}

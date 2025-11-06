@@ -1,0 +1,23 @@
+{
+  "id": "audit/updates-oct-2025",
+  "title": "TownesDev Platform - October 2025 Updates",
+  "description": "Overview",
+  "source": "@site/../docs/audit/updates-oct-2025.md",
+  "sourceDirName": "audit",
+  "slug": "/audit/updates-oct-2025",
+  "permalink": "/audit/updates-oct-2025",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Repository Issues & Prioritized Tasks",
+    "permalink": "/audit/repo-issues"
+  },
+  "next": {
+    "title": "TownesDev Documentation",
+    "permalink": "/"
+  }
+}

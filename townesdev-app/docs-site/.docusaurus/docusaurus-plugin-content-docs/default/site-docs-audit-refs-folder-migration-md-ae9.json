@@ -1,0 +1,23 @@
+{
+  "id": "audit/refs-folder-migration",
+  "title": "Refs Folder Analysis & Migration Summary",
+  "description": "Date: November 4, 2025",
+  "source": "@site/../docs/audit/refs-folder-migration.md",
+  "sourceDirName": "audit",
+  "slug": "/audit/refs-folder-migration",
+  "permalink": "/audit/refs-folder-migration",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Refs Folder Cleanup & Remaining Work Analysis",
+    "permalink": "/audit/refs-cleanup-analysis"
+  },
+  "next": {
+    "title": "Repository Issues & Prioritized Tasks",
+    "permalink": "/audit/repo-issues"
+  }
+}

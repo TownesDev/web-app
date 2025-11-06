@@ -1,0 +1,23 @@
+{
+  "id": "architecture/auth",
+  "title": "auth",
+  "description": "",
+  "source": "@site/../docs/architecture/auth.md",
+  "sourceDirName": "architecture",
+  "slug": "/architecture/auth",
+  "permalink": "/architecture/auth",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Architecture Overview",
+    "permalink": "/architecture-overview"
+  },
+  "next": {
+    "title": "Bot Platform Integration",
+    "permalink": "/architecture/bot-integration"
+  }
+}

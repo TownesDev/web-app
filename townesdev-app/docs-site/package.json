@@ -1,0 +1,14 @@
+{
+  "name": "townesdev-docs-site",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "start": "docusaurus start",
+    "build": "docusaurus build",
+    "serve": "docusaurus serve"
+  },
+  "dependencies": {
+    "@docusaurus/core": "^3.8.0",
+    "@docusaurus/preset-classic": "^3.8.0"
+  }
+}

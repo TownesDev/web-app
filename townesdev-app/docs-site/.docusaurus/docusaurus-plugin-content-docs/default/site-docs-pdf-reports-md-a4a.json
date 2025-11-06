@@ -1,0 +1,14 @@
+{
+  "id": "PDF_REPORTS",
+  "title": "PDF Reports Generation",
+  "description": "Overview",
+  "source": "@site/../docs/PDF_REPORTS.md",
+  "sourceDirName": ".",
+  "slug": "/PDF_REPORTS",
+  "permalink": "/PDF_REPORTS",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {}
+}

@@ -1,0 +1,23 @@
+{
+  "id": "architecture/data-layer",
+  "title": "Data Layer Architecture",
+  "description": "Overview",
+  "source": "@site/../docs/architecture/data-layer.md",
+  "sourceDirName": "architecture",
+  "slug": "/architecture/data-layer",
+  "permalink": "/architecture/data-layer",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Caching Strategy",
+    "permalink": "/architecture/caching"
+  },
+  "next": {
+    "title": "Multi-Service Architecture (placeholder)",
+    "permalink": "/architecture/multi-service"
+  }
+}

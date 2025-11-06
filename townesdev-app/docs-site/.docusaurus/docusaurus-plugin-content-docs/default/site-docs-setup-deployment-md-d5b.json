@@ -1,0 +1,23 @@
+{
+  "id": "setup/deployment",
+  "title": "deployment",
+  "description": "",
+  "source": "@site/../docs/setup/deployment.md",
+  "sourceDirName": "setup",
+  "slug": "/setup/deployment",
+  "permalink": "/setup/deployment",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Setup & Local Development",
+    "permalink": "/setup"
+  },
+  "next": {
+    "title": "Environment Configuration",
+    "permalink": "/setup/environment"
+  }
+}

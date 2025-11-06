@@ -1,0 +1,23 @@
+{
+  "id": "setup/local-development",
+  "title": "Local Development Setup",
+  "description": "Prerequisites",
+  "source": "@site/../docs/setup/local-development.md",
+  "sourceDirName": "setup",
+  "slug": "/setup/local-development",
+  "permalink": "/setup/local-development",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Environment Configuration",
+    "permalink": "/setup/environment"
+  },
+  "next": {
+    "title": "Sanity CMS Setup",
+    "permalink": "/setup/sanity"
+  }
+}

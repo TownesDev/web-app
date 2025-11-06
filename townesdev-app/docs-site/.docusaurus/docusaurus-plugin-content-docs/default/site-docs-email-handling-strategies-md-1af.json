@@ -1,0 +1,17 @@
+{
+  "id": "EMAIL_HANDLING_STRATEGIES",
+  "title": "Email handling strategies (deprecated)",
+  "description": "This file has been consolidated. See email-integration.md (section \"Handling Strategies\") for the canonical guidance and recommended environment variables.",
+  "source": "@site/../docs/EMAIL_HANDLING_STRATEGIES.md",
+  "sourceDirName": ".",
+  "slug": "/email-handling-strategies-deprecated",
+  "permalink": "/email-handling-strategies-deprecated",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "title": "Email handling strategies (deprecated)",
+    "slug": "/email-handling-strategies-deprecated"
+  }
+}

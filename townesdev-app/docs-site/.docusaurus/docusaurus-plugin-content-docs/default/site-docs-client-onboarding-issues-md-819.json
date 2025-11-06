@@ -1,0 +1,17 @@
+{
+  "id": "CLIENT_ONBOARDING_ISSUES",
+  "title": "Client onboarding (deprecated)",
+  "description": "This file was consolidated into onboarding-plan.md on 2025-10-31. Please see docs/onboarding-plan.md for the full, canonical onboarding implementation plan including schema changes, Stripe integration notes, and epics/acceptance criteria.",
+  "source": "@site/../docs/CLIENT_ONBOARDING_ISSUES.md",
+  "sourceDirName": ".",
+  "slug": "/client-onboarding-deprecated",
+  "permalink": "/client-onboarding-deprecated",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "title": "Client onboarding (deprecated)",
+    "slug": "/client-onboarding-deprecated"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "id": "accessibility/README",
+  "title": "Accessibility Testing Checklist",
+  "description": "Automated Testing",
+  "source": "@site/../docs/accessibility/README.md",
+  "sourceDirName": "accessibility",
+  "slug": "/accessibility-testing",
+  "permalink": "/accessibility-testing",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "title": "Accessibility Testing Checklist",
+    "slug": "/accessibility-testing"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Route Groups Architecture",
+    "permalink": "/architecture/route-groups"
+  },
+  "next": {
+    "title": "Setup & Local Development",
+    "permalink": "/setup"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "id": "development/onboarding-status",
+  "title": "Onboarding Implementation Status",
+  "description": "Last Updated: November 4, 2025",
+  "source": "@site/../docs/development/onboarding-status.md",
+  "sourceDirName": "development",
+  "slug": "/development/onboarding-status",
+  "permalink": "/development/onboarding-status",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "AI Agent Guidelines for TownesDev",
+    "permalink": "/development/ai-agents"
+  },
+  "next": {
+    "title": "PDF Reports Generation",
+    "permalink": "/development/pdf-reports"
+  }
+}

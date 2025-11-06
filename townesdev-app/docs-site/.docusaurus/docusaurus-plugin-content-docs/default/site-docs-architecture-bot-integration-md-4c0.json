@@ -1,0 +1,23 @@
+{
+  "id": "architecture/bot-integration",
+  "title": "Bot Platform Integration",
+  "description": "Overview",
+  "source": "@site/../docs/architecture/bot-integration.md",
+  "sourceDirName": "architecture",
+  "slug": "/architecture/bot-integration",
+  "permalink": "/architecture/bot-integration",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "auth",
+    "permalink": "/architecture/auth"
+  },
+  "next": {
+    "title": "Caching Strategy",
+    "permalink": "/architecture/caching"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "id": "audit/checkpoint-review",
+  "title": "TownesDev Platform – Checkpoint Review",
+  "description": "Last reviewed: 2025-11-04",
+  "source": "@site/../docs/audit/checkpoint-review.md",
+  "sourceDirName": "audit",
+  "slug": "/audit/checkpoint-review",
+  "permalink": "/audit/checkpoint-review",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "TownesDev Documentation Audit & Cleanup Plan",
+    "permalink": "/audit/DOCS_AUDIT_COMPREHENSIVE"
+  },
+  "next": {
+    "title": "Repository Issues & Prioritized Tasks",
+    "permalink": "/audit/repo-issues"
+  }
+}

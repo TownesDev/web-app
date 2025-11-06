@@ -1,0 +1,23 @@
+{
+  "id": "audit/DOCS_AUDIT_COMPREHENSIVE",
+  "title": "TownesDev Documentation Audit & Cleanup Plan",
+  "description": "Date: November 4, 2025",
+  "source": "@site/../docs/audit/DOCS_AUDIT_COMPREHENSIVE.md",
+  "sourceDirName": "audit",
+  "slug": "/audit/DOCS_AUDIT_COMPREHENSIVE",
+  "permalink": "/audit/DOCS_AUDIT_COMPREHENSIVE",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Audit & Issues",
+    "permalink": "/audit/"
+  },
+  "next": {
+    "title": "TownesDev Platform – Checkpoint Review",
+    "permalink": "/audit/checkpoint-review"
+  }
+}

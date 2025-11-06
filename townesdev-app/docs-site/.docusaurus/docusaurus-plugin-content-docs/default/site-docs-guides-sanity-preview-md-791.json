@@ -1,0 +1,23 @@
+{
+  "id": "guides/sanity-preview",
+  "title": "Sanity Preview Mode",
+  "description": "Overview",
+  "source": "@site/../docs/guides/sanity-preview.md",
+  "sourceDirName": "guides",
+  "slug": "/guides/sanity-preview",
+  "permalink": "/guides/sanity-preview",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Client Portal User Guide",
+    "permalink": "/guides/portal-flow"
+  },
+  "next": {
+    "title": "security",
+    "permalink": "/guides/security"
+  }
+}
