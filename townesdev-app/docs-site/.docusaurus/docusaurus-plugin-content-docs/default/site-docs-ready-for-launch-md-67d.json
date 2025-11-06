@@ -1,0 +1,23 @@
+{
+  "id": "READY_FOR_LAUNCH",
+  "title": "TownesDev - Ready for Launch",
+  "description": "Date: November 5, 2025",
+  "source": "@site/../docs/READY_FOR_LAUNCH.md",
+  "sourceDirName": ".",
+  "slug": "/READY_FOR_LAUNCH",
+  "permalink": "/READY_FOR_LAUNCH",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "TownesDev Documentation",
+    "permalink": "/"
+  },
+  "next": {
+    "title": "Source of Truth (SOT) - TownesDev Platform",
+    "permalink": "/SOT"
+  }
+}

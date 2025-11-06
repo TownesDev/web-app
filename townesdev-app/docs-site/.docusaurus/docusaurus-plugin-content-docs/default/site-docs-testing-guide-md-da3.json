@@ -1,0 +1,14 @@
+{
+  "id": "TESTING_GUIDE",
+  "title": "TESTING_GUIDE",
+  "description": "This file has been consolidated into testing-guide.md. Please consult docs/testing-guide.md for testing setup and test-case recipes.",
+  "source": "@site/../docs/TESTING_GUIDE.md",
+  "sourceDirName": ".",
+  "slug": "/TESTING_GUIDE",
+  "permalink": "/TESTING_GUIDE",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {}
+}

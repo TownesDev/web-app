@@ -333,7 +333,7 @@ it('should not have accessibility violations', async () => {
 
 ### Manual Testing
 
-Follow the [accessibility testing checklist](../ACCESSIBILITY_TESTING.md).
+Follow the [accessibility testing checklist](../accessibility-testing.md).
 
 ## Test Data Management
 

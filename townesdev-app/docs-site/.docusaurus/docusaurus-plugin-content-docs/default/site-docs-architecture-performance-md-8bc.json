@@ -1,0 +1,23 @@
+{
+  "id": "architecture/performance",
+  "title": "performance",
+  "description": "",
+  "source": "@site/../docs/architecture/performance.md",
+  "sourceDirName": "architecture",
+  "slug": "/architecture/performance",
+  "permalink": "/architecture/performance",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "payments",
+    "permalink": "/architecture/payments"
+  },
+  "next": {
+    "title": "Route Groups Architecture",
+    "permalink": "/architecture/route-groups"
+  }
+}

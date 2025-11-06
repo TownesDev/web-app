@@ -1,0 +1,23 @@
+{
+  "id": "development/pdf-reports",
+  "title": "PDF Reports Generation",
+  "description": "Overview",
+  "source": "@site/../docs/development/pdf-reports.md",
+  "sourceDirName": "development",
+  "slug": "/development/pdf-reports",
+  "permalink": "/development/pdf-reports",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Onboarding Implementation Status",
+    "permalink": "/development/onboarding-status"
+  },
+  "next": {
+    "title": "Performance Monitoring & Optimization Opportunities",
+    "permalink": "/development/performance-optimization"
+  }
+}

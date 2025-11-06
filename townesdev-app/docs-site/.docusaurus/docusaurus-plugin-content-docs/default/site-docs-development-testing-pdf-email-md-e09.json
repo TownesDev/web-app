@@ -1,0 +1,23 @@
+{
+  "id": "development/testing-pdf-email",
+  "title": "Testing Guide: PDF Reports & Email Incidents",
+  "description": "Prerequisites for Testing",
+  "source": "@site/../docs/development/testing-pdf-email.md",
+  "sourceDirName": "development",
+  "slug": "/development/testing-pdf-email",
+  "permalink": "/development/testing-pdf-email",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Performance Monitoring & Optimization Opportunities",
+    "permalink": "/development/performance-optimization"
+  },
+  "next": {
+    "title": "Guides",
+    "permalink": "/guides/"
+  }
+}

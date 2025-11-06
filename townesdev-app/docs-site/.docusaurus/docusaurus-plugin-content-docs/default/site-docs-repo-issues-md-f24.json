@@ -1,0 +1,23 @@
+{
+  "id": "repo-issues",
+  "title": "Repository Issues & Prioritized Tasks",
+  "description": "Date: 2025-10-31",
+  "source": "@site/../docs/repo-issues.md",
+  "sourceDirName": ".",
+  "slug": "/repo-issues",
+  "permalink": "/repo-issues",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Performance Monitoring & Optimization Opportunities",
+    "permalink": "/performance-optimization"
+  },
+  "next": {
+    "title": "deployment",
+    "permalink": "/setup/deployment"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "id": "EMAIL_INTEGRATION",
+  "title": "Email to Incident Integration",
+  "description": "---",
+  "source": "@site/../docs/EMAIL_INTEGRATION.md",
+  "sourceDirName": ".",
+  "slug": "/EMAIL_INTEGRATION",
+  "permalink": "/EMAIL_INTEGRATION",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {}
+}

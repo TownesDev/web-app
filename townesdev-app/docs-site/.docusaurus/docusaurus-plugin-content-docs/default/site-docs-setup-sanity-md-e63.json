@@ -1,0 +1,23 @@
+{
+  "id": "setup/sanity",
+  "title": "Sanity CMS Setup",
+  "description": "Overview",
+  "source": "@site/../docs/setup/sanity.md",
+  "sourceDirName": "setup",
+  "slug": "/setup/sanity",
+  "permalink": "/setup/sanity",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Local Development Setup",
+    "permalink": "/setup/local-development"
+  },
+  "next": {
+    "title": "Deploying the docs site to TSERVER (Windows)",
+    "permalink": "/setup/ts-server-deploy"
+  }
+}

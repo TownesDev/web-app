@@ -1,0 +1,23 @@
+{
+  "id": "architecture/multi-service",
+  "title": "Multi-Service Architecture (placeholder)",
+  "description": "Last updated: 2025-10-31",
+  "source": "@site/../docs/architecture/multi-service.md",
+  "sourceDirName": "architecture",
+  "slug": "/architecture/multi-service",
+  "permalink": "/architecture/multi-service",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Data Layer Architecture",
+    "permalink": "/architecture/data-layer"
+  },
+  "next": {
+    "title": "Architecture Overview",
+    "permalink": "/architecture/overview"
+  }
+}

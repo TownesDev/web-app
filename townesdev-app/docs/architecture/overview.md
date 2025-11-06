@@ -1,3 +1,10 @@
+---
+
+title: "Architecture Overview"
+slug: "/architecture/overview"
+
+---
+
 # Architecture Overview
 
 ## Introduction
@@ -33,7 +40,7 @@ TownesDev is a multi-tenant SaaS platform for digital service management, built 
 
 The application uses Next.js route groups for clean separation of concerns:
 
-```
+```bash
 src/app/
 ├── (public)/          # Marketing pages (/, /plans, /status)
 │   ├── page.tsx       # Homepage with pricing

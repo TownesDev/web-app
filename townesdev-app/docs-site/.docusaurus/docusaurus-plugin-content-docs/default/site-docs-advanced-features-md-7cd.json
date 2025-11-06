@@ -1,0 +1,26 @@
+{
+  "id": "advanced-features",
+  "title": "Advanced Features & Improvements (moved)",
+  "description": "This document has been moved into the development-guides folder as the canonical source. See docs/development-guides/advanced-features.md for the current version.",
+  "source": "@site/../docs/advanced-features.md",
+  "sourceDirName": ".",
+  "slug": "/_deprecated/advanced-features",
+  "permalink": "/_deprecated/advanced-features",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "title": "Advanced Features & Improvements (moved)",
+    "slug": "/_deprecated/advanced-features"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "TownesDev Documentation",
+    "permalink": "/"
+  },
+  "next": {
+    "title": "Stripe Webhooks Runbook",
+    "permalink": "/stripe-webhooks-runbook"
+  }
+}

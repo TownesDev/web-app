@@ -1,0 +1,25 @@
+{
+  "id": "development/advanced-features",
+  "title": "Advanced Features & Improvements",
+  "description": "🚀 Next-Level Features to Implement",
+  "source": "@site/../docs/development/advanced-features.md",
+  "sourceDirName": "development",
+  "slug": "/development/advanced-features",
+  "permalink": "/development/advanced-features",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "title": "Advanced Features & Improvements"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Development Guides",
+    "permalink": "/development/"
+  },
+  "next": {
+    "title": "AI Agent Guidelines for TownesDev",
+    "permalink": "/development/ai-agents"
+  }
+}

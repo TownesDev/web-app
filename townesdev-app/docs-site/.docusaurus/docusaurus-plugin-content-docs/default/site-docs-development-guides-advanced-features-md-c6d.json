@@ -1,0 +1,25 @@
+{
+  "id": "development-guides/advanced-features",
+  "title": "Advanced Features & Improvements",
+  "description": "🚀 Next-Level Features to Implement",
+  "source": "@site/../docs/development-guides/advanced-features.md",
+  "sourceDirName": "development-guides",
+  "slug": "/development-guides/advanced-features",
+  "permalink": "/development-guides/advanced-features",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "title": "Advanced Features & Improvements"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Development Guides",
+    "permalink": "/development-guides/"
+  },
+  "next": {
+    "title": "PDF Reports Generation",
+    "permalink": "/development-guides/pdf-reports"
+  }
+}

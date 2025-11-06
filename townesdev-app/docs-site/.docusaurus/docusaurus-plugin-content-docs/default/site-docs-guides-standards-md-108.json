@@ -1,0 +1,23 @@
+{
+  "id": "guides/standards",
+  "title": "standards",
+  "description": "",
+  "source": "@site/../docs/guides/standards.md",
+  "sourceDirName": "guides",
+  "slug": "/guides/standards",
+  "permalink": "/guides/standards",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "security",
+    "permalink": "/guides/security"
+  },
+  "next": {
+    "title": "Stripe Webhooks Runbook",
+    "permalink": "/guides/stripe-webhooks-runbook"
+  }
+}

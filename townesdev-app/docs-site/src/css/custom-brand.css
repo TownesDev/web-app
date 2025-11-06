@@ -1,0 +1,71 @@
+/* Brand-focused CSS for docs dark-mode link contrast */
+
+:root {
+  --ifm-color-primary: #1e2e3e; /* deep navy (brand primary) */
+  --td-accent: #d8dde2; /* cool gray accent used for navbar and subtle links */
+  --td-link-orange: #ff7a00; /* clickable link color in dark mode (orange) */
+}
+
+/* Force the design system primary color in dark mode so Docusaurus default
+   blue does not override our palette via :root variables in built CSS. */
+html[data-theme='dark'] {
+  --ifm-color-primary: #1e2e3e;
+}
+
+body {
+  padding: 8px;
+}
+
+/* Dark mode color rules:
+   - navbar links stay as a cool gray accent for consistency
+   - in-doc clickable links (markdown) use an orange for high contrast
+*/
+.theme-dark .navbar__link {
+  color: var(--td-accent) !important;
+}
+
+/* Markdown and inline links use the brand orange for visibility */
+.theme-dark .markdown a,
+html[data-theme='dark'] .markdown a,
+html[data-theme='dark'] .markdown p a,
+html[data-theme='dark'] .markdown li a,
+html[data-theme='dark'] .markdown span a {
+  /* Pick up inline and block links in documentation content */
+  color: var(--td-link-orange) !important;
+}
+
+.theme-dark .markdown a:hover {
+  color: #ffffff !important;
+  text-decoration: underline;
+}
+
+/* Light mode: keep brand primary for links */
+.theme-light a,
+.theme-light .navbar__link,
+.theme-light .markdown a {
+  color: var(--ifm-color-primary) !important;
+}
+
+/* Active / current page link styling (navbar, sidebar, and inline aria-current)
+   Use the brand orange so the active page matches front-page accents in both
+   light and dark themes. Using `aria-current` covers several navigation
+   implementations in Docusaurus (navbar, sidebar, menu links). */
+html[data-theme='dark'] .navbar__link--active,
+html[data-theme='dark'] .navbar__link[aria-current='page'],
+.theme-dark .navbar__link--active,
+.theme-dark .navbar__link[aria-current='page'],
+html[data-theme='dark'] a[aria-current='page'],
+.theme-dark a[aria-current='page'] {
+  color: var(--td-link-orange) !important;
+  font-weight: 600;
+}
+
+html[data-theme='light'] .navbar__link--active,
+html[data-theme='light'] .navbar__link[aria-current='page'],
+.theme-light .navbar__link--active,
+.theme-light .navbar__link[aria-current='page'],
+html[data-theme='light'] a[aria-current='page'],
+.theme-light a[aria-current='page'] {
+  color: var(--td-link-orange) !important;
+  font-weight: 600;
+}

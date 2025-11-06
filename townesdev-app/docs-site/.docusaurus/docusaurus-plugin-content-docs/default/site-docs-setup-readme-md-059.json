@@ -1,0 +1,26 @@
+{
+  "id": "setup/README",
+  "title": "Setup & Local Development",
+  "description": "This folder contains setup guides for running the platform locally, environment configuration, Sanity setup, and deployment notes for internal TSERVER hosting.",
+  "source": "@site/../docs/setup/README.md",
+  "sourceDirName": "setup",
+  "slug": "/setup",
+  "permalink": "/setup",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "title": "Setup & Local Development",
+    "slug": "/setup"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Accessibility",
+    "permalink": "/accessibility-testing"
+  },
+  "next": {
+    "title": "deployment",
+    "permalink": "/setup/deployment"
+  }
+}

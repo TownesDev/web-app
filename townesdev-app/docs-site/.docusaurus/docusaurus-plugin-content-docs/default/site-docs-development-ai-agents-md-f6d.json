@@ -1,0 +1,23 @@
+{
+  "id": "development/ai-agents",
+  "title": "AI Agent Guidelines for TownesDev",
+  "description": "Last Updated: November 4, 2025",
+  "source": "@site/../docs/development/ai-agents.md",
+  "sourceDirName": "development",
+  "slug": "/development/ai-agents",
+  "permalink": "/development/ai-agents",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Advanced Features & Improvements",
+    "permalink": "/development/advanced-features"
+  },
+  "next": {
+    "title": "Onboarding Implementation Status",
+    "permalink": "/development/onboarding-status"
+  }
+}

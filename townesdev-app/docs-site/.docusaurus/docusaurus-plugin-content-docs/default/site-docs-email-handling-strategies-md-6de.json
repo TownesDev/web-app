@@ -1,0 +1,23 @@
+{
+  "id": "email-handling-strategies",
+  "title": "email-handling-strategies",
+  "description": "This file has been consolidated. See email-integration.md (section \"Handling Strategies\") for the canonical guidance and recommended environment variables.",
+  "source": "@site/../docs/email-handling-strategies.md",
+  "sourceDirName": ".",
+  "slug": "/email-handling-strategies",
+  "permalink": "/email-handling-strategies",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Email to Incident Integration",
+    "permalink": "/email-integration"
+  },
+  "next": {
+    "title": "PDF Reports Generation",
+    "permalink": "/pdf-reports"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "id": "ADVANCED_FEATURES",
+  "title": "Advanced Features & Improvements",
+  "description": "🚀 Next-Level Features to Implement",
+  "source": "@site/../docs/ADVANCED_FEATURES.md",
+  "sourceDirName": ".",
+  "slug": "/ADVANCED_FEATURES",
+  "permalink": "/ADVANCED_FEATURES",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {}
+}

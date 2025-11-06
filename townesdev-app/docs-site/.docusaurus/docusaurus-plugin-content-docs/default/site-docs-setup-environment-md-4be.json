@@ -1,0 +1,23 @@
+{
+  "id": "setup/environment",
+  "title": "Environment Configuration",
+  "description": "Overview",
+  "source": "@site/../docs/setup/environment.md",
+  "sourceDirName": "setup",
+  "slug": "/setup/environment",
+  "permalink": "/setup/environment",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "deployment",
+    "permalink": "/setup/deployment"
+  },
+  "next": {
+    "title": "Local Development Setup",
+    "permalink": "/setup/local-development"
+  }
+}

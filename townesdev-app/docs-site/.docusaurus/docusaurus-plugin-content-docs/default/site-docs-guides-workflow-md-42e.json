@@ -1,0 +1,23 @@
+{
+  "id": "guides/workflow",
+  "title": "workflow",
+  "description": "",
+  "source": "@site/../docs/guides/workflow.md",
+  "sourceDirName": "guides",
+  "slug": "/guides/workflow",
+  "permalink": "/guides/workflow",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Testing Guide",
+    "permalink": "/guides/testing"
+  },
+  "next": {
+    "title": "Audit & Issues",
+    "permalink": "/audit/"
+  }
+}

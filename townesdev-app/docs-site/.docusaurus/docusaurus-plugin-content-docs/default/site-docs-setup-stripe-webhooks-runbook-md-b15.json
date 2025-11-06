@@ -1,0 +1,26 @@
+{
+  "id": "setup/stripe-webhooks-runbook",
+  "title": "Stripe Webhooks Runbook",
+  "description": "Purpose: increase reliability and observability of Stripe webhook handling. This runbook explains retry behavior, safe replay, alerting, and operational guidance.",
+  "source": "@site/../docs/setup/stripe-webhooks-runbook.md",
+  "sourceDirName": "setup",
+  "slug": "/setup/stripe-webhooks-runbook",
+  "permalink": "/setup/stripe-webhooks-runbook",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "title": "Stripe Webhooks Runbook",
+    "slug": "/setup/stripe-webhooks-runbook"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Sanity CMS Setup",
+    "permalink": "/setup/sanity"
+  },
+  "next": {
+    "title": "Deploying the docs site to TSERVER (Windows)",
+    "permalink": "/setup/ts-server-deploy"
+  }
+}

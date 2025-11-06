@@ -1,0 +1,23 @@
+{
+  "id": "pdf-reports",
+  "title": "PDF Reports Generation",
+  "description": "Overview",
+  "source": "@site/../docs/pdf-reports.md",
+  "sourceDirName": ".",
+  "slug": "/pdf-reports",
+  "permalink": "/pdf-reports",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "onboarding-plan",
+    "permalink": "/onboarding-plan"
+  },
+  "next": {
+    "title": "Performance Monitoring & Optimization Opportunities",
+    "permalink": "/performance-optimization"
+  }
+}

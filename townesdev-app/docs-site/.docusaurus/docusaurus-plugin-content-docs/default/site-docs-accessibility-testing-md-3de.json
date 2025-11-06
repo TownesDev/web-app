@@ -1,0 +1,26 @@
+{
+  "id": "accessibility-testing",
+  "title": "Accessibility Testing (moved)",
+  "description": "This content has been moved into docs/accessibility/README.md as the canonical copy for accessibility testing guidance. This placeholder preserves history while the canonical file lives in the accessibility folder.",
+  "source": "@site/../docs/accessibility-testing.md",
+  "sourceDirName": ".",
+  "slug": "/_deprecated/accessibility-testing",
+  "permalink": "/_deprecated/accessibility-testing",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "title": "Accessibility Testing (moved)",
+    "slug": "/_deprecated/accessibility-testing"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "TownesDev Documentation",
+    "permalink": "/"
+  },
+  "next": {
+    "title": "Advanced Features & Improvements (moved)",
+    "permalink": "/_deprecated/advanced-features"
+  }
+}

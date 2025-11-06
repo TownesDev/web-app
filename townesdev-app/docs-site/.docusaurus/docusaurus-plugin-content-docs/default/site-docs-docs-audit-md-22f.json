@@ -1,0 +1,23 @@
+{
+  "id": "docs-audit",
+  "title": "Documentation & Code Audit (snapshot)",
+  "description": "Date: 2025-10-31",
+  "source": "@site/../docs/docs-audit.md",
+  "sourceDirName": ".",
+  "slug": "/docs-audit",
+  "permalink": "/docs-audit",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "TownesDev Platform – Checkpoint Review",
+    "permalink": "/checkpoint-review"
+  },
+  "next": {
+    "title": "Email to Incident Integration",
+    "permalink": "/email-integration"
+  }
+}

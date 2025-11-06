@@ -1,0 +1,25 @@
+{
+  "id": "audit/README",
+  "title": "Audit & Issues",
+  "description": "Repository documentation audits, prioritized issues, and checkpoint reviews live here.",
+  "source": "@site/../docs/audit/README.md",
+  "sourceDirName": "audit",
+  "slug": "/audit/",
+  "permalink": "/audit/",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "title": "Audit & Issues"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "workflow",
+    "permalink": "/guides/workflow"
+  },
+  "next": {
+    "title": "TownesDev Documentation Audit & Cleanup Plan",
+    "permalink": "/audit/DOCS_AUDIT_COMPREHENSIVE"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "id": "architecture/route-groups",
+  "title": "Route Groups Architecture",
+  "description": "Overview",
+  "source": "@site/../docs/architecture/route-groups.md",
+  "sourceDirName": "architecture",
+  "slug": "/architecture/route-groups",
+  "permalink": "/architecture/route-groups",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "performance",
+    "permalink": "/architecture/performance"
+  },
+  "next": {
+    "title": "Accessibility",
+    "permalink": "/accessibility-testing"
+  }
+}

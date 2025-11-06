@@ -1,0 +1,19 @@
+{
+  "id": "client-onboarding-issues",
+  "title": "client-onboarding-issues",
+  "description": "This file was consolidated into onboarding-plan.md on 2025-10-31. Please see docs/onboarding-plan.md for the full, canonical onboarding implementation plan including schema changes, Stripe integration notes, and epics/acceptance criteria.",
+  "source": "@site/../docs/client-onboarding-issues.md",
+  "sourceDirName": ".",
+  "slug": "/client-onboarding-issues",
+  "permalink": "/client-onboarding-issues",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "TownesDev Platform – Checkpoint Review",
+    "permalink": "/checkpoint-review"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "id": "guides/portal-flow",
+  "title": "Client Portal User Guide",
+  "description": "Overview",
+  "source": "@site/../docs/guides/portal-flow.md",
+  "sourceDirName": "guides",
+  "slug": "/guides/portal-flow",
+  "permalink": "/guides/portal-flow",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Client Onboarding (Web App + Discord)",
+    "permalink": "/onboarding-plan"
+  },
+  "next": {
+    "title": "Sanity Preview Mode",
+    "permalink": "/guides/sanity-preview"
+  }
+}

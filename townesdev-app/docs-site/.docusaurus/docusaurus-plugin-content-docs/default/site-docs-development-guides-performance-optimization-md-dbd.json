@@ -1,0 +1,23 @@
+{
+  "id": "development-guides/performance-optimization",
+  "title": "Performance Monitoring & Optimization Opportunities",
+  "description": "🚀 Current Performance Wins",
+  "source": "@site/../docs/development-guides/performance-optimization.md",
+  "sourceDirName": "development-guides",
+  "slug": "/development-guides/performance-optimization",
+  "permalink": "/development-guides/performance-optimization",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "PDF Reports Generation",
+    "permalink": "/development-guides/pdf-reports"
+  },
+  "next": {
+    "title": "Testing Guide: PDF Reports & Email Incidents",
+    "permalink": "/development-guides/testing-guide"
+  }
+}

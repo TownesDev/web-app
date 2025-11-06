@@ -1,0 +1,23 @@
+{
+  "id": "checkpoint-review",
+  "title": "TownesDev Platform – Checkpoint Review",
+  "description": "Last reviewed: 2025-10-31",
+  "source": "@site/../docs/checkpoint-review.md",
+  "sourceDirName": ".",
+  "slug": "/checkpoint-review",
+  "permalink": "/checkpoint-review",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Route Groups Architecture",
+    "permalink": "/architecture/route-groups"
+  },
+  "next": {
+    "title": "Documentation & Code Audit (snapshot)",
+    "permalink": "/docs-audit"
+  }
+}

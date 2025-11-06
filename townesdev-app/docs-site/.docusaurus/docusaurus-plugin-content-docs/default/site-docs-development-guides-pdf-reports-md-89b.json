@@ -1,0 +1,23 @@
+{
+  "id": "development-guides/pdf-reports",
+  "title": "PDF Reports Generation",
+  "description": "Overview",
+  "source": "@site/../docs/development-guides/pdf-reports.md",
+  "sourceDirName": "development-guides",
+  "slug": "/development-guides/pdf-reports",
+  "permalink": "/development-guides/pdf-reports",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Advanced Features & Improvements",
+    "permalink": "/development-guides/advanced-features"
+  },
+  "next": {
+    "title": "Performance Monitoring & Optimization Opportunities",
+    "permalink": "/development-guides/performance-optimization"
+  }
+}
