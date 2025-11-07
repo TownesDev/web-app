@@ -101,6 +101,7 @@ export function PricingCard({ tier }: PricingCardProps) {
       <Link
         href="/contact"
         className="block w-full text-center bg-nile-blue-600 hover:bg-nile-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+        aria-label={`Get started with ${tier.name} plan`}
       >
         Get Started
       </Link>

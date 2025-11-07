@@ -147,7 +147,7 @@ export default function PricingPage() {
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Page Header */}
-        <div className="text-center mb-16">
+        <header className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-nile-blue-900 mb-4">
             Simple, Transparent Pricing
           </h1>
@@ -155,7 +155,7 @@ export default function PricingPage() {
             Choose the perfect plan for your needs. All plans include hosting,
             maintenance, and ongoing support. No hidden fees.
           </p>
-        </div>
+        </header>
 
         {/* Small Businesses Section */}
         <PricingSegment
@@ -179,7 +179,7 @@ export default function PricingPage() {
         />
 
         {/* Footer CTA */}
-        <div className="text-center mt-16 p-8 bg-white rounded-lg shadow-md">
+        <aside className="text-center mt-16 p-8 bg-white rounded-lg shadow-md">
           <h2 className="text-2xl font-bold text-nile-blue-900 mb-4">
             Need a custom solution?
           </h2>
@@ -190,10 +190,11 @@ export default function PricingPage() {
           <a
             href="/contact"
             className="inline-block bg-sandy-brown-600 hover:bg-sandy-brown-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors"
+            aria-label="Contact us for custom pricing solutions"
           >
             Contact Us
           </a>
-        </div>
+        </aside>
       </div>
     </div>
   )
