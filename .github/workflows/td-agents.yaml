@@ -1,0 +1,17 @@
+name: TownesDev Agent Workflow
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  build:
+    name: TownesDev Runner Job
+    runs-on: [self-hosted, td-agent-01, td-agent-02]
+
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Runner picked up job from Copilot Agent on $(hostname)"
