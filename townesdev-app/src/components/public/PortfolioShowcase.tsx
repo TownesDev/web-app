@@ -107,7 +107,6 @@ export function PortfolioShowcase() {
 
                 <Link
                   href={example.url}
-                  target="_blank"
                   className="inline-flex items-center gap-2 bg-nile-blue-600 hover:bg-nile-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
                 >
                   View Live Demo
