@@ -44,11 +44,82 @@ export default async function PlansPage() {
             customization.
           </p>
         </div>
-        <PlansPicker
-          basePlans={basePlans}
-          addOnPlans={addOnPlans}
-          oneTimePlans={oneTimePlans}
-        />
+
+        {/* Market Segment Navigation */}
+        <div className="mb-12 flex flex-wrap justify-center gap-4">
+          <a
+            href="#small-business"
+            className="px-6 py-3 bg-white border-2 border-nile-blue-600 text-nile-blue-600 rounded-lg font-semibold hover:bg-nile-blue-50 transition-colors"
+          >
+            Small Business Plans
+          </a>
+          <a
+            href="#discord"
+            className="px-6 py-3 bg-white border-2 border-nile-blue-600 text-nile-blue-600 rounded-lg font-semibold hover:bg-nile-blue-50 transition-colors"
+          >
+            Discord Community Plans
+          </a>
+          <a
+            href="#musicians"
+            className="px-6 py-3 bg-white border-2 border-nile-blue-600 text-nile-blue-600 rounded-lg font-semibold hover:bg-nile-blue-50 transition-colors"
+          >
+            Musician Plans
+          </a>
+        </div>
+
+        {/* Small Business Section */}
+        <div id="small-business" className="mb-16 scroll-mt-4">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-nile-blue-900 mb-2">
+              Small Business Plans
+            </h2>
+            <p className="text-gray-600">
+              Professional websites and digital solutions to help your business
+              grow online
+            </p>
+          </div>
+          <PlansPicker
+            basePlans={basePlans}
+            addOnPlans={addOnPlans}
+            oneTimePlans={oneTimePlans}
+          />
+        </div>
+
+        {/* Discord Communities Section */}
+        <div id="discord" className="mb-16 scroll-mt-4">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-nile-blue-900 mb-2">
+              Discord Community Plans
+            </h2>
+            <p className="text-gray-600">
+              Custom Discord bots and automation to engage and manage your
+              community
+            </p>
+          </div>
+          <PlansPicker
+            basePlans={basePlans}
+            addOnPlans={addOnPlans}
+            oneTimePlans={oneTimePlans}
+          />
+        </div>
+
+        {/* Musicians Section */}
+        <div id="musicians" className="mb-16 scroll-mt-4">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-nile-blue-900 mb-2">
+              Musician Plans
+            </h2>
+            <p className="text-gray-600">
+              Beautiful websites and tools to showcase your music and connect
+              with fans
+            </p>
+          </div>
+          <PlansPicker
+            basePlans={basePlans}
+            addOnPlans={addOnPlans}
+            oneTimePlans={oneTimePlans}
+          />
+        </div>
       </div>
     </div>
   )
