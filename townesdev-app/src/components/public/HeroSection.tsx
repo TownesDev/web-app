@@ -9,10 +9,10 @@ interface HeroSectionProps {
 export function HeroSection({ content }: HeroSectionProps) {
   // Fallback hero content with lighthouse logo
   const fallbackContent: HeroContent = {
-    tagline: 'Code. Systems. Foundations.',
+    tagline: 'Quality digital services for businesses, communities, and artists',
     headline: 'TOWNESDEV',
     subheadline:
-      'Expert software engineering for Discord bots, automation systems, and scalable applications.',
+      'Websites, Discord bots, and software built by people who care',
     logoLight: {
       asset: { url: '/townesdev_logo_sub_light.svg' },
       alt: 'TownesDev Light Logo',
@@ -22,10 +22,10 @@ export function HeroSection({ content }: HeroSectionProps) {
       alt: 'TownesDev Dark Logo',
     },
     backgroundGradient: 'gradient-nile',
-    primaryCtaText: 'Start Your Project',
-    primaryCtaUrl: '/contact',
-    secondaryCtaText: 'View Plans',
-    secondaryCtaUrl: '/plans',
+    primaryCtaText: 'View Pricing',
+    primaryCtaUrl: '/plans',
+    secondaryCtaText: 'Contact Us',
+    secondaryCtaUrl: '/contact',
     featuredMetrics: [
       {
         label: 'Years Experience',

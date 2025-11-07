@@ -1,4 +1,5 @@
 import { HeroSection } from '../../components/public/HeroSection'
+import { SegmentShowcase } from '../../components/public/SegmentShowcase'
 import { ServiceOfferings } from '../../components/public/ServiceOfferings'
 import { TestimonialsSection } from '../../components/public/TestimonialsSection'
 import { AboutMeSection } from '../../components/public/AboutMeSection'
@@ -30,6 +31,9 @@ export default async function HomePage() {
         <main className="min-h-screen">
           <section id="home">
             <HeroSection content={landingPageData?.hero} />
+          </section>
+          <section id="segments">
+            <SegmentShowcase />
           </section>
           <section id="services" className="py-16">
             <ServiceOfferings
@@ -79,6 +83,9 @@ export default async function HomePage() {
         <main className="min-h-screen">
           <section id="home">
             <HeroSection />
+          </section>
+          <section id="segments">
+            <SegmentShowcase />
           </section>
           <section id="services" className="py-16">
             <ServiceOfferings services={[]} />
