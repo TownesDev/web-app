@@ -4,6 +4,7 @@ import { ServiceOfferings } from '../../components/public/ServiceOfferings'
 import { TestimonialsSection } from '../../components/public/TestimonialsSection'
 import { AboutMeSection } from '../../components/public/AboutMeSection'
 import { ContactSection } from '../../components/public/ContactSection'
+import { PortfolioShowcase } from '../../components/public/PortfolioShowcase'
 import { PlanCard } from '../../components/PlanCard'
 import { runPublicQuery } from '../../lib/public/client'
 import { qLandingPageContent, qPlans } from '../../sanity/lib/queries'
@@ -68,6 +69,9 @@ export default async function HomePage() {
               testimonials={landingPageData?.testimonials || []}
             />
           </section>
+          <section>
+            <PortfolioShowcase />
+          </section>
           <section id="contact">
             <ContactSection contactInfo={landingPageData?.contact} />
           </section>
@@ -95,6 +99,9 @@ export default async function HomePage() {
           </section>
           <section className="py-16">
             <TestimonialsSection testimonials={[]} />
+          </section>
+          <section>
+            <PortfolioShowcase />
           </section>
           <section id="contact">
             <ContactSection />

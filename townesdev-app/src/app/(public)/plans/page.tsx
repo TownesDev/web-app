@@ -2,6 +2,7 @@ import { runQueryNoCache } from '@/lib/client'
 import { qPlans } from '@/sanity/lib/queries'
 import { draftMode } from 'next/headers'
 import { PlansPicker } from '@/components/public/PlansPicker'
+import { PortfolioShowcase } from '@/components/public/PortfolioShowcase'
 
 interface Plan {
   _id: string
@@ -116,6 +117,9 @@ export default async function PlansPage() {
           </div>
         ))}
       </div>
+      
+      {/* Portfolio Examples Section */}
+      <PortfolioShowcase />
     </div>
   )
 }
