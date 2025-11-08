@@ -13,6 +13,7 @@ import {
 } from '@/lib/entitlements'
 import { runAdminQuery } from '@/lib/admin/client'
 import { qPlanFeatureMappings } from '@/sanity/lib/queries'
+import { ensureInvoiceForSubscription } from '@/lib/invoices'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-09-30.clover',
@@ -110,8 +111,9 @@ export async function POST(request: NextRequest) {
         const lockExpires = doc.lockExpiresAt
           ? new Date(doc.lockExpiresAt)
           : null
+        const ownsLock = doc.processingLockOwner === correlationId
 
-        if (lockExpires && lockExpires > now) {
+        if (!ownsLock && lockExpires && lockExpires > now) {
           // Another worker owns the lock and it's still valid — short-circuit.
           logInfo('webhook.duplicate_suppressed', {
             eventId: event.id,
@@ -130,24 +132,26 @@ export async function POST(request: NextRequest) {
           const newLockExpires = new Date(
             Date.now() + 15 * 60 * 1000
           ).toISOString()
-          await sanityWrite.mutate([
-            {
-              patch: {
-                id: stripeEventDocId,
-                set: {
-                  processingLockOwner: correlationId,
-                  lockExpiresAt: newLockExpires,
-                  correlationId,
+          if (!ownsLock) {
+            await sanityWrite.mutate([
+              {
+                patch: {
+                  id: stripeEventDocId,
+                  set: {
+                    processingLockOwner: correlationId,
+                    lockExpiresAt: newLockExpires,
+                    correlationId,
+                  },
                 },
               },
-            },
-          ])
-          logInfo('webhook.lock_claimed', {
-            eventId: event.id,
-            docId: stripeEventDocId,
-            newLockExpires,
-            correlationId,
-          })
+            ])
+            logInfo('webhook.lock_claimed', {
+              eventId: event.id,
+              docId: stripeEventDocId,
+              newLockExpires,
+              correlationId,
+            })
+          }
         } catch (claimErr) {
           logError('webhook.lock_claim_failed', {
             error: String(claimErr),
@@ -796,6 +800,16 @@ async function handlePlanSubscription(session: Stripe.Checkout.Session) {
         },
       },
     ])
+
+    try {
+      await ensureInvoiceForSubscription({
+        clientId,
+        planName: plan.name || 'Selected Plan',
+        subscriptionId: subscription.id,
+      })
+    } catch (invoiceError) {
+      console.warn('Invoice creation failed (non-fatal):', invoiceError)
+    }
 
     // Send welcome email to client
     try {

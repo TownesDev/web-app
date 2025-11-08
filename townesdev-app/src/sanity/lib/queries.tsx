@@ -157,6 +157,7 @@ export const qPlans = /* groq */ `
     category,
     interval,
     visibility,
+    marketSegment,
     stripeProductId,
     stripePriceId,
     hoursIncluded
