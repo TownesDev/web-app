@@ -19,6 +19,22 @@ export const plan: SchemaTypeDefinition = {
       description: 'Classify plans as base, add-on, or one-time purchase',
     },
     {
+      name: 'marketSegment',
+      title: 'Market Segment',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Small Business', value: 'small_business' },
+          { title: 'Discord Bot', value: 'discord_bot' },
+          { title: 'Musician', value: 'musician' },
+          { title: 'General', value: 'general' },
+        ],
+      },
+      initialValue: 'general',
+      description: 'Primary audience for this plan (used for catalog grouping)',
+      validation: (Rule) => Rule.required(),
+    },
+    {
       name: 'interval',
       title: 'Billing Interval',
       type: 'string',
