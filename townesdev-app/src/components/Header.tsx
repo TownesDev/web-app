@@ -80,14 +80,6 @@ export default function Header({ variant }: HeaderProps) {
               </li>
               <li>
                 <Link
-                  href="/pricing"
-                  className="text-nile-blue-100 hover:text-white text-sm font-medium"
-                >
-                  Pricing
-                </Link>
-              </li>
-              <li>
-                <Link
                   href="/#contact"
                   className="text-nile-blue-100 hover:text-white text-sm font-medium"
                 >
