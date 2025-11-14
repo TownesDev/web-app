@@ -55,7 +55,8 @@ export async function middleware(request: NextRequest) {
 
   // Onboarding/billing gating for portal routes, with path exceptions
   if (pathname.startsWith('/app')) {
-    const exemptPaths = ['/app/onboarding', '/app/plans']
+    // Allow access to onboarding flow without subscription check
+    const exemptPaths = ['/app/onboarding']
     const isExempt = exemptPaths.some((p) => pathname.startsWith(p))
 
     if (!isExempt) {
@@ -86,16 +87,19 @@ export async function middleware(request: NextRequest) {
               }
             }
             const client = json.result
+            // If client doesn't exist or onboarding not completed, redirect to onboarding
             if (!client || client.onboardingStatus !== 'completed') {
               return NextResponse.redirect(
                 new URL('/app/onboarding', request.url)
               )
             }
+            // If onboarding is complete but no active subscription, redirect to pricing
+            // Only redirect if hasActiveSubscription is explicitly false (graceful degradation)
             if (
               client.onboardingStatus === 'completed' &&
-              !client.hasActiveSubscription
+              client.hasActiveSubscription === false
             ) {
-              return NextResponse.redirect(new URL('/app/plans', request.url))
+              return NextResponse.redirect(new URL('/pricing', request.url))
             }
           }
         }
