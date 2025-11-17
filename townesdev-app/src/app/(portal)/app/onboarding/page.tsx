@@ -2,8 +2,6 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { z } from 'zod'
-import { runPublicQuery } from '@/lib/public/client'
-import { qPlans } from '@/sanity/lib/queries'
 
 const BRAND_FONTS = ['Inter', 'Space Grotesk', 'JetBrains Mono'] as const
 
@@ -678,10 +676,14 @@ export default function OnboardingPage() {
 
     ;(async () => {
       try {
-        const result = await runPublicQuery(qPlans)
+        // Fetch products from Stripe via API route
+        const response = await fetch('/api/products')
+        if (!response.ok) throw new Error('Failed to fetch products')
+        
+        const { products } = await response.json()
         if (cancelled) return
 
-        if (!Array.isArray(result)) {
+        if (!Array.isArray(products)) {
           setPlanCatalog(
             withFallbackPlans({
               base: [],
@@ -692,7 +694,7 @@ export default function OnboardingPage() {
           return
         }
 
-        const normalized = result
+        const normalized = products
           .filter(
             (plan): plan is Record<string, unknown> =>
               typeof plan === 'object' && plan !== null
@@ -701,7 +703,8 @@ export default function OnboardingPage() {
           .filter((plan) => plan._id.length > 0)
 
         setPlanCatalog(withFallbackPlans(groupPlansByCategory(normalized)))
-      } catch {
+      } catch (error) {
+        console.error('Error fetching products:', error)
         if (!cancelled) {
           setPlanCatalog(
             withFallbackPlans({
