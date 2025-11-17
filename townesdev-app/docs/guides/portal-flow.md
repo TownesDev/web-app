@@ -23,6 +23,17 @@ The TownesDev Client Portal provides a comprehensive dashboard for managing your
    - Two-factor authentication setup (recommended)
    - Dashboard overview with personalized welcome
 
+### Subscription Access Gating
+
+The portal automatically manages access based on your subscription status:
+
+- **Trial Mode**: During onboarding or without an active subscription, you'll see a trial banner prompting you to subscribe
+- **Full Access**: With an active subscription, full portal features are available
+- **Onboarding Exemption**: Complete the onboarding process without requiring an active subscription
+- **Graceful Handling**: If subscription status can't be determined, access is granted to prevent lockouts
+
+**Note**: You can complete onboarding and setup even without a subscription. You'll be redirected to the pricing page after onboarding is complete if you don't have an active subscription.
+
 ## Portal Navigation
 
 ### Main Dashboard (`/app`)
