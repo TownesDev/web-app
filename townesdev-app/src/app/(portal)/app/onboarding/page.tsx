@@ -24,6 +24,9 @@ type WizardData = {
     webApp: boolean
     discord: boolean
   }
+  pricing: {
+    selectedPlan?: string
+  }
   web: { pages: string[]; domainIntent: string; links: Record<string, string> }
   discord: { botName: string; intents: string[]; features: string[] }
 }
@@ -37,6 +40,9 @@ const DEFAULT_DATA: WizardData = {
     oneTime: [],
     webApp: true,
     discord: false,
+  },
+  pricing: {
+    selectedPlan: undefined,
   },
   web: { pages: ['home', 'about', 'contact'], domainIntent: '', links: {} },
   discord: { botName: '', intents: [], features: [] },
@@ -247,6 +253,7 @@ type StepLabel =
   | 'Basics'
   | 'Brand'
   | 'Services'
+  | 'Pricing'
   | 'Web App'
   | 'Discord'
   | 'Review'
@@ -338,6 +345,13 @@ const WEB_SCHEMA = z.object({
     .min(1, 'Pick a preset so we know which pages to scaffold.'),
 })
 
+const PRICING_SCHEMA = z.object({
+  selectedPlan: z
+    .string()
+    .trim()
+    .min(1, 'Please select a plan to continue.'),
+})
+
 type BasicsTouched = Record<keyof WizardData['basics'], boolean>
 
 type BrandTouched = Record<keyof WizardData['brand'], boolean>
@@ -351,6 +365,10 @@ type ServicesErrorKey = keyof WizardData['services'] | 'serviceSelection'
 
 type WebTouched = {
   domainIntent: boolean
+}
+
+type PricingTouched = {
+  selectedPlan: boolean
 }
 
 const INITIAL_BASICS_TOUCHED: BasicsTouched = {
@@ -369,6 +387,10 @@ const INITIAL_BRAND_TOUCHED: BrandTouched = {
 const INITIAL_SERVICES_TOUCHED: ServicesTouched = {
   basePlanId: false,
   serviceSelection: false,
+}
+
+const INITIAL_PRICING_TOUCHED: PricingTouched = {
+  selectedPlan: false,
 }
 
 const INITIAL_WEB_TOUCHED: WebTouched = {
@@ -469,7 +491,7 @@ const formatHoursIncluded = (hours: number | null) => {
 type StepOrderInput = Pick<WizardData['services'], 'webApp' | 'discord'>
 
 const computeStepOrder = ({ webApp, discord }: StepOrderInput): StepLabel[] => {
-  const order: StepLabel[] = ['Basics', 'Brand', 'Services']
+  const order: StepLabel[] = ['Basics', 'Brand', 'Services', 'Pricing']
   if (webApp) order.push('Web App')
   if (discord) order.push('Discord')
   order.push('Review')
@@ -480,6 +502,7 @@ const mergeWizardData = (incoming: Partial<WizardData>): WizardData => ({
   basics: { ...DEFAULT_DATA.basics, ...(incoming.basics ?? {}) },
   brand: { ...DEFAULT_DATA.brand, ...(incoming.brand ?? {}) },
   services: { ...DEFAULT_DATA.services, ...(incoming.services ?? {}) },
+  pricing: { ...DEFAULT_DATA.pricing, ...(incoming.pricing ?? {}) },
   web: { ...DEFAULT_DATA.web, ...(incoming.web ?? {}) },
   discord: { ...DEFAULT_DATA.discord, ...(incoming.discord ?? {}) },
 })
@@ -504,6 +527,9 @@ export default function OnboardingPage() {
   )
   const [servicesTouched, setServicesTouched] = useState<ServicesTouched>(
     INITIAL_SERVICES_TOUCHED
+  )
+  const [pricingTouched, setPricingTouched] = useState<PricingTouched>(
+    INITIAL_PRICING_TOUCHED
   )
   const [webTouched, setWebTouched] = useState<WebTouched>(INITIAL_WEB_TOUCHED)
   const [discordTouched, setDiscordTouched] = useState(false)
@@ -755,6 +781,22 @@ export default function OnboardingPage() {
     string[] | undefined
   >
 
+  const pricingValidation = useMemo(
+    () =>
+      PRICING_SCHEMA.safeParse({
+        selectedPlan: data.pricing.selectedPlan ?? '',
+      }),
+    [data.pricing.selectedPlan]
+  )
+
+  const pricingErrors = useMemo(() => {
+    if (pricingValidation.success) return {}
+    return pricingValidation.error.formErrors.fieldErrors
+  }, [pricingValidation]) as Record<
+    keyof WizardData['pricing'],
+    string[] | undefined
+  >
+
   const serviceSelectionValue =
     data.services.webApp && data.services.discord
       ? 'both'
@@ -828,6 +870,10 @@ export default function OnboardingPage() {
     .filter(Boolean)
     .join(' ')
 
+  const pricingError =
+    (pricingTouched.selectedPlan || showStepErrors) &&
+    pricingErrors.selectedPlan?.[0]
+
   const canGoNext = useMemo(() => {
     switch (currentStep) {
       case 'Basics':
@@ -836,6 +882,8 @@ export default function OnboardingPage() {
         return brandValidation.success
       case 'Services':
         return servicesValidation.success
+      case 'Pricing':
+        return pricingValidation.success
       case 'Web App':
         return webValidation.success
       case 'Discord':
@@ -849,6 +897,7 @@ export default function OnboardingPage() {
     basicsValidation.success,
     brandValidation.success,
     servicesValidation.success,
+    pricingValidation.success,
     webValidation.success,
     currentStep,
     data.services.discord,
@@ -885,6 +934,15 @@ export default function OnboardingPage() {
           setServicesTouched({
             basePlanId: true,
             serviceSelection: true,
+          })
+          setShowStepErrors(true)
+          return
+        }
+        break
+      case 'Pricing':
+        if (!pricingValidation.success) {
+          setPricingTouched({
+            selectedPlan: true,
           })
           setShowStepErrors(true)
           return
@@ -1670,6 +1728,145 @@ export default function OnboardingPage() {
           </div>
         )}
 
+        {currentStep === 'Pricing' && (
+          <div className="space-y-5">
+            <p className="text-sm text-gray-600">
+              Select the tier that best fits your needs. We&rsquo;ll set up your
+              billing during checkout.
+            </p>
+            <div>
+              <label
+                id="onboarding-pricing-label"
+                className="block text-sm font-medium text-gray-800 mb-3"
+              >
+                Available Tiers
+              </label>
+              <div className="grid gap-4">
+                {planCatalog.addon
+                  .filter((plan) => {
+                    const applies = planAppliesTo(plan)
+                    // Filter based on selected services
+                    if (data.services.webApp && data.services.discord) {
+                      // Both selected: show all
+                      return true
+                    }
+                    if (data.services.webApp) {
+                      // Only web: show web-related plans
+                      return applies.web
+                    }
+                    if (data.services.discord) {
+                      // Only discord: show discord-related plans
+                      return applies.discord
+                    }
+                    return false
+                  })
+                  .map((plan) => {
+                    const isSelected = data.pricing.selectedPlan === plan._id
+                    return (
+                      <button
+                        key={plan._id}
+                        type="button"
+                        onClick={() => {
+                          setPricingTouched({ selectedPlan: true })
+                          setData((d) => ({
+                            ...d,
+                            pricing: { selectedPlan: plan._id },
+                          }))
+                        }}
+                        className={`text-left rounded-lg border-2 p-4 transition-all ${
+                          isSelected
+                            ? 'border-nile-blue-600 bg-nile-blue-50'
+                            : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                        aria-pressed={isSelected}
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <div
+                                className={`flex h-5 w-5 items-center justify-center rounded-full border-2 ${
+                                  isSelected
+                                    ? 'border-nile-blue-600 bg-nile-blue-600'
+                                    : 'border-gray-300'
+                                }`}
+                              >
+                                {isSelected && (
+                                  <svg
+                                    className="h-3 w-3 text-white"
+                                    fill="currentColor"
+                                    viewBox="0 0 12 12"
+                                  >
+                                    <path d="M10 3L4.5 8.5L2 6" />
+                                  </svg>
+                                )}
+                              </div>
+                              <h3 className="text-lg font-semibold text-gray-900">
+                                {plan.name}
+                              </h3>
+                            </div>
+                            {plan.description && (
+                              <p className="mt-2 text-sm text-gray-600">
+                                {plan.description}
+                              </p>
+                            )}
+                            {plan.features.length > 0 && (
+                              <ul className="mt-3 space-y-1">
+                                {plan.features.map((feature) => (
+                                  <li
+                                    key={feature}
+                                    className="flex items-start text-sm text-gray-700"
+                                  >
+                                    <svg
+                                      className="mr-2 mt-0.5 h-4 w-4 flex-shrink-0 text-green-500"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M5 13l4 4L19 7"
+                                      />
+                                    </svg>
+                                    <span>{feature}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                          </div>
+                          <div className="text-right">
+                            <div className="text-2xl font-bold text-nile-blue-700">
+                              {plan.price || 'Contact us'}
+                            </div>
+                            {plan.interval && (
+                              <div className="text-sm text-gray-500">
+                                {formatIntervalLabel(plan.interval)}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </button>
+                    )
+                  })}
+              </div>
+              {pricingError && (
+                <p
+                  id="onboarding-pricing-error"
+                  className="mt-2 text-sm text-red-600"
+                >
+                  {pricingError}
+                </p>
+              )}
+            </div>
+            <div className="pt-2">
+              <p className="text-xs text-gray-500">
+                You can change your plan later from the billing settings.
+              </p>
+            </div>
+          </div>
+        )}
+
         {currentStep === 'Web App' && (
           <div className="space-y-5">
             <p className="text-sm text-gray-600">
@@ -1943,6 +2140,7 @@ export default function OnboardingPage() {
             setBasicsTouched(INITIAL_BASICS_TOUCHED)
             setBrandTouched(INITIAL_BRAND_TOUCHED)
             setServicesTouched(INITIAL_SERVICES_TOUCHED)
+            setPricingTouched(INITIAL_PRICING_TOUCHED)
             setWebTouched(INITIAL_WEB_TOUCHED)
             setDiscordTouched(false)
             setShowStepErrors(false)
