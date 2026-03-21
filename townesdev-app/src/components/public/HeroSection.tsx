@@ -9,7 +9,8 @@ interface HeroSectionProps {
 export function HeroSection({ content }: HeroSectionProps) {
   // Fallback hero content with lighthouse logo
   const fallbackContent: HeroContent = {
-    tagline: 'Quality digital services for businesses, communities, and artists',
+    tagline:
+      'Quality digital services for businesses, communities, and artists',
     headline: 'TOWNESDEV',
     subheadline:
       'Websites, Discord bots, and software built by people who care',

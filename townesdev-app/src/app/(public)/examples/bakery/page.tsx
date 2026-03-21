@@ -209,8 +209,8 @@ export default function BakeryPage() {
               delicious cakes tailored to your vision.
             </p>
             <p className="text-gray-700 mb-6">
-              <strong>Starting at $45</strong> - Contact us at least 48 hours
-              in advance for custom orders.
+              <strong>Starting at $45</strong> - Contact us at least 48 hours in
+              advance for custom orders.
             </p>
             <a
               href="#contact"
@@ -282,9 +282,7 @@ export default function BakeryPage() {
                 </div>
 
                 <div className="mt-8">
-                  <p className="font-semibold text-gray-900 mb-3">
-                    Follow Us
-                  </p>
+                  <p className="font-semibold text-gray-900 mb-3">Follow Us</p>
                   <div className="flex gap-4">
                     <a
                       href="#"
@@ -311,9 +309,7 @@ export default function BakeryPage() {
               <div className="aspect-video bg-gradient-to-br from-amber-100 to-orange-100 rounded-lg shadow-lg flex items-center justify-center border-2 border-amber-200">
                 <div className="text-center p-8">
                   <MapPin className="mx-auto mb-4 text-amber-600" size={48} />
-                  <p className="text-amber-800 font-semibold">
-                    Map Location
-                  </p>
+                  <p className="text-amber-800 font-semibold">Map Location</p>
                   <p className="text-amber-700 text-sm">
                     123 Main Street, Downtown District
                   </p>

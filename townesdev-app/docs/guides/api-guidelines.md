@@ -1,10 +1,7 @@
 ---
-
-title: "API Guidelines"
-slug: "/api-guidelines"
-
+title: 'API Guidelines'
+slug: '/api-guidelines'
 ---
-
 
 ```markdown
 # API Guidelines (placeholder)

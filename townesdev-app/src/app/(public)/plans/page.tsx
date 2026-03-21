@@ -117,7 +117,7 @@ export default async function PlansPage() {
           </div>
         ))}
       </div>
-      
+
       {/* Portfolio Examples Section */}
       <PortfolioShowcase />
     </div>

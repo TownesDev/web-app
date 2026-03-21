@@ -32,6 +32,7 @@ Visit `/examples/bakery` to see the live demo.
 ## Business Type
 
 Perfect for:
+
 - Bakeries
 - Cafes
 - Restaurants

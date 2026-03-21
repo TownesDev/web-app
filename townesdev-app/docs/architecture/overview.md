@@ -1,8 +1,6 @@
 ---
-
-title: "Architecture Overview"
-slug: "/architecture/overview"
-
+title: 'Architecture Overview'
+slug: '/architecture/overview'
 ---
 
 # Architecture Overview

@@ -33,6 +33,7 @@ Visit `/examples/musician` to see the live demo.
 ## Business Type
 
 Perfect for:
+
 - Musicians (solo artists)
 - Bands
 - DJs

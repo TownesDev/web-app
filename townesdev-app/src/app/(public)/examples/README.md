@@ -5,10 +5,12 @@ This directory contains live portfolio example websites demonstrating TownesDev'
 ## Examples
 
 ### 1. Sweet Sunrise Bakery (`/examples/bakery`)
+
 **Type:** Small Business Website  
 **Route:** `/examples/bakery`
 
 A professional website for a fictional artisan bakery featuring:
+
 - Warm, inviting design with amber/orange color scheme
 - Multi-section layout (Home, About, Menu, Contact)
 - Menu showcase with organized categories (breads, pastries, cakes)
@@ -19,10 +21,12 @@ A professional website for a fictional artisan bakery featuring:
 **Perfect for:** Bakeries, cafes, restaurants, catering services, food trucks
 
 ### 2. The Midnight Collective (`/examples/musician`)
+
 **Type:** Musician/Band Website  
 **Route:** `/examples/musician`
 
 A modern, engaging website for a fictional alternative rock band featuring:
+
 - Dark theme with purple/pink gradients
 - Music player mockups (Spotify, Apple Music, Bandcamp)
 - Tour dates section with ticket availability
@@ -35,6 +39,7 @@ A modern, engaging website for a fictional alternative rock band featuring:
 ## Implementation
 
 All examples are built using:
+
 - **Next.js 15** - React framework with server-side rendering
 - **TypeScript** - Type-safe code
 - **Tailwind CSS** - Utility-first CSS framework
@@ -44,18 +49,22 @@ All examples are built using:
 ## Integration
 
 ### Homepage Integration
+
 The `PortfolioShowcase` component displays these examples on the main TownesDev homepage between the Testimonials and Contact sections.
 
 ### Pricing Page Integration
+
 The portfolio examples are also showcased at the bottom of the `/plans` page, allowing potential clients to see live demos before choosing a plan.
 
 ## Usage
 
 ### Viewing Examples
+
 1. Navigate to `/examples/bakery` for the bakery demo
 2. Navigate to `/examples/musician` for the band demo
 
 ### PortfolioShowcase Component
+
 Import and use the portfolio showcase component:
 
 ```tsx
@@ -71,6 +80,7 @@ export default function Page() {
 ```
 
 The component automatically displays both examples with:
+
 - Live demo links
 - Feature lists
 - Type badges
@@ -92,6 +102,7 @@ examples/
 ## Design Principles
 
 All examples follow these principles:
+
 1. **Professional Quality** - Production-ready design and code
 2. **Mobile-First** - Responsive on all devices
 3. **Performance** - Optimized for fast loading
@@ -113,6 +124,7 @@ To add a new portfolio example:
 ## Marketing Value
 
 These examples serve as:
+
 - **Social Proof** - Demonstrate capabilities to potential clients
 - **Inspiration** - Help clients envision their own website
 - **Trust Building** - Show real, functional examples

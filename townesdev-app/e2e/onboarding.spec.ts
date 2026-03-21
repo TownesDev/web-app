@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test'
 
 test.describe('self-service onboarding and portal gating', () => {
-  test('get-started flow reaches review with valid inputs', async ({ page }) => {
+  test('get-started flow reaches review with valid inputs', async ({
+    page,
+  }) => {
     await page.route('**/api/auth/session', async (route) => {
       await route.fulfill({
         status: 200,
@@ -157,9 +159,7 @@ test.describe('self-service onboarding and portal gating', () => {
     await page.getByRole('button', { name: /Small Business Website/i }).click()
     await page.getByRole('button', { name: 'Continue' }).click()
 
-    await page
-      .getByRole('button', { name: /Small Business Starter/i })
-      .click()
+    await page.getByRole('button', { name: /Small Business Starter/i }).click()
     await page.getByRole('button', { name: 'Continue' }).click()
 
     await page.getByRole('button', { name: /Complete Setup/i }).click()

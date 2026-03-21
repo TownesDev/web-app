@@ -307,9 +307,7 @@ export default function MusicianPage() {
           </div>
 
           <div className="mt-12 text-center">
-            <p className="text-gray-400 mb-4">
-              Want us to play in your city?
-            </p>
+            <p className="text-gray-400 mb-4">Want us to play in your city?</p>
             <a
               href="#contact"
               className="inline-block border-2 border-purple-500 text-purple-300 hover:bg-purple-900/50 px-6 py-3 rounded-lg font-semibold transition-colors"
@@ -350,10 +348,10 @@ export default function MusicianPage() {
 
           <div className="bg-slate-900 rounded-lg p-8 border border-slate-700">
             <p className="text-gray-300 text-lg leading-relaxed mb-4">
-              The Midnight Collective formed in 2019 when three musicians
-              bonded over their shared love of atmospheric rock and honest
-              songwriting. What started as late-night jam sessions in
-              Alex&apos;s basement quickly evolved into something more.
+              The Midnight Collective formed in 2019 when three musicians bonded
+              over their shared love of atmospheric rock and honest songwriting.
+              What started as late-night jam sessions in Alex&apos;s basement
+              quickly evolved into something more.
             </p>
             <p className="text-gray-300 text-lg leading-relaxed">
               Our music explores the spaces between light and dark, hope and

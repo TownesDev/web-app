@@ -1,1 +1,600 @@
-{"version":{"pluginId":"default","version":"current","label":"Next","banner":null,"badge":false,"noIndex":false,"className":"docs-version-current","isLast":true,"docsSidebars":{"tutorialSidebar":[{"type":"category","label":"Architecture","collapsible":true,"collapsed":true,"items":[{"type":"link","href":"/architecture/auth","label":"auth","docId":"architecture/auth","unlisted":false},{"type":"link","href":"/architecture/bot-integration","label":"Bot Platform Integration","docId":"architecture/bot-integration","unlisted":false},{"type":"link","href":"/architecture/caching","label":"Caching Strategy","docId":"architecture/caching","unlisted":false},{"type":"link","href":"/architecture/data-layer","label":"Data Layer Architecture","docId":"architecture/data-layer","unlisted":false},{"type":"link","href":"/architecture/multi-service","label":"Multi-Service Architecture (placeholder)","docId":"architecture/multi-service","unlisted":false},{"type":"link","href":"/architecture/overview","label":"Architecture Overview","docId":"architecture/overview","unlisted":false},{"type":"link","href":"/architecture/payments","label":"payments","docId":"architecture/payments","unlisted":false},{"type":"link","href":"/architecture/performance","label":"performance","docId":"architecture/performance","unlisted":false},{"type":"link","href":"/architecture/route-groups","label":"Route Groups Architecture","docId":"architecture/route-groups","unlisted":false}],"href":"/architecture-overview"},{"type":"link","href":"/accessibility-testing","label":"Accessibility","docId":"accessibility/README","unlisted":false},{"type":"category","label":"Setup","collapsible":true,"collapsed":true,"items":[{"type":"link","href":"/setup/deployment","label":"deployment","docId":"setup/deployment","unlisted":false},{"type":"link","href":"/setup/environment","label":"Environment Configuration","docId":"setup/environment","unlisted":false},{"type":"link","href":"/setup/local-development","label":"Local Development Setup","docId":"setup/local-development","unlisted":false},{"type":"link","href":"/setup/sanity","label":"Sanity CMS Setup","docId":"setup/sanity","unlisted":false},{"type":"link","href":"/setup/ts-server-deploy","label":"Deploying the docs site to TSERVER (Windows)","docId":"setup/ts-server-deploy","unlisted":false}],"href":"/setup"},{"type":"category","label":"Development Guides","collapsible":true,"collapsed":true,"items":[{"type":"link","href":"/development/advanced-features","label":"Advanced Features & Improvements","docId":"development/advanced-features","unlisted":false},{"type":"link","href":"/development/ai-agents","label":"AI Agent Guidelines for TownesDev","docId":"development/ai-agents","unlisted":false},{"type":"link","href":"/development/onboarding-status","label":"Onboarding Implementation Status","docId":"development/onboarding-status","unlisted":false},{"type":"link","href":"/development/pdf-reports","label":"PDF Reports Generation","docId":"development/pdf-reports","unlisted":false},{"type":"link","href":"/development/performance-optimization","label":"Performance Monitoring & Optimization Opportunities","docId":"development/performance-optimization","unlisted":false},{"type":"link","href":"/development/testing-pdf-email","label":"Testing Guide: PDF Reports & Email Incidents","docId":"development/testing-pdf-email","unlisted":false}],"href":"/development/"},{"type":"category","label":"Guides","collapsible":true,"collapsed":true,"items":[{"type":"link","href":"/api-guidelines","label":"API Guidelines","docId":"guides/api-guidelines","unlisted":false},{"type":"link","href":"/guides/email-integration","label":"Email to Incident Integration","docId":"guides/email-integration","unlisted":false},{"type":"link","href":"/guides/launch-roadmap-2026","label":"TownesDev Launch Roadmap - Jan 1, 2026","docId":"guides/launch-roadmap-2026","unlisted":false},{"type":"link","href":"/guides/monitoring","label":"monitoring","docId":"guides/monitoring","unlisted":false},{"type":"link","href":"/onboarding-plan","label":"Client Onboarding (Web App + Discord)","docId":"guides/onboarding-plan","unlisted":false},{"type":"link","href":"/guides/portal-flow","label":"Client Portal User Guide","docId":"guides/portal-flow","unlisted":false},{"type":"link","href":"/guides/sanity-preview","label":"Sanity Preview Mode","docId":"guides/sanity-preview","unlisted":false},{"type":"link","href":"/guides/security","label":"security","docId":"guides/security","unlisted":false},{"type":"link","href":"/guides/standards","label":"standards","docId":"guides/standards","unlisted":false},{"type":"link","href":"/guides/stripe-webhooks-runbook","label":"Stripe Webhooks Runbook","docId":"guides/stripe-webhooks-runbook","unlisted":false},{"type":"link","href":"/guides/testing","label":"Testing Guide","docId":"guides/testing","unlisted":false},{"type":"link","href":"/guides/workflow","label":"workflow","docId":"guides/workflow","unlisted":false}],"href":"/guides/"},{"type":"category","label":"Audit & Issues","collapsible":true,"collapsed":true,"items":[{"type":"link","href":"/audit/DOCS_AUDIT_COMPREHENSIVE","label":"TownesDev Documentation Audit & Cleanup Plan","docId":"audit/DOCS_AUDIT_COMPREHENSIVE","unlisted":false},{"type":"link","href":"/audit/checkpoint-review","label":"TownesDev Platform – Checkpoint Review","docId":"audit/checkpoint-review","unlisted":false},{"type":"link","href":"/audit/repo-issues","label":"Repository Issues & Prioritized Tasks","docId":"audit/repo-issues","unlisted":false}],"href":"/audit/"},{"type":"link","href":"/","label":"TownesDev Documentation","docId":"README","unlisted":false},{"type":"link","href":"/READY_FOR_LAUNCH","label":"TownesDev - Ready for Launch","docId":"READY_FOR_LAUNCH","unlisted":false},{"type":"link","href":"/SOT","label":"Source of Truth (SOT) - TownesDev Platform","docId":"SOT","unlisted":false}]},"docs":{"accessibility/README":{"id":"accessibility/README","title":"Accessibility Testing Checklist","description":"Automated Testing","sidebar":"tutorialSidebar"},"architecture/auth":{"id":"architecture/auth","title":"auth","description":"","sidebar":"tutorialSidebar"},"architecture/bot-integration":{"id":"architecture/bot-integration","title":"Bot Platform Integration","description":"Overview","sidebar":"tutorialSidebar"},"architecture/caching":{"id":"architecture/caching","title":"Caching Strategy","description":"Overview","sidebar":"tutorialSidebar"},"architecture/data-layer":{"id":"architecture/data-layer","title":"Data Layer Architecture","description":"Overview","sidebar":"tutorialSidebar"},"architecture/multi-service":{"id":"architecture/multi-service","title":"Multi-Service Architecture (placeholder)","description":"Last updated: 2025-10-31","sidebar":"tutorialSidebar"},"architecture/overview":{"id":"architecture/overview","title":"Architecture Overview","description":"Introduction","sidebar":"tutorialSidebar"},"architecture/payments":{"id":"architecture/payments","title":"payments","description":"","sidebar":"tutorialSidebar"},"architecture/performance":{"id":"architecture/performance","title":"performance","description":"","sidebar":"tutorialSidebar"},"architecture/README":{"id":"architecture/README","title":"Architecture Overview","description":"This section contains high-level architecture guidance: routing, data layer integration, performance considerations, and service decomposition. Use the pages here to understand the platform structure and implementation patterns.","sidebar":"tutorialSidebar"},"architecture/route-groups":{"id":"architecture/route-groups","title":"Route Groups Architecture","description":"Overview","sidebar":"tutorialSidebar"},"audit/checkpoint-review":{"id":"audit/checkpoint-review","title":"TownesDev Platform – Checkpoint Review","description":"Last reviewed: 2025-11-04","sidebar":"tutorialSidebar"},"audit/DOCS_AUDIT_COMPREHENSIVE":{"id":"audit/DOCS_AUDIT_COMPREHENSIVE","title":"TownesDev Documentation Audit & Cleanup Plan","description":"Date: November 4, 2025","sidebar":"tutorialSidebar"},"audit/README":{"id":"audit/README","title":"Audit & Issues","description":"Repository documentation audits, prioritized issues, and checkpoint reviews live here.","sidebar":"tutorialSidebar"},"audit/repo-issues":{"id":"audit/repo-issues","title":"Repository Issues & Prioritized Tasks","description":"Date: 2025-10-31","sidebar":"tutorialSidebar"},"development/advanced-features":{"id":"development/advanced-features","title":"Advanced Features & Improvements","description":"🚀 Next-Level Features to Implement","sidebar":"tutorialSidebar"},"development/ai-agents":{"id":"development/ai-agents","title":"AI Agent Guidelines for TownesDev","description":"Last Updated: November 4, 2025","sidebar":"tutorialSidebar"},"development/onboarding-status":{"id":"development/onboarding-status","title":"Onboarding Implementation Status","description":"Last Updated: November 4, 2025","sidebar":"tutorialSidebar"},"development/pdf-reports":{"id":"development/pdf-reports","title":"PDF Reports Generation","description":"Overview","sidebar":"tutorialSidebar"},"development/performance-optimization":{"id":"development/performance-optimization","title":"Performance Monitoring & Optimization Opportunities","description":"🚀 Current Performance Wins","sidebar":"tutorialSidebar"},"development/README":{"id":"development/README","title":"Development Guides","description":"Tools and patterns for developing and optimizing the application: testing, performance, and report generation.","sidebar":"tutorialSidebar"},"development/testing-pdf-email":{"id":"development/testing-pdf-email","title":"Testing Guide: PDF Reports & Email Incidents","description":"Prerequisites for Testing","sidebar":"tutorialSidebar"},"guides/api-guidelines":{"id":"guides/api-guidelines","title":"API Guidelines","description":"","sidebar":"tutorialSidebar"},"guides/email-integration":{"id":"guides/email-integration","title":"Email to Incident Integration","description":"---","sidebar":"tutorialSidebar"},"guides/launch-roadmap-2026":{"id":"guides/launch-roadmap-2026","title":"TownesDev Launch Roadmap - Jan 1, 2026","description":"Created: November 4, 2025","sidebar":"tutorialSidebar"},"guides/monitoring":{"id":"guides/monitoring","title":"monitoring","description":"","sidebar":"tutorialSidebar"},"guides/onboarding-plan":{"id":"guides/onboarding-plan","title":"Client Onboarding (Web App + Discord)","description":"This document defines the end-to-end client onboarding flow, pricing/plan structure (base retainer + service add-ons), Sanity schemas, Stripe integration, RBAC, site generation, and operational considerations. It is designed to work for any client vertical (musician, bakery, thrift store, etc.) and to scale to higher-demand clients.","sidebar":"tutorialSidebar"},"guides/portal-flow":{"id":"guides/portal-flow","title":"Client Portal User Guide","description":"Overview","sidebar":"tutorialSidebar"},"guides/README":{"id":"guides/README","title":"Guides","description":"Collection of focused how-to and runbook style documents: portal flows, API guidance, monitoring, and other operational guides.","sidebar":"tutorialSidebar"},"guides/sanity-preview":{"id":"guides/sanity-preview","title":"Sanity Preview Mode","description":"Overview","sidebar":"tutorialSidebar"},"guides/security":{"id":"guides/security","title":"security","description":"","sidebar":"tutorialSidebar"},"guides/standards":{"id":"guides/standards","title":"standards","description":"","sidebar":"tutorialSidebar"},"guides/stripe-webhooks-runbook":{"id":"guides/stripe-webhooks-runbook","title":"Stripe Webhooks Runbook","description":"Purpose: increase reliability and observability of Stripe webhook handling. This runbook explains retry behavior, safe replay, alerting, and operational guidance.","sidebar":"tutorialSidebar"},"guides/testing":{"id":"guides/testing","title":"Testing Guide","description":"Overview","sidebar":"tutorialSidebar"},"guides/workflow":{"id":"guides/workflow","title":"workflow","description":"","sidebar":"tutorialSidebar"},"README":{"id":"README","title":"TownesDev Documentation","description":"Note: This documentation is for developers working on the TownesDev platform. For client portal usage, see the in-app help system.","sidebar":"tutorialSidebar"},"READY_FOR_LAUNCH":{"id":"READY_FOR_LAUNCH","title":"TownesDev - Ready for Launch","description":"Date: November 5, 2025","sidebar":"tutorialSidebar"},"setup/deployment":{"id":"setup/deployment","title":"deployment","description":"","sidebar":"tutorialSidebar"},"setup/environment":{"id":"setup/environment","title":"Environment Configuration","description":"Overview","sidebar":"tutorialSidebar"},"setup/local-development":{"id":"setup/local-development","title":"Local Development Setup","description":"Prerequisites","sidebar":"tutorialSidebar"},"setup/README":{"id":"setup/README","title":"Setup & Local Development","description":"This folder contains setup guides for running the platform locally, environment configuration, Sanity setup, and deployment notes for internal TSERVER hosting.","sidebar":"tutorialSidebar"},"setup/sanity":{"id":"setup/sanity","title":"Sanity CMS Setup","description":"Overview","sidebar":"tutorialSidebar"},"setup/ts-server-deploy":{"id":"setup/ts-server-deploy","title":"Deploying the docs site to TSERVER (Windows)","description":"This page describes a minimal, secure, and reproducible way to host the built Docusaurus build/ output on an internal Windows server (TSERVER). It includes three recommended approaches, a suggested CI flow, and a short example of using NSSM to run a static server as a Windows service.","sidebar":"tutorialSidebar"},"SOT":{"id":"SOT","title":"Source of Truth (SOT) - TownesDev Platform","description":"Last Updated: November 4, 2025","sidebar":"tutorialSidebar"}}}}
+{
+  "version": {
+    "pluginId": "default",
+    "version": "current",
+    "label": "Next",
+    "banner": null,
+    "badge": false,
+    "noIndex": false,
+    "className": "docs-version-current",
+    "isLast": true,
+    "docsSidebars": {
+      "tutorialSidebar": [
+        {
+          "type": "category",
+          "label": "Architecture",
+          "collapsible": true,
+          "collapsed": true,
+          "items": [
+            {
+              "type": "link",
+              "href": "/architecture/auth",
+              "label": "auth",
+              "docId": "architecture/auth",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/architecture/bot-integration",
+              "label": "Bot Platform Integration",
+              "docId": "architecture/bot-integration",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/architecture/caching",
+              "label": "Caching Strategy",
+              "docId": "architecture/caching",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/architecture/data-layer",
+              "label": "Data Layer Architecture",
+              "docId": "architecture/data-layer",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/architecture/multi-service",
+              "label": "Multi-Service Architecture (placeholder)",
+              "docId": "architecture/multi-service",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/architecture/overview",
+              "label": "Architecture Overview",
+              "docId": "architecture/overview",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/architecture/payments",
+              "label": "payments",
+              "docId": "architecture/payments",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/architecture/performance",
+              "label": "performance",
+              "docId": "architecture/performance",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/architecture/route-groups",
+              "label": "Route Groups Architecture",
+              "docId": "architecture/route-groups",
+              "unlisted": false
+            }
+          ],
+          "href": "/architecture-overview"
+        },
+        {
+          "type": "link",
+          "href": "/accessibility-testing",
+          "label": "Accessibility",
+          "docId": "accessibility/README",
+          "unlisted": false
+        },
+        {
+          "type": "category",
+          "label": "Setup",
+          "collapsible": true,
+          "collapsed": true,
+          "items": [
+            {
+              "type": "link",
+              "href": "/setup/deployment",
+              "label": "deployment",
+              "docId": "setup/deployment",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/setup/environment",
+              "label": "Environment Configuration",
+              "docId": "setup/environment",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/setup/local-development",
+              "label": "Local Development Setup",
+              "docId": "setup/local-development",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/setup/sanity",
+              "label": "Sanity CMS Setup",
+              "docId": "setup/sanity",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/setup/ts-server-deploy",
+              "label": "Deploying the docs site to TSERVER (Windows)",
+              "docId": "setup/ts-server-deploy",
+              "unlisted": false
+            }
+          ],
+          "href": "/setup"
+        },
+        {
+          "type": "category",
+          "label": "Development Guides",
+          "collapsible": true,
+          "collapsed": true,
+          "items": [
+            {
+              "type": "link",
+              "href": "/development/advanced-features",
+              "label": "Advanced Features & Improvements",
+              "docId": "development/advanced-features",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/development/ai-agents",
+              "label": "AI Agent Guidelines for TownesDev",
+              "docId": "development/ai-agents",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/development/onboarding-status",
+              "label": "Onboarding Implementation Status",
+              "docId": "development/onboarding-status",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/development/pdf-reports",
+              "label": "PDF Reports Generation",
+              "docId": "development/pdf-reports",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/development/performance-optimization",
+              "label": "Performance Monitoring & Optimization Opportunities",
+              "docId": "development/performance-optimization",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/development/testing-pdf-email",
+              "label": "Testing Guide: PDF Reports & Email Incidents",
+              "docId": "development/testing-pdf-email",
+              "unlisted": false
+            }
+          ],
+          "href": "/development/"
+        },
+        {
+          "type": "category",
+          "label": "Guides",
+          "collapsible": true,
+          "collapsed": true,
+          "items": [
+            {
+              "type": "link",
+              "href": "/api-guidelines",
+              "label": "API Guidelines",
+              "docId": "guides/api-guidelines",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/guides/email-integration",
+              "label": "Email to Incident Integration",
+              "docId": "guides/email-integration",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/guides/launch-roadmap-2026",
+              "label": "TownesDev Launch Roadmap - Jan 1, 2026",
+              "docId": "guides/launch-roadmap-2026",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/guides/monitoring",
+              "label": "monitoring",
+              "docId": "guides/monitoring",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/onboarding-plan",
+              "label": "Client Onboarding (Web App + Discord)",
+              "docId": "guides/onboarding-plan",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/guides/portal-flow",
+              "label": "Client Portal User Guide",
+              "docId": "guides/portal-flow",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/guides/sanity-preview",
+              "label": "Sanity Preview Mode",
+              "docId": "guides/sanity-preview",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/guides/security",
+              "label": "security",
+              "docId": "guides/security",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/guides/standards",
+              "label": "standards",
+              "docId": "guides/standards",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/guides/stripe-webhooks-runbook",
+              "label": "Stripe Webhooks Runbook",
+              "docId": "guides/stripe-webhooks-runbook",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/guides/testing",
+              "label": "Testing Guide",
+              "docId": "guides/testing",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/guides/workflow",
+              "label": "workflow",
+              "docId": "guides/workflow",
+              "unlisted": false
+            }
+          ],
+          "href": "/guides/"
+        },
+        {
+          "type": "category",
+          "label": "Audit & Issues",
+          "collapsible": true,
+          "collapsed": true,
+          "items": [
+            {
+              "type": "link",
+              "href": "/audit/DOCS_AUDIT_COMPREHENSIVE",
+              "label": "TownesDev Documentation Audit & Cleanup Plan",
+              "docId": "audit/DOCS_AUDIT_COMPREHENSIVE",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/audit/checkpoint-review",
+              "label": "TownesDev Platform – Checkpoint Review",
+              "docId": "audit/checkpoint-review",
+              "unlisted": false
+            },
+            {
+              "type": "link",
+              "href": "/audit/repo-issues",
+              "label": "Repository Issues & Prioritized Tasks",
+              "docId": "audit/repo-issues",
+              "unlisted": false
+            }
+          ],
+          "href": "/audit/"
+        },
+        {
+          "type": "link",
+          "href": "/",
+          "label": "TownesDev Documentation",
+          "docId": "README",
+          "unlisted": false
+        },
+        {
+          "type": "link",
+          "href": "/READY_FOR_LAUNCH",
+          "label": "TownesDev - Ready for Launch",
+          "docId": "READY_FOR_LAUNCH",
+          "unlisted": false
+        },
+        {
+          "type": "link",
+          "href": "/SOT",
+          "label": "Source of Truth (SOT) - TownesDev Platform",
+          "docId": "SOT",
+          "unlisted": false
+        }
+      ]
+    },
+    "docs": {
+      "accessibility/README": {
+        "id": "accessibility/README",
+        "title": "Accessibility Testing Checklist",
+        "description": "Automated Testing",
+        "sidebar": "tutorialSidebar"
+      },
+      "architecture/auth": {
+        "id": "architecture/auth",
+        "title": "auth",
+        "description": "",
+        "sidebar": "tutorialSidebar"
+      },
+      "architecture/bot-integration": {
+        "id": "architecture/bot-integration",
+        "title": "Bot Platform Integration",
+        "description": "Overview",
+        "sidebar": "tutorialSidebar"
+      },
+      "architecture/caching": {
+        "id": "architecture/caching",
+        "title": "Caching Strategy",
+        "description": "Overview",
+        "sidebar": "tutorialSidebar"
+      },
+      "architecture/data-layer": {
+        "id": "architecture/data-layer",
+        "title": "Data Layer Architecture",
+        "description": "Overview",
+        "sidebar": "tutorialSidebar"
+      },
+      "architecture/multi-service": {
+        "id": "architecture/multi-service",
+        "title": "Multi-Service Architecture (placeholder)",
+        "description": "Last updated: 2025-10-31",
+        "sidebar": "tutorialSidebar"
+      },
+      "architecture/overview": {
+        "id": "architecture/overview",
+        "title": "Architecture Overview",
+        "description": "Introduction",
+        "sidebar": "tutorialSidebar"
+      },
+      "architecture/payments": {
+        "id": "architecture/payments",
+        "title": "payments",
+        "description": "",
+        "sidebar": "tutorialSidebar"
+      },
+      "architecture/performance": {
+        "id": "architecture/performance",
+        "title": "performance",
+        "description": "",
+        "sidebar": "tutorialSidebar"
+      },
+      "architecture/README": {
+        "id": "architecture/README",
+        "title": "Architecture Overview",
+        "description": "This section contains high-level architecture guidance: routing, data layer integration, performance considerations, and service decomposition. Use the pages here to understand the platform structure and implementation patterns.",
+        "sidebar": "tutorialSidebar"
+      },
+      "architecture/route-groups": {
+        "id": "architecture/route-groups",
+        "title": "Route Groups Architecture",
+        "description": "Overview",
+        "sidebar": "tutorialSidebar"
+      },
+      "audit/checkpoint-review": {
+        "id": "audit/checkpoint-review",
+        "title": "TownesDev Platform – Checkpoint Review",
+        "description": "Last reviewed: 2025-11-04",
+        "sidebar": "tutorialSidebar"
+      },
+      "audit/DOCS_AUDIT_COMPREHENSIVE": {
+        "id": "audit/DOCS_AUDIT_COMPREHENSIVE",
+        "title": "TownesDev Documentation Audit & Cleanup Plan",
+        "description": "Date: November 4, 2025",
+        "sidebar": "tutorialSidebar"
+      },
+      "audit/README": {
+        "id": "audit/README",
+        "title": "Audit & Issues",
+        "description": "Repository documentation audits, prioritized issues, and checkpoint reviews live here.",
+        "sidebar": "tutorialSidebar"
+      },
+      "audit/repo-issues": {
+        "id": "audit/repo-issues",
+        "title": "Repository Issues & Prioritized Tasks",
+        "description": "Date: 2025-10-31",
+        "sidebar": "tutorialSidebar"
+      },
+      "development/advanced-features": {
+        "id": "development/advanced-features",
+        "title": "Advanced Features & Improvements",
+        "description": "🚀 Next-Level Features to Implement",
+        "sidebar": "tutorialSidebar"
+      },
+      "development/ai-agents": {
+        "id": "development/ai-agents",
+        "title": "AI Agent Guidelines for TownesDev",
+        "description": "Last Updated: November 4, 2025",
+        "sidebar": "tutorialSidebar"
+      },
+      "development/onboarding-status": {
+        "id": "development/onboarding-status",
+        "title": "Onboarding Implementation Status",
+        "description": "Last Updated: November 4, 2025",
+        "sidebar": "tutorialSidebar"
+      },
+      "development/pdf-reports": {
+        "id": "development/pdf-reports",
+        "title": "PDF Reports Generation",
+        "description": "Overview",
+        "sidebar": "tutorialSidebar"
+      },
+      "development/performance-optimization": {
+        "id": "development/performance-optimization",
+        "title": "Performance Monitoring & Optimization Opportunities",
+        "description": "🚀 Current Performance Wins",
+        "sidebar": "tutorialSidebar"
+      },
+      "development/README": {
+        "id": "development/README",
+        "title": "Development Guides",
+        "description": "Tools and patterns for developing and optimizing the application: testing, performance, and report generation.",
+        "sidebar": "tutorialSidebar"
+      },
+      "development/testing-pdf-email": {
+        "id": "development/testing-pdf-email",
+        "title": "Testing Guide: PDF Reports & Email Incidents",
+        "description": "Prerequisites for Testing",
+        "sidebar": "tutorialSidebar"
+      },
+      "guides/api-guidelines": {
+        "id": "guides/api-guidelines",
+        "title": "API Guidelines",
+        "description": "",
+        "sidebar": "tutorialSidebar"
+      },
+      "guides/email-integration": {
+        "id": "guides/email-integration",
+        "title": "Email to Incident Integration",
+        "description": "---",
+        "sidebar": "tutorialSidebar"
+      },
+      "guides/launch-roadmap-2026": {
+        "id": "guides/launch-roadmap-2026",
+        "title": "TownesDev Launch Roadmap - Jan 1, 2026",
+        "description": "Created: November 4, 2025",
+        "sidebar": "tutorialSidebar"
+      },
+      "guides/monitoring": {
+        "id": "guides/monitoring",
+        "title": "monitoring",
+        "description": "",
+        "sidebar": "tutorialSidebar"
+      },
+      "guides/onboarding-plan": {
+        "id": "guides/onboarding-plan",
+        "title": "Client Onboarding (Web App + Discord)",
+        "description": "This document defines the end-to-end client onboarding flow, pricing/plan structure (base retainer + service add-ons), Sanity schemas, Stripe integration, RBAC, site generation, and operational considerations. It is designed to work for any client vertical (musician, bakery, thrift store, etc.) and to scale to higher-demand clients.",
+        "sidebar": "tutorialSidebar"
+      },
+      "guides/portal-flow": {
+        "id": "guides/portal-flow",
+        "title": "Client Portal User Guide",
+        "description": "Overview",
+        "sidebar": "tutorialSidebar"
+      },
+      "guides/README": {
+        "id": "guides/README",
+        "title": "Guides",
+        "description": "Collection of focused how-to and runbook style documents: portal flows, API guidance, monitoring, and other operational guides.",
+        "sidebar": "tutorialSidebar"
+      },
+      "guides/sanity-preview": {
+        "id": "guides/sanity-preview",
+        "title": "Sanity Preview Mode",
+        "description": "Overview",
+        "sidebar": "tutorialSidebar"
+      },
+      "guides/security": {
+        "id": "guides/security",
+        "title": "security",
+        "description": "",
+        "sidebar": "tutorialSidebar"
+      },
+      "guides/standards": {
+        "id": "guides/standards",
+        "title": "standards",
+        "description": "",
+        "sidebar": "tutorialSidebar"
+      },
+      "guides/stripe-webhooks-runbook": {
+        "id": "guides/stripe-webhooks-runbook",
+        "title": "Stripe Webhooks Runbook",
+        "description": "Purpose: increase reliability and observability of Stripe webhook handling. This runbook explains retry behavior, safe replay, alerting, and operational guidance.",
+        "sidebar": "tutorialSidebar"
+      },
+      "guides/testing": {
+        "id": "guides/testing",
+        "title": "Testing Guide",
+        "description": "Overview",
+        "sidebar": "tutorialSidebar"
+      },
+      "guides/workflow": {
+        "id": "guides/workflow",
+        "title": "workflow",
+        "description": "",
+        "sidebar": "tutorialSidebar"
+      },
+      "README": {
+        "id": "README",
+        "title": "TownesDev Documentation",
+        "description": "Note: This documentation is for developers working on the TownesDev platform. For client portal usage, see the in-app help system.",
+        "sidebar": "tutorialSidebar"
+      },
+      "READY_FOR_LAUNCH": {
+        "id": "READY_FOR_LAUNCH",
+        "title": "TownesDev - Ready for Launch",
+        "description": "Date: November 5, 2025",
+        "sidebar": "tutorialSidebar"
+      },
+      "setup/deployment": {
+        "id": "setup/deployment",
+        "title": "deployment",
+        "description": "",
+        "sidebar": "tutorialSidebar"
+      },
+      "setup/environment": {
+        "id": "setup/environment",
+        "title": "Environment Configuration",
+        "description": "Overview",
+        "sidebar": "tutorialSidebar"
+      },
+      "setup/local-development": {
+        "id": "setup/local-development",
+        "title": "Local Development Setup",
+        "description": "Prerequisites",
+        "sidebar": "tutorialSidebar"
+      },
+      "setup/README": {
+        "id": "setup/README",
+        "title": "Setup & Local Development",
+        "description": "This folder contains setup guides for running the platform locally, environment configuration, Sanity setup, and deployment notes for internal TSERVER hosting.",
+        "sidebar": "tutorialSidebar"
+      },
+      "setup/sanity": {
+        "id": "setup/sanity",
+        "title": "Sanity CMS Setup",
+        "description": "Overview",
+        "sidebar": "tutorialSidebar"
+      },
+      "setup/ts-server-deploy": {
+        "id": "setup/ts-server-deploy",
+        "title": "Deploying the docs site to TSERVER (Windows)",
+        "description": "This page describes a minimal, secure, and reproducible way to host the built Docusaurus build/ output on an internal Windows server (TSERVER). It includes three recommended approaches, a suggested CI flow, and a short example of using NSSM to run a static server as a Windows service.",
+        "sidebar": "tutorialSidebar"
+      },
+      "SOT": {
+        "id": "SOT",
+        "title": "Source of Truth (SOT) - TownesDev Platform",
+        "description": "Last Updated: November 4, 2025",
+        "sidebar": "tutorialSidebar"
+      }
+    }
+  }
+}

@@ -7,7 +7,16 @@ export interface PricingTier {
   oneTimePrice: string
   monthlyPrice: string
   features: string[]
-  badge?: 'Starter' | 'Pro' | 'Premium' | 'Community' | 'Guild' | 'Enterprise' | 'Solo' | 'Band' | 'Label'
+  badge?:
+    | 'Starter'
+    | 'Pro'
+    | 'Premium'
+    | 'Community'
+    | 'Guild'
+    | 'Enterprise'
+    | 'Solo'
+    | 'Band'
+    | 'Label'
 }
 
 interface PricingCardProps {
@@ -17,7 +26,7 @@ interface PricingCardProps {
 export function PricingCard({ tier }: PricingCardProps) {
   const getBadgeColor = (badge: string | undefined) => {
     if (!badge) return ''
-    
+
     switch (badge) {
       case 'Starter':
       case 'Community':

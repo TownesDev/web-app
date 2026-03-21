@@ -3,7 +3,8 @@ import { PricingTier } from '@/components/public/PricingCard'
 
 export const metadata = {
   title: 'Pricing - TownesDev',
-  description: 'Choose the perfect plan for your business needs. Transparent pricing for small businesses, Discord bots, and musicians.',
+  description:
+    'Choose the perfect plan for your business needs. Transparent pricing for small businesses, Discord bots, and musicians.',
 }
 
 export const revalidate = 3600 // Revalidate every hour for marketing content
@@ -184,8 +185,8 @@ export default function PricingPage() {
             Need a custom solution?
           </h2>
           <p className="text-gray-600 mb-6">
-            Contact us for enterprise pricing or special requirements. We&apos;re
-            happy to discuss your specific needs.
+            Contact us for enterprise pricing or special requirements.
+            We&apos;re happy to discuss your specific needs.
           </p>
           <a
             href="/contact"

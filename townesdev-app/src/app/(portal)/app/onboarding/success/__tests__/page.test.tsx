@@ -16,11 +16,11 @@ describe('Onboarding Success Page', () => {
   it('page file structure matches Next.js requirements', () => {
     // Verify the file exists and is a proper Next.js page
     const pagePath = join(__dirname, '../page.tsx')
-    
+
     expect(existsSync(pagePath)).toBe(true)
-    
+
     const content = readFileSync(pagePath, 'utf-8')
-    
+
     // Verify it has required Next.js patterns
     expect(content).toContain('export default')
     expect(content).toContain('searchParams')
@@ -30,7 +30,7 @@ describe('Onboarding Success Page', () => {
   it('imports necessary dependencies', () => {
     const pagePath = join(__dirname, '../page.tsx')
     const content = readFileSync(pagePath, 'utf-8')
-    
+
     // Check for required imports
     expect(content).toContain("from 'react'")
     expect(content).toContain("from 'next/navigation'")
