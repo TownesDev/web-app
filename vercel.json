@@ -1,6 +1,8 @@
 {
-  "rootDirectory": "townesdev-app",
-  "buildCommand": "npm run build",
-  "installCommand": "npm install",
-  "outputDirectory": ".next"
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "installCommand": "cd townesdev-app && npm install",
+  "buildCommand": "cd townesdev-app && npm run build",
+  "devCommand": "cd townesdev-app && npm run dev",
+  "outputDirectory": "townesdev-app/.next"
 }
