@@ -154,3 +154,33 @@ Purpose: running engineering log for implementation, debugging, and architectura
 - Follow-up Tasks:
   - Run the post-deploy smoke + test checkout verification from the Vercel preflight checklist.
   - Optionally silence Sanity live-preview token warnings in local/dev if desired.
+
+### Entry 005
+
+- Date/Time: 2026-03-20
+- Session Label: Vercel Deployment Root Resolution and Config Cleanup
+- Trigger/Context: Vercel builds kept failing with "No Next.js version detected" despite valid Next.js dependencies in `townesdev-app/package.json`.
+- Problem Statement: The repository root (`app/web`) is not the Next.js app root (`app/web/townesdev-app`), and Vercel framework detection occurs before custom `buildCommand`/`installCommand` logic.
+- Initial Hypothesis: File-based command overrides alone would not reliably solve framework auto-detection if the Vercel Project Root Directory remained pointed at the repo root.
+- Actions Taken:
+  - Confirmed the schema error caused by unsupported `rootDirectory` in `vercel.json`.
+  - Confirmed the successful fix path in Vercel UI: set Project Root Directory to `townesdev-app` under Settings → General.
+  - Removed `vercel.json` after root-directory configuration was validated as the permanent working setup.
+  - Synced branch state so deployment behavior is consistent for future sessions.
+- Evidence/Output:
+  - Vercel no longer blocked on "No Next.js version detected" once root directory was set in project settings.
+  - Local quality baseline remains green from previous preflight:
+    - typecheck ✅
+    - lint ✅
+    - unit tests ✅
+    - Playwright ✅
+    - build ✅
+- Decision:
+  - Treat Vercel Project Root Directory (`townesdev-app`) as the source of truth for deployment configuration.
+  - Do not keep redundant root-routing logic in `vercel.json` for this project.
+- Architectural Impact:
+  - Deployment config is simpler and less error-prone for this monorepo layout.
+  - Framework detection now aligns with the true app root and avoids command-order edge cases.
+- Follow-up Tasks:
+  - Run one full post-deploy Stripe test-mode checkout and verify webhook event receipt, client activation, and portal access.
+  - Record Stripe verification outcome in this log once completed.
