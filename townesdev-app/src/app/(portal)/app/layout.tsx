@@ -3,6 +3,8 @@ import { getCurrentClient } from '../../../lib/auth'
 import { redirect } from 'next/navigation'
 import TrialBanner from '../../../components/TrialBanner'
 
+export const dynamic = 'force-dynamic'
+
 /**
  * Portal app layout - handles subscription gating and trial mode notifications
  * Works in conjunction with middleware.ts for route protection

@@ -17,6 +17,10 @@
 
 # testing
 /coverage
+/playwright-report
+/test-results
+/jest-test-results.json
+
 
 # next.js
 /.next/

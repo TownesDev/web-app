@@ -18,8 +18,8 @@ describe('TrialBanner', () => {
   })
 
   it('renders warning icon', () => {
-    render(<TrialBanner />)
-    const icon = screen.getByRole('img', { hidden: true })
+    const { container } = render(<TrialBanner />)
+    const icon = container.querySelector('svg[aria-hidden="true"]')
     expect(icon).toBeInTheDocument()
   })
 })

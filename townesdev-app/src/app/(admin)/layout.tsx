@@ -5,6 +5,8 @@ import Footer from '../../components/Footer'
 import AdminSidebar from '../../components/AdminSidebar'
 import { requireStaff } from '../../lib/rbac/guards'
 
+export const dynamic = 'force-dynamic'
+
 export default async function AdminLayout({
   children,
 }: {

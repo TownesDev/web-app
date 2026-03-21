@@ -2,6 +2,8 @@
  * Regression tests for Stripe webhook idempotency and stuck-processing handling.
  */
 
+export {}
+
 type JsonRespLocal = <T>(
   body: T,
   opts?: { status?: number }
@@ -19,9 +21,22 @@ interface MockRequest {
   url: string
 }
 
+let consoleLogSpy: jest.SpyInstance
+let consoleWarnSpy: jest.SpyInstance
+let consoleErrorSpy: jest.SpyInstance
+
 describe('Stripe webhook regression - concurrency & stuck processing', () => {
   beforeEach(() => {
     jest.resetModules()
+    consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {})
+    consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {})
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+  })
+
+  afterEach(() => {
+    consoleLogSpy.mockRestore()
+    consoleWarnSpy.mockRestore()
+    consoleErrorSpy.mockRestore()
   })
 
   it('only one worker proceeds when two deliveries race for the same event', async () => {
@@ -147,14 +162,12 @@ describe('Stripe webhook regression - concurrency & stuck processing', () => {
           })),
         },
         subscriptions: {
-          retrieve: jest
-            .fn()
-            .mockResolvedValue({
-              id: 'sub_race',
-              status: 'active',
-              current_period_start: Math.floor(Date.now() / 1000),
-              current_period_end: Math.floor(Date.now() / 1000) + 3600,
-            }),
+          retrieve: jest.fn().mockResolvedValue({
+            id: 'sub_race',
+            status: 'active',
+            current_period_start: Math.floor(Date.now() / 1000),
+            current_period_end: Math.floor(Date.now() / 1000) + 3600,
+          }),
         },
       }))
     })
@@ -185,14 +198,14 @@ describe('Stripe webhook regression - concurrency & stuck processing', () => {
     expect(calledWithDup).toBe(true)
   })
 
-  it('short-circuits when a processing doc exists from far in the past (stuck)', async () => {
+  it('reclaims a stale processing doc when no active lock remains', async () => {
     jest.mock('next/server', () => ({
       NextRequest: class {},
       NextResponse: {
-        json: ((body, opts) => ({
+        json: ((body: unknown, opts?: { status?: number }) => ({
           body,
           status: opts?.status ?? 200,
-        })) as JsonResponse,
+        })) as JsonRespLocal,
       },
     }))
 
@@ -281,34 +294,30 @@ describe('Stripe webhook regression - concurrency & stuck processing', () => {
     jest.mock('stripe', () => {
       return jest.fn().mockImplementation(() => ({
         webhooks: {
-          constructEvent: jest
-            .fn()
-            .mockImplementation(() => ({
-              id: 'evt_stuck',
-              type: 'checkout.session.completed',
-              data: {
-                object: {
-                  id: 'cs_stuck',
-                  metadata: { planId: 'plan.x', clientId: 'client.1' },
-                  subscription: 'sub_stuck',
-                },
+          constructEvent: jest.fn().mockImplementation(() => ({
+            id: 'evt_stuck',
+            type: 'checkout.session.completed',
+            data: {
+              object: {
+                id: 'cs_stuck',
+                metadata: { planId: 'plan.x', clientId: 'client.1' },
+                subscription: 'sub_stuck',
               },
-            })),
+            },
+          })),
         },
         subscriptions: {
-          retrieve: jest
-            .fn()
-            .mockResolvedValue({
-              id: 'sub_stuck',
-              status: 'active',
-              current_period_start: Math.floor(Date.now() / 1000),
-              current_period_end: Math.floor(Date.now() / 1000) + 3600,
-            }),
+          retrieve: jest.fn().mockResolvedValue({
+            id: 'sub_stuck',
+            status: 'active',
+            current_period_start: Math.floor(Date.now() / 1000),
+            current_period_end: Math.floor(Date.now() / 1000) + 3600,
+          }),
         },
       }))
     })
 
-    // Pre-seed a stuck processing doc (old createdAt)
+    // Pre-seed a stale processing doc with no usable lock metadata.
     const stuckId = `stripeEvent.evt_stuck`
     docs[stuckId] = {
       _id: stuckId,
@@ -328,13 +337,11 @@ describe('Stripe webhook regression - concurrency & stuck processing', () => {
 
     await POST(req as unknown as import('next/server').NextRequest)
 
-    // Handler should short-circuit and not create new retainer
-    expect(retainerCreates.length).toBe(0)
-    const dupCalled = mockLogInfo2.mock.calls.some((c: unknown) =>
-      String((c as unknown[])?.[0] || '').includes(
-        'webhook.duplicate_suppressed'
-      )
+    // Handler should reclaim the stale lock and continue safely.
+    expect(retainerCreates.length).toBe(1)
+    const lockClaimed = mockLogInfo2.mock.calls.some((c: unknown) =>
+      String((c as unknown[])?.[0] || '').includes('webhook.lock_claimed')
     )
-    expect(dupCalled).toBe(true)
+    expect(lockClaimed).toBe(true)
   })
 })

@@ -37,7 +37,7 @@ async function SuccessContent({ sessionId }: { sessionId: string }) {
   const session = await verifySession(sessionId)
 
   if (!session) {
-    redirect('/app/onboarding')
+    redirect('/get-started')
   }
 
   // Extract plan details from session metadata
@@ -167,7 +167,7 @@ export default async function OnboardingSuccessPage({
   const sessionId = params.session_id
 
   if (!sessionId) {
-    redirect('/app/onboarding')
+    redirect('/get-started')
   }
 
   return (

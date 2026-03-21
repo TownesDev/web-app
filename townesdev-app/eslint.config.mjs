@@ -17,8 +17,19 @@ const eslintConfig = [
       '.next/**',
       'out/**',
       'build/**',
+      'coverage/**',
+      'playwright-report/**',
+      'test-results/**',
+      'docs-site/build/**',
+      'docs-site/.docusaurus/**',
       'next-env.d.ts',
     ],
+  },
+  {
+    files: ['scripts/**/*.js', 'tools/**/*.js'],
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+    },
   },
 ]
 

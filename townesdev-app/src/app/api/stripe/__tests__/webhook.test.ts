@@ -2,6 +2,8 @@
  * Tests for Stripe webhook duplicate suppression and event recording.
  */
 
+export {}
+
 type JsonResponse = <T>(
   body: T,
   opts?: { status?: number }
@@ -14,9 +16,22 @@ interface MockRequest {
   url: string
 }
 
+let consoleLogSpy: jest.SpyInstance
+let consoleWarnSpy: jest.SpyInstance
+let consoleErrorSpy: jest.SpyInstance
+
 describe('Stripe webhook handler', () => {
   beforeEach(() => {
     jest.resetModules()
+    consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {})
+    consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {})
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+  })
+
+  afterEach(() => {
+    consoleLogSpy.mockRestore()
+    consoleWarnSpy.mockRestore()
+    consoleErrorSpy.mockRestore()
   })
 
   it('short-circuits when event already processed', async () => {

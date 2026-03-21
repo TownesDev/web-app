@@ -1,9 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createUser } from '../../../../lib/auth'
+import { createUser, findUserByEmail } from '../../../../lib/auth'
+import { sanityWrite } from '@/lib/client'
+import { createSession } from '@/lib/session'
+import { v4 as uuidv4 } from 'uuid'
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password, name } = await request.json()
+    const {
+      email,
+      password,
+      name,
+      businessName,
+      elevatorPitch,
+      brand,
+      market,
+    } = await request.json()
 
     if (!email || !password || !name) {
       return NextResponse.json(
@@ -22,14 +33,54 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate password strength
-    if (password.length < 6) {
+    if (password.length < 8) {
       return NextResponse.json(
-        { error: 'Password must be at least 6 characters long' },
+        { error: 'Password must be at least 8 characters long' },
         { status: 400 }
       )
     }
 
+    // Check if user already exists
+    const existingUser = await findUserByEmail(email)
+    if (existingUser) {
+      return NextResponse.json(
+        { error: 'An account with this email already exists' },
+        { status: 409 }
+      )
+    }
+
+    // Create user
     const user = await createUser(email, password, name)
+
+    // Create client record with onboarding data
+    const clientId = uuidv4()
+    const clientResult = await sanityWrite.create({
+      _id: clientId,
+      _type: 'client',
+      name: businessName || name,
+      email,
+      status: 'Active',
+      user: {
+        _type: 'reference',
+        _ref: user._id,
+      },
+      hasActiveSubscription: false, // Will be set to true after Stripe payment
+      onboardingStatus: 'awaiting_payment',
+      // Store onboarding data for later use
+      metadata: {
+        elevatorPitch: elevatorPitch || '',
+        brand: brand || {},
+        market: market || '',
+      },
+    })
+
+    // Create session for the new user
+    await createSession({
+      id: user._id,
+      email: user.email,
+      name: user.name,
+      role: 'client',
+    })
 
     return NextResponse.json({
       message: 'User created successfully',
@@ -37,6 +88,10 @@ export async function POST(request: NextRequest) {
         id: user._id,
         email: user.email,
         name: user.name,
+      },
+      client: {
+        id: clientResult._id,
+        name: clientResult.name,
       },
     })
   } catch (error: unknown) {

@@ -53,10 +53,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/auth/signin', request.url))
   }
 
-  // Onboarding/billing gating for portal routes, with path exceptions
+  // Subscription gating for portal routes ("no portal until paid" approach)
   if (pathname.startsWith('/app')) {
-    // Allow access to onboarding flow without subscription check
-    const exemptPaths = ['/app/onboarding']
+    // Allow access to onboarding success page
+    const exemptPaths = ['/app/onboarding/success']
     const isExempt = exemptPaths.some((p) => pathname.startsWith(p))
 
     if (!isExempt) {
@@ -69,7 +69,7 @@ export async function middleware(request: NextRequest) {
 
         if (projectId && sanityToken) {
           const query = encodeURIComponent(
-            '*[_type=="client" && user._ref==$userId][0]{onboardingStatus,hasActiveSubscription}'
+            '*[_type=="client" && user._ref==$userId][0]{hasActiveSubscription}'
           )
           const url = `https://${projectId}.api.sanity.io/${apiVersion}/data/query/${dataset}?query=${query}&%24userId=${encodeURIComponent(
             payload.id
@@ -82,24 +82,16 @@ export async function middleware(request: NextRequest) {
           if (res.ok) {
             const json = (await res.json()) as {
               result?: {
-                onboardingStatus?: string
                 hasActiveSubscription?: boolean
               }
             }
             const client = json.result
-            // If client doesn't exist or onboarding not completed, redirect to onboarding
-            if (!client || client.onboardingStatus !== 'completed') {
+
+            // Hard gate: No portal access without active subscription
+            if (!client || client.hasActiveSubscription !== true) {
               return NextResponse.redirect(
-                new URL('/app/onboarding', request.url)
+                new URL('/get-started?blocked=no_subscription', request.url)
               )
-            }
-            // If onboarding is complete but no active subscription, redirect to pricing
-            // Only redirect if hasActiveSubscription is explicitly false (graceful degradation)
-            if (
-              client.onboardingStatus === 'completed' &&
-              client.hasActiveSubscription === false
-            ) {
-              return NextResponse.redirect(new URL('/pricing', request.url))
             }
           }
         }

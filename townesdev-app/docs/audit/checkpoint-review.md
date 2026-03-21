@@ -4,6 +4,8 @@ _Last reviewed: 2025-11-04_
 
 This document captures the current state of the onboarding program, operational gaps, documentation hygiene, and forward-looking work necessary to keep the platform healthy for the next 20–30 years. Tasks are grouped by urgency so a solo developer (and supporting agents) can execute systematically.
 
+> Status note: portions of this checklist predate the current self-service onboarding and gating implementation. Use [docs/development/current-resume-plan.md](../development/current-resume-plan.md) as the active execution source when items conflict.
+
 ## Critical (address immediately)
 
 - [x] **Stripe webhook hardening** ✅ COMPLETED
@@ -11,9 +13,9 @@ This document captures the current state of the onboarding program, operational 
   - ✅ Emit structured JSON logs with correlation IDs, provision actions, and failure outcomes
   - ✅ Ops runbook exists at `docs/guides/stripe-webhooks-runbook.md`
   - ✅ Regression tests exist in `src/app/api/stripe/__tests__/webhook.test.ts` and `webhook.regression.test.ts`
-- [ ] **Onboarding → Checkout integration**
-  - Build the checkout orchestration so selections from `Services` feed Stripe line items (base + add-ons + one-time) and the return path resumes the wizard at Review.
-  - Store the resulting subscription/add-on refs in Sanity (client.selectedPlans / selectedAddons) and gate portal access until payment clears.
+- [x] **Onboarding → Checkout integration**
+  - Active self-service onboarding already creates checkout sessions from the public flow.
+  - Portal access is already gated on active subscription state.
 - [ ] **Onboarding review completeness**
   - Expand the Review step copy, status indicators, and CTA grouping so clients clearly understand what will be provisioned, what billing occurs, and next steps.
   - Surface post-provision preview URLs and Stripe billing portal CTA in the success state.
@@ -31,9 +33,9 @@ This document captures the current state of the onboarding program, operational 
 - [ ] **Provisioning UX polish**
   - Replace the simple `alert` usage in `Finish & Provision` with toast/status components, loading states, and retry guidance.
   - Return preview URL + links inside the UI immediately after provisioning succeeds.
-- [ ] **Portal gating & state machine**
-  - Store onboarding progress and stripe status on the Client document (`onboardingStatus`, `hasActiveSubscription`) and enforce gating in `src/app/(portal)/layout.tsx`.
-  - Provide a friendly blocker page with resume CTA and support contact.
+- [ ] **Portal gating follow-through**
+  - Current subscription gating is implemented.
+  - Remaining work is polish, docs cleanup, and any future admin/manual onboarding distinctions.
 - [ ] **Analytics & funnel instrumentation**
   - Define event schema (step viewed/completed, abandonment, checkout start/complete) and wire to analytics provider.
   - Capture metrics so we can iterate on wizard friction.

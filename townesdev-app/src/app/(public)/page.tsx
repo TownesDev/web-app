@@ -69,7 +69,7 @@ export default async function HomePage() {
                   our services.&rdquo;
                 </p>
                 <p className="text-sm text-gray-600 mt-2">
-                  — Donny Townes, Founder
+                  — Donovan Townes, Founder
                 </p>
               </div>
             </div>

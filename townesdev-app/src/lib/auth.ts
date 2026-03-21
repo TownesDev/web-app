@@ -113,7 +113,6 @@ export async function findUserById(id: string): Promise<User | null> {
 
 export async function getCurrentClient() {
   const session = await getSession()
-  console.log('getCurrentClient: Session retrieved:', session)
   if (!session) return null
 
   const client = await sanityWrite.fetch(
@@ -121,11 +120,11 @@ export async function getCurrentClient() {
       _id, name, email, status,
       onboardingStatus, hasActiveSubscription,
       startDate, maintenanceWindow,
+      productName, stripeProductId, stripeSubscriptionId,
       selectedPlan->{name,price,features}
     }`,
     { userId: session.id }
   )
-  console.log('getCurrentClient: Client fetched:', client)
 
   return client || null
 }

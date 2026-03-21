@@ -22,6 +22,8 @@
 
 ## Development Guides
 
+- [**Current Resume Plan**](./development/current-resume-plan.md) - Canonical restart path for active engineering work
+- [**Development Log**](./development/development-log.md) - Running engineering log with decisions and evidence
 - [**🚀 Launch Roadmap 2026**](./guides/launch-roadmap-2026.md) - **START HERE** - 8-week plan to launch by Jan 1, 2026
 - [**Environment Configuration**](./setup/environment.md) - Required environment variables
 - [**Database Setup**](./setup/sanity.md) - Sanity CMS configuration
@@ -47,6 +49,7 @@
 ## Deployment
 
 - [**Production Deployment**](./setup/deployment.md) - Vercel and environment setup
+- [**Vercel Refresh Preflight**](./setup/vercel-refresh-preflight.md) - Ship checklist for the cleaned baseline
 - [**Monitoring**](./guides/monitoring.md) - Health checks and observability
 - [**Security**](./guides/security.md) - Authentication and data protection
 
@@ -56,6 +59,7 @@
 - [**Code Standards**](./guides/standards.md) - TypeScript, linting, and formatting
 - [**API Guidelines**](./guides/api-guidelines.md) - REST endpoint patterns and conventions
 - [**AI Agent Guidelines**](./development/ai-agents.md) - Safe operation rules for AI coding agents
+- [**Development Log**](./development/development-log.md) - Running engineering record for debugging and decisions
 - [**Onboarding Status**](./development/onboarding-status.md) - Implementation tracking
 
 ## Audit & Updates

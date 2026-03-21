@@ -316,6 +316,76 @@ export const client: SchemaTypeDefinition = {
         'Derived from Stripe webhooks; when false, portal will prompt to complete billing',
     },
     {
+      name: 'stripeSubscriptionId',
+      title: 'Stripe Subscription ID',
+      type: 'string',
+      description: 'Active Stripe subscription ID for this client',
+      readOnly: true,
+    },
+    {
+      name: 'stripeProductId',
+      title: 'Stripe Product ID',
+      type: 'string',
+      description: 'Stripe product ID for current subscription',
+      readOnly: true,
+    },
+    {
+      name: 'productName',
+      title: 'Product/Plan Name',
+      type: 'string',
+      description: 'Human-readable product name',
+      readOnly: true,
+    },
+    {
+      name: 'activatedAt',
+      title: 'Activated At',
+      type: 'datetime',
+      description: 'Timestamp when subscription was activated',
+      readOnly: true,
+    },
+    {
+      name: 'metadata',
+      title: 'Onboarding Metadata',
+      type: 'object',
+      description: 'Stores onboarding data from self-service signup',
+      fields: [
+        {
+          name: 'elevatorPitch',
+          title: 'Elevator Pitch',
+          type: 'text',
+          description: 'Business description from signup',
+        },
+        {
+          name: 'brand',
+          title: 'Brand Preferences',
+          type: 'object',
+          fields: [
+            {
+              name: 'logoUrl',
+              title: 'Logo URL',
+              type: 'string',
+            },
+            {
+              name: 'primaryColor',
+              title: 'Primary Color',
+              type: 'string',
+            },
+            {
+              name: 'font',
+              title: 'Font',
+              type: 'string',
+            },
+          ],
+        },
+        {
+          name: 'market',
+          title: 'Market',
+          type: 'string',
+          description: 'Selected market segment',
+        },
+      ],
+    },
+    {
       name: 'botTenantId',
       title: 'Bot Platform Tenant ID',
       type: 'string',
@@ -2545,6 +2615,92 @@ export const schema: { types: SchemaTypeDefinition[] } = {
           readOnly: true,
         },
         { name: 'processedAt', title: 'Processed At', type: 'datetime' },
+      ],
+    },
+    {
+      name: 'adminNotification',
+      title: 'Admin Notification',
+      type: 'document',
+      icon: () => '🔔',
+      fields: [
+        {
+          name: 'type',
+          title: 'Notification Type',
+          type: 'string',
+          options: {
+            list: [
+              { title: '💰 New Signup', value: 'new_signup' },
+              { title: '✅ Payment Success', value: 'payment_success' },
+              { title: '❌ Payment Failed', value: 'payment_failed' },
+              { title: '📄 Invoice Generated', value: 'invoice_generated' },
+              {
+                title: '🔄 Subscription Renewed',
+                value: 'subscription_renewed',
+              },
+              {
+                title: '⚠️ Subscription Cancelled',
+                value: 'subscription_cancelled',
+              },
+            ],
+          },
+          validation: (Rule) => Rule.required(),
+        },
+        {
+          name: 'title',
+          title: 'Title',
+          type: 'string',
+          validation: (Rule) => Rule.required(),
+        },
+        {
+          name: 'message',
+          title: 'Message',
+          type: 'text',
+        },
+        {
+          name: 'client',
+          title: 'Related Client',
+          type: 'reference',
+          to: [{ type: 'client' }],
+        },
+        {
+          name: 'invoice',
+          title: 'Related Invoice',
+          type: 'reference',
+          to: [{ type: 'invoice' }],
+        },
+        {
+          name: 'read',
+          title: 'Read',
+          type: 'boolean',
+          initialValue: false,
+        },
+        {
+          name: 'readAt',
+          title: 'Read At',
+          type: 'datetime',
+        },
+        {
+          name: 'createdAt',
+          title: 'Created At',
+          type: 'datetime',
+          readOnly: true,
+          initialValue: () => new Date().toISOString(),
+        },
+      ],
+      orderings: [
+        {
+          title: 'Newest First',
+          name: 'newestFirst',
+          by: [{ field: 'createdAt', direction: 'desc' }],
+        },
+        {
+          title: 'Unread First',
+          name: 'unreadFirst',
+          by: [
+            { field: 'read', direction: 'asc' },
+            { field: 'createdAt', direction: 'desc' },
+          ],
+        },
       ],
     },
     user,

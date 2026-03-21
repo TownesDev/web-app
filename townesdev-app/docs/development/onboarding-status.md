@@ -1,23 +1,62 @@
 # Onboarding Implementation Status
 
-**Last Updated**: November 4, 2025  
-**Purpose**: Track what's implemented vs what's TODO in the client onboarding flow  
-**Related**: [Checkpoint Review](../audit/checkpoint-review.md) | [Onboarding Plan](../guides/onboarding-plan.md)
+**Last Updated**: March 20, 2026  
+**Purpose**: Current-state onboarding status aligned to the canonical restart plan  
+**Canonical Reference**: [Current Resume Plan](./current-resume-plan.md)
 
 ---
 
+## Current Direction
+
+TownesDev now treats public self-service onboarding at `/get-started` as the canonical client onboarding entry.
+
+The legacy portal wizard at `/app/onboarding` is retired as a primary flow and remains only as a compatibility redirect. Historical notes in older onboarding docs are preserved for context, but they are no longer the execution target.
+
 ## Implementation Status Overview
 
-| Component            | Status         | Notes                                       |
-| -------------------- | -------------- | ------------------------------------------- |
-| Wizard UI            | ✅ Complete    | Basics, Brand, Services, Web, Discord steps |
-| Validation           | ✅ Complete    | Client-side + schema validation             |
-| State Persistence    | ⚠️ Partial     | In-memory only, no Sanity persistence       |
-| Checkout Integration | ❌ Not Started | No wizard → Stripe flow                     |
-| Portal Gating        | ❌ Not Started | No layout.tsx checks                        |
-| Provisioning API     | ✅ Complete    | `/api/clients/provision` exists             |
-| Provisioning UX      | ⚠️ Partial     | No loading states, uses alert()             |
-| Review Step          | ⚠️ Partial     | Basic UI, needs polish                      |
+| Component                  | Status      | Notes                                                              |
+| -------------------------- | ----------- | ------------------------------------------------------------------ |
+| Public self-service wizard | ✅ Complete | `/get-started` is the active onboarding flow                       |
+| Validation                 | ✅ Complete | Client-side validation is in place                                 |
+| Signup + session creation  | ✅ Complete | User and client creation happen before checkout                    |
+| Checkout integration       | ✅ Complete | Stripe checkout is wired from the active onboarding flow           |
+| Webhook activation         | ✅ Complete | Subscription activation is handled in the Stripe webhook           |
+| Portal gating              | ✅ Complete | Middleware blocks portal access without active subscription        |
+| Success flow               | ✅ Complete | Success page verifies checkout session and routes users forward    |
+| Provisioning API           | ✅ Complete | Provisioning endpoints exist                                       |
+| Provisioning UX            | ⚠️ Partial  | Further polish and clearer post-provision feedback still needed    |
+| Review UX                  | ⚠️ Partial  | Active flow works, but summary and next-step messaging can improve |
+| Test coverage              | ⚠️ Partial  | Core gates are green; broader test trust is the next active task   |
+
+## What Changed Since Earlier Docs
+
+- Checkout integration is no longer pending.
+- Portal gating is no longer pending.
+- Webhook activation is no longer pending.
+- The portal onboarding wizard is no longer the primary implementation path.
+
+## Current Gaps
+
+### 1. Provisioning UX Polish
+
+- Improve loading, retry, and status feedback around provisioning flows.
+- Surface clearer preview and next-step links after successful payment and setup.
+
+### 2. Review and Success Copy
+
+- Tighten the active onboarding review step so users have clearer expectations about billing, delivery, and next steps.
+- Ensure post-payment screens consistently route users into the dashboard and support flow.
+
+### 3. Test Confidence
+
+- Expand coverage around the active self-service onboarding, webhook processing, and portal gating flows.
+- Retire or replace tests that still target deprecated onboarding behavior.
+
+## Rules for Future Updates
+
+- Treat [current-resume-plan.md](./current-resume-plan.md) as authoritative when this file conflicts with older launch or audit docs.
+- Update this file only when the active onboarding behavior changes.
+- Record all major onboarding decisions and validation outcomes in [development-log.md](./development-log.md).
 
 ---
 

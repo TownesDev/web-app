@@ -16,7 +16,7 @@ import { qPlanFeatureMappings } from '@/sanity/lib/queries'
 import { ensureInvoiceForSubscription } from '@/lib/invoices'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-09-30.clover',
+  apiVersion: '2025-10-29.clover',
 })
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!
@@ -193,11 +193,17 @@ export async function POST(request: NextRequest) {
           // Handle feature purchase
           await handleFeaturePurchase(session)
         } else if (session.metadata?.planId) {
-          // Handle plan subscription
+          // Handle plan subscription (legacy flow)
           await handlePlanSubscription(session)
+        } else if (
+          session.metadata?.productId &&
+          session.metadata?.sanityClientId
+        ) {
+          // Handle self-service onboarding subscription (new flow)
+          await handleSelfServiceSubscription(session)
         } else {
           console.warn(
-            'Checkout session completed without featureId or planId metadata'
+            'Checkout session completed without featureId, planId, or productId metadata'
           )
         }
         break
@@ -827,6 +833,189 @@ async function handlePlanSubscription(session: Stripe.Checkout.Session) {
     }
   } catch (error) {
     console.error('Error creating retainer:', error)
+  }
+}
+
+// ──────────────── Self-Service Onboarding Handler ────────────────
+
+async function handleSelfServiceSubscription(session: Stripe.Checkout.Session) {
+  const { sanityClientId, sanityUserId, productId } = session.metadata!
+
+  console.log('🎯 Processing self-service subscription:', {
+    clientId: sanityClientId,
+    userId: sanityUserId,
+    productId,
+    subscriptionId: session.subscription,
+  })
+
+  if (!sanityClientId || !session.subscription) {
+    console.error('Missing sanityClientId or subscription ID')
+    return
+  }
+
+  try {
+    // Get subscription details from Stripe
+    const subscription = await stripe.subscriptions.retrieve(
+      session.subscription as string
+    )
+
+    console.log('✅ Retrieved subscription:', {
+      id: subscription.id,
+      status: subscription.status,
+    })
+
+    // Get the Stripe invoice and create it in Sanity
+    try {
+      const stripeInvoice = await stripe.invoices.retrieve(
+        subscription.latest_invoice as string,
+        { expand: ['payment_intent'] }
+      ) // Get product name from metadata or subscription
+      let productName = 'Subscription'
+      if (productId) {
+        try {
+          const product = await stripe.products.retrieve(productId)
+          productName = product.name
+        } catch {
+          console.warn('Could not retrieve product name')
+        }
+      }
+
+      // Create invoice in Sanity
+      const invoiceId = randomUUID()
+      const amountPaid = stripeInvoice.amount_paid / 100
+      await sanityWrite.create({
+        _id: invoiceId,
+        _type: 'invoice',
+        client: { _type: 'reference', _ref: sanityClientId },
+        invoiceNumber: stripeInvoice.number || `INV-${Date.now()}`,
+        status: 'paid',
+        totalAmount: amountPaid,
+        currency: stripeInvoice.currency.toUpperCase(),
+        issueDate: stripeInvoice.created
+          ? new Date(stripeInvoice.created * 1000).toISOString()
+          : new Date().toISOString(),
+        dueDate: stripeInvoice.due_date
+          ? new Date(stripeInvoice.due_date * 1000).toISOString()
+          : new Date().toISOString(),
+        paidDate: stripeInvoice.status_transitions.paid_at
+          ? new Date(
+              stripeInvoice.status_transitions.paid_at * 1000
+            ).toISOString()
+          : new Date().toISOString(),
+        stripeInvoiceId: stripeInvoice.id,
+        description: `${productName} - Initial Payment`,
+        lineItems: [
+          {
+            description: productName,
+            quantity: 1,
+            rate: amountPaid,
+            amount: amountPaid,
+          },
+        ],
+      })
+
+      console.log('✅ Invoice created in Sanity:', invoiceId)
+
+      // Get client info for notification
+      const clientInfo = await runQuery(
+        `*[_type=="client" && _id==$id][0]{ name, email }`,
+        { id: sanityClientId }
+      )
+
+      // Create admin notification for new signup
+      await sanityWrite.create({
+        _type: 'adminNotification',
+        type: 'new_signup',
+        title: `New Client Signup: ${clientInfo?.name || 'Unknown'}`,
+        message: `${clientInfo?.name || 'Unknown'} (${clientInfo?.email}) signed up for ${productName} ($${stripeInvoice.amount_paid / 100})`,
+        client: { _type: 'reference', _ref: sanityClientId },
+        invoice: { _type: 'reference', _ref: invoiceId },
+        read: false,
+        createdAt: new Date().toISOString(),
+      })
+
+      console.log('✅ Admin notification created')
+
+      // Store product name for later use
+      const selectedProductName = productName
+      const selectedProductId = productId
+
+      // Activate client account and store product info
+      await sanityWrite
+        .patch(sanityClientId)
+        .set({
+          hasActiveSubscription: true,
+          stripeSubscriptionId: subscription.id,
+          stripeProductId: selectedProductId,
+          productName: selectedProductName,
+          onboardingStatus: 'completed',
+          activatedAt: new Date().toISOString(),
+        })
+        .commit()
+    } catch (invoiceError) {
+      console.error('❌ Failed to create invoice:', invoiceError)
+      // Don't fail the whole activation if invoice creation fails
+
+      // Still activate the client even if invoice failed
+      await sanityWrite
+        .patch(sanityClientId)
+        .set({
+          hasActiveSubscription: true,
+          stripeSubscriptionId: subscription.id,
+          onboardingStatus: 'completed',
+          activatedAt: new Date().toISOString(),
+        })
+        .commit()
+    }
+
+    console.log('✅ Client activated:', sanityClientId)
+
+    // Send welcome email
+    try {
+      const client = await runQuery(
+        `*[_type=="client" && _id==$id][0]{ name, email }`,
+        { id: sanityClientId }
+      )
+
+      if (client?.email) {
+        const templateData = await getEmailTemplateByName('Welcome Activation')
+
+        if (templateData && templateData.htmlBody) {
+          const vars = {
+            clientName: client.name || 'there',
+          }
+
+          const subject = mergeVars(
+            templateData.subject || 'Welcome to TownesDev!',
+            vars
+          )
+          const htmlRaw = ptToHtml(templateData.htmlBody)
+          const textRaw = ptToPlainText(templateData.htmlBody)
+          const html = mergeVars(htmlRaw, vars)
+          const text = mergeVars(textRaw, vars)
+
+          await resend.emails.send({
+            from: EMAIL_FROM,
+            to: client.email,
+            subject,
+            html,
+            text,
+          })
+
+          console.log('✅ Welcome email sent to:', client.email)
+        } else {
+          console.warn('⚠️ Welcome email template not found')
+        }
+      }
+    } catch (emailError) {
+      console.error('❌ Failed to send welcome email:', emailError)
+      // Don't fail the webhook if email fails
+    }
+
+    console.log('🎉 Self-service subscription activation complete!')
+  } catch (error) {
+    console.error('❌ Error activating self-service subscription:', error)
+    throw error
   }
 }
 

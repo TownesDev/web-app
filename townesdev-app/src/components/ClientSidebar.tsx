@@ -5,16 +5,12 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import {
   LayoutDashboard,
-  FileText,
   AlertTriangle,
-  Calendar,
   Menu,
   X,
   Settings,
   CreditCard,
-  Award,
   Layers,
-  FileBarChart,
 } from 'lucide-react'
 
 interface NavItem {
@@ -35,38 +31,18 @@ const navItems: NavItem[] = [
     icon: Layers,
   },
   {
-    href: '/app/entitlements',
-    label: 'Subscriptions',
-    icon: Award,
-  },
-  {
-    href: '/app/plans',
-    label: 'Upgrade Plans',
-    icon: CreditCard,
-  },
-  {
-    href: '/app/invoices',
-    label: 'Invoices',
-    icon: FileText,
-  },
-  {
     href: '/app/incidents',
     label: 'Support',
     icon: AlertTriangle,
   },
   {
-    href: '/app/rhythm',
-    label: 'Monthly Rhythm',
-    icon: Calendar,
-  },
-  {
-    href: '/app/reports',
-    label: 'Reports',
-    icon: FileBarChart,
+    href: '/app/invoices',
+    label: 'Billing',
+    icon: CreditCard,
   },
   {
     href: '/app/profile',
-    label: 'Account Settings',
+    label: 'Settings',
     icon: Settings,
   },
 ]

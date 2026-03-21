@@ -1,13 +1,13 @@
 ---
-
-title: "Client Onboarding (Web App + Discord)"
-slug: "/onboarding-plan"
-
+title: 'Client Onboarding (Web App + Discord)'
+slug: '/onboarding-plan'
 ---
 
 <!-- Canonical onboarding plan. Created 2025-10-31 from CLIENT_ONBOARDING_ISSUES.md -->
 
 # Onboarding Plan — Client Onboarding (Web App + Discord)
+
+> Status note: this is a design and architecture guide, not the canonical restart checklist. The active client onboarding entry is `/get-started`, and the current execution order lives in [docs/development/current-resume-plan.md](../development/current-resume-plan.md).
 
 This document defines the end-to-end client onboarding flow, pricing/plan structure (base retainer + service add-ons), Sanity schemas, Stripe integration, RBAC, site generation, and operational considerations. It is designed to work for any client vertical (musician, bakery, thrift store, etc.) and to scale to higher-demand clients.
 
@@ -16,8 +16,8 @@ This document defines the end-to-end client onboarding flow, pricing/plan struct
 ## 2) User journey overview
 
 1. Discover: public site → Start Project / Contact → brief intake
-2. Account & Checkout: signup → pick base retainer → select add-ons → pay
-3. Onboarding Wizard (Portal): brand, vertical, service selection, content basics, domain
+2. Account & Checkout: signup at `/get-started` → pick product → pay
+3. Post-payment success: verify session, activate subscription, route into portal
 4. Provisioning: create tenant, initialize content, set entitlements, create preview
 5. Review & Launch: client previews, requests tweaks → connect domain → go live
 6. Ongoing: manage content (Sanity), subscriptions (Stripe portal), support (portal)
@@ -101,16 +101,15 @@ Rationale for Project modeling: prefer separate documents for WebsiteProject and
 - Billing page linking to Stripe Portal
 - Website preview links
 
-### 8.a) Portal gating for incomplete onboarding
+### 8.a) Portal gating for inactive subscriptions
 
 - Input: authenticated user; derived client via current session
-- Gate condition: client.onboardingStatus !== 'completed' OR !hasActiveSubscription
-- Behavior: redirect to /app/onboarding if wizard incomplete; if payment missing, redirect to /app/plans or the checkout resume link
-- Success: access to full portal only when onboarding is completed and subscription is active
-- Schema: add onboardingStatus to client (enum), optional hasActiveSubscription boolean (or derive from Stripe webhook state)
-- Server check: in src/app/(portal)/layout.tsx, after getCurrentClient(), enforce gate and redirect
-- UX: show a friendly blocker page with progress and a “Resume onboarding” CTA
-- Webhooks: keep client state in sync after Stripe events
+- Gate condition: `hasActiveSubscription !== true`
+- Behavior: redirect blocked portal access to `/get-started?blocked=no_subscription`
+- Success: access to the full portal only when subscription activation has completed
+- Schema: keep `hasActiveSubscription` in sync from Stripe webhook state
+- Server check: enforce gating in middleware and keep post-payment success routes exempt
+- UX: use public onboarding as the resume and payment entry point, not the retired portal wizard
 - Clients listing with plan/add-ons, status, quick actions
 - Service catalog (Plans/Services) editor views
 

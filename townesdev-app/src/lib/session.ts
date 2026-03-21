@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers'
-import { verifyToken } from './auth'
+import { verifyToken, generateToken } from './auth'
 import { runQuery } from './client'
 import { qUserById } from '../sanity/lib/queries'
 
@@ -8,6 +8,29 @@ export interface SessionUser {
   email: string
   name: string
   role: string
+}
+
+function isDynamicServerUsageError(error: unknown): boolean {
+  if (!(error instanceof Error)) return false
+
+  const withDigest = error as Error & { digest?: string }
+  return (
+    withDigest.digest === 'DYNAMIC_SERVER_USAGE' ||
+    error.message.includes('Dynamic server usage')
+  )
+}
+
+export async function createSession(user: SessionUser): Promise<void> {
+  const token = generateToken(user)
+  const cookieStore = await cookies()
+
+  cookieStore.set('auth-token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 60 * 60 * 24 * 7, // 7 days
+    path: '/',
+  })
 }
 
 export async function getSession(): Promise<SessionUser | null> {
@@ -37,7 +60,9 @@ export async function getSession(): Promise<SessionUser | null> {
       role: user.role || 'user',
     }
   } catch (error) {
-    console.error('Session error:', error)
+    if (!isDynamicServerUsageError(error)) {
+      console.error('Session error:', error)
+    }
     return null
   }
 }

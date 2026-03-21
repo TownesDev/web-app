@@ -1,8 +1,10 @@
 # TownesDev Launch Roadmap - Jan 1, 2026
 
+> Status note: this document is a historical launch-planning snapshot. For the current execution order and active engineering direction, use [docs/development/current-resume-plan.md](../development/current-resume-plan.md).
+
 **Created**: November 4, 2025  
 **Launch Target**: January 1, 2026 (8 weeks)  
-**Status**: Pre-Launch Planning  
+**Status**: Historical Planning Snapshot  
 **Owner**: Primary Developer
 
 ---
@@ -21,13 +23,13 @@
 
 **Current Reality**:
 
-- ✅ Platform is 80% technically ready
-- ❌ No pricing page, incomplete checkout
-- ❌ No public marketing presence
-- ❌ No monitoring or support system
-- ✅ Excellent documentation and architecture
+- ✅ Public self-service onboarding exists at `/get-started`
+- ✅ Stripe checkout, webhook activation, and portal gating are implemented
+- ✅ Core validation baseline is restored: typecheck, lint, and build are green
+- ⚠️ Test suite and stale documentation still require ongoing reconciliation
+- ❌ Monitoring, support operations, and launch execution still need focused follow-through
 
-**Critical Truth**: You're not missing features. You're missing **business operations**.
+**Critical Truth**: The platform is further along than this original plan assumes. The main remaining work is operational readiness, documentation accuracy, and validation depth.
 
 ---
 
