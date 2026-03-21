@@ -1,0 +1,5 @@
+{
+  "buildCommand": "cd townesdev-app && npm run build",
+  "installCommand": "cd townesdev-app && npm install",
+  "outputDirectory": "townesdev-app/.next"
+}
