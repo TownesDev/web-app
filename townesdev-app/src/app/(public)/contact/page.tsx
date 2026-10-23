@@ -3,7 +3,10 @@ import { runPublicQuery } from '../../../lib/public/client'
 import { qContact } from '../../../sanity/lib/queries'
 import { ContactInfo } from '../../../types/cms'
 import { draftMode } from 'next/headers'
-import { isMaintenanceMode } from '@/lib/maintenance'
+import {
+  getMaintenanceMetadata,
+  isMaintenanceMode,
+} from '@/lib/maintenance'
 
 async function getContactInfo(): Promise<ContactInfo | null> {
   const { isEnabled } = await draftMode()
@@ -377,6 +380,8 @@ export default async function ContactPage() {
 }
 
 export async function generateMetadata() {
+  if (isMaintenanceMode()) return getMaintenanceMetadata()
+
   return {
     title: 'Contact Us - TownesDev',
     description:

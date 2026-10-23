@@ -10,6 +10,7 @@ const forbiddenSerializedContent = [
   'Get In Touch',
   'Sweet Sunrise Bakery',
   'The Midnight Collective',
+  'independent development studio',
   'mailto:',
   'tel:',
 ]
@@ -56,6 +57,11 @@ test.describe('maintenance mode', () => {
       await expect(main).not.toContainText('Enter (Testers)')
       await expect(main).not.toContainText('Continue to checkout')
       await expect(main).not.toContainText('Create your account')
+      await expect(page).toHaveTitle('TownesDev')
+      await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+        'content',
+        holdingMessage
+      )
 
       const serializedHtml = await page.content()
       for (const legacyContent of forbiddenSerializedContent) {

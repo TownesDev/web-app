@@ -4,6 +4,10 @@ import './globals.css'
 import '../styles/accessibility.css'
 import { getSEOConfig } from '../sanity/lib/seo'
 import { Toaster } from 'sonner'
+import {
+  getMaintenanceMetadata,
+  isMaintenanceMode,
+} from '@/lib/maintenance'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -16,6 +20,8 @@ const geistMono = Geist_Mono({
 })
 
 export async function generateMetadata(): Promise<Metadata> {
+  if (isMaintenanceMode()) return getMaintenanceMetadata()
+
   const seoConfig = await getSEOConfig()
 
   return {

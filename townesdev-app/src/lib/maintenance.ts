@@ -14,6 +14,8 @@ export function getMaintenanceMetadata(): Metadata {
   if (!isMaintenanceMode()) return {}
 
   return {
+    title: 'TownesDev',
+    description: HOLDING_MESSAGE,
     robots: {
       index: false,
       follow: false,
