@@ -218,3 +218,38 @@ Purpose: running engineering log for implementation, debugging, and architectura
 - Follow-up Tasks:
   - Obtain separate Captain GO before creating or promoting any deployment.
   - If approved later, create a protected preview and verify the same route matrix before production promotion.
+
+### Entry 007
+
+- Date/Time: 2026-10-23
+- Session Label: CR-TD-01 Protected Preview Handoff
+- Trigger/Context: Captain authorized a protected preview for personal verification and explicitly kept production promotion gated.
+- Problem Statement: The approved maintenance build needed a private Vercel preview without exporting local credentials, changing production aliases, or weakening deployment protection for automated access.
+- Actions Taken:
+  - Confirmed the linked Vercel project targets `townesdev-app` and deployed only to the Preview environment with `MAINTENANCE_MODE=true` forced at build time and runtime.
+  - Supplied only the required public Sanity identifiers to the preview build; no Stripe, email, Sanity write, session, or other local secret was exported.
+  - Deferred Stripe client construction until a Stripe-backed operation is invoked so builds do not require a payment credential merely to collect route data.
+  - Re-ran typecheck, lint, all unit tests, and the maintenance production build after the initialization change.
+  - Confirmed the deployment target is Preview, its Vercel status is Ready, and an unauthenticated request is redirected to Vercel SSO.
+  - Declined to create a project-wide automation bypass secret; authenticated visual review remains with the Captain.
+- Evidence/Output:
+  - Preview URL: `https://townesdev-jcht9pxwp-donovan-townes-projects.vercel.app`.
+  - Vercel deployment ID: `dpl_HWz1WPfyGZBFDygKjQNDuo5i167n`.
+  - Vercel inspection: target `preview`, status `Ready`.
+  - Protection probe: unauthenticated `/` returned `302` to Vercel SSO with `Cache-Control: no-store`, `X-Frame-Options: DENY`, and `X-Robots-Tag: noindex`.
+  - Verification commit: `794a53a8427fe4bec5e403ffd99bede7378d6d18`.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - `npm test -- --runInBand` passed with 11 suites and 39 tests.
+  - `MAINTENANCE_MODE=true npm run build` passed with 46 generated static pages.
+  - The complete holding-page route matrix remains covered by the prior local 11/11 Playwright crawl; preview content inspection is pending Captain authentication because deployment protection is active.
+- Decision:
+  - Treat the protected preview as ready for Captain review, not production release.
+  - Production aliases, domains, DNS, email, payment data, and customer data remain untouched.
+- Rollback:
+  - No production rollback is required because the deployment has not been promoted or aliased to production.
+  - To withdraw the preview, remove deployment `dpl_HWz1WPfyGZBFDygKjQNDuo5i167n` from Vercel after explicit approval.
+  - To revert code, revert commits `794a53a8427fe4bec5e403ffd99bede7378d6d18` and `fa9a2fe7ac221f426c5f52dbc5f87a96efaeda90`, then rerun all quality gates.
+- Follow-up Tasks:
+  - Captain verifies the protected preview and records approval or requested changes.
+  - Do not promote to production without a separate explicit Captain GO.
