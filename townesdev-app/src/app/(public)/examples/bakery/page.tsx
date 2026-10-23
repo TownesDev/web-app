@@ -1,13 +1,23 @@
 import { Metadata } from 'next'
 import { MapPin, Phone, Mail, Clock, Facebook, Instagram } from 'lucide-react'
+import {
+  getMaintenanceMetadata,
+  isMaintenanceMode,
+} from '@/lib/maintenance'
 
-export const metadata: Metadata = {
-  title: 'Sweet Sunrise Bakery - Fresh Baked Goods Daily',
-  description:
-    'Fresh artisan breads, pastries, and cakes baked daily. Visit us in downtown for the best coffee and baked goods.',
+export function generateMetadata(): Metadata {
+  if (isMaintenanceMode()) return getMaintenanceMetadata()
+
+  return {
+    title: 'Sweet Sunrise Bakery - Fresh Baked Goods Daily',
+    description:
+      'Fresh artisan breads, pastries, and cakes baked daily. Visit us in downtown for the best coffee and baked goods.',
+  }
 }
 
 export default function BakeryPage() {
+  if (isMaintenanceMode()) return null
+
   return (
     <div className="min-h-screen bg-amber-50">
       {/* Hero Section */}

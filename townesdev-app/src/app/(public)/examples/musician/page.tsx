@@ -9,14 +9,24 @@ import {
   Twitter,
   Youtube,
 } from 'lucide-react'
+import {
+  getMaintenanceMetadata,
+  isMaintenanceMode,
+} from '@/lib/maintenance'
 
-export const metadata: Metadata = {
-  title: 'The Midnight Collective - Alternative Rock Band',
-  description:
-    'Official website for The Midnight Collective. Listen to our music, check tour dates, and connect with us.',
+export function generateMetadata(): Metadata {
+  if (isMaintenanceMode()) return getMaintenanceMetadata()
+
+  return {
+    title: 'The Midnight Collective - Alternative Rock Band',
+    description:
+      'Official website for The Midnight Collective. Listen to our music, check tour dates, and connect with us.',
+  }
 }
 
 export default function MusicianPage() {
+  if (isMaintenanceMode()) return null
+
   return (
     <div className="min-h-screen bg-slate-900 text-white">
       {/* Hero Section */}

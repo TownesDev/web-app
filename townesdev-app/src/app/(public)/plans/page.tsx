@@ -3,6 +3,7 @@ import { qPlans } from '@/sanity/lib/queries'
 import { draftMode } from 'next/headers'
 import { PlansPicker } from '@/components/public/PlansPicker'
 import { PortfolioShowcase } from '@/components/public/PortfolioShowcase'
+import { isMaintenanceMode } from '@/lib/maintenance'
 
 interface Plan {
   _id: string
@@ -33,6 +34,8 @@ async function getPlans(): Promise<Plan[]> {
 export const revalidate = 0 // Always fetch fresh plans to reflect catalog updates
 
 export default async function PlansPage() {
+  if (isMaintenanceMode()) return null
+
   const plans = await getPlans()
   const basePlans = plans.filter((p) => p.category === 'base')
   const addOnPlans = plans.filter((p) => p.category === 'addon')

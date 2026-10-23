@@ -1,15 +1,26 @@
+import type { Metadata } from 'next'
 import { PricingSegment } from '@/components/public/PricingSegment'
 import { PricingTier } from '@/components/public/PricingCard'
+import {
+  getMaintenanceMetadata,
+  isMaintenanceMode,
+} from '@/lib/maintenance'
 
-export const metadata = {
-  title: 'Pricing - TownesDev',
-  description:
-    'Choose the perfect plan for your business needs. Transparent pricing for small businesses, Discord bots, and musicians.',
+export function generateMetadata(): Metadata {
+  if (isMaintenanceMode()) return getMaintenanceMetadata()
+
+  return {
+    title: 'Pricing - TownesDev',
+    description:
+      'Choose the perfect plan for your business needs. Transparent pricing for small businesses, Discord bots, and musicians.',
+  }
 }
 
 export const revalidate = 3600 // Revalidate every hour for marketing content
 
 export default function PricingPage() {
+  if (isMaintenanceMode()) return null
+
   // Small Businesses Pricing Data
   const smallBusinessTiers: PricingTier[] = [
     {

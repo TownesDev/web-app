@@ -3,6 +3,17 @@ import { test, expect } from '@playwright/test'
 const holdingMessage =
   'This site is being simplified. No services, subscriptions, or client sign-ups are currently offered here.'
 
+const forbiddenSerializedContent = [
+  'WHY START WITH TOWNESDEV?',
+  'Small Business Plans',
+  '$1,000',
+  'Get In Touch',
+  'Sweet Sunrise Bakery',
+  'The Midnight Collective',
+  'mailto:',
+  'tel:',
+]
+
 const heldRoutes = [
   '/',
   '/plans',
@@ -45,6 +56,11 @@ test.describe('maintenance mode', () => {
       await expect(main).not.toContainText('Enter (Testers)')
       await expect(main).not.toContainText('Continue to checkout')
       await expect(main).not.toContainText('Create your account')
+
+      const serializedHtml = await page.content()
+      for (const legacyContent of forbiddenSerializedContent) {
+        expect(serializedHtml, legacyContent).not.toContain(legacyContent)
+      }
 
       const robots = await page
         .locator('meta[name="robots"]')

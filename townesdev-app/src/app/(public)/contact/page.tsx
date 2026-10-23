@@ -3,6 +3,7 @@ import { runPublicQuery } from '../../../lib/public/client'
 import { qContact } from '../../../sanity/lib/queries'
 import { ContactInfo } from '../../../types/cms'
 import { draftMode } from 'next/headers'
+import { isMaintenanceMode } from '@/lib/maintenance'
 
 async function getContactInfo(): Promise<ContactInfo | null> {
   const { isEnabled } = await draftMode()
@@ -24,6 +25,8 @@ async function getContactInfo(): Promise<ContactInfo | null> {
 export const revalidate = 300 // Revalidate every 5 minutes
 
 export default async function ContactPage() {
+  if (isMaintenanceMode()) return null
+
   const contact = await getContactInfo()
 
   // Fallback contact info if CMS is unavailable
