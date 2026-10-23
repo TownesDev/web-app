@@ -1,11 +1,17 @@
 import { ReactNode } from 'react'
+import type { Metadata } from 'next'
 import '../globals.css'
 import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 import { SanityLive } from '../../sanity/lib/live'
-import { draftMode, cookies } from 'next/headers'
+import { draftMode } from 'next/headers'
 import { VisualEditingClient } from './visual-editing'
 import MaintenanceCover from './MaintenanceCover'
+import { getMaintenanceMetadata, isMaintenanceMode } from '@/lib/maintenance'
+
+export function generateMetadata(): Metadata {
+  return getMaintenanceMetadata()
+}
 
 async function PreviewBanner() {
   const { isEnabled } = await draftMode()
@@ -30,9 +36,7 @@ export default async function PublicLayout({
 }: {
   children: ReactNode
 }) {
-  const maintenance = process.env.MAINTENANCE_MODE === 'true'
-  const cookieStore = await cookies()
-  const bypass = cookieStore.get('maintenance-bypass')?.value
+  if (isMaintenanceMode()) return <MaintenanceCover />
 
   return (
     <div
@@ -45,7 +49,6 @@ export default async function PublicLayout({
       <Footer variant="public" />
       <SanityLive />
       <VisualEditingClient />
-      {maintenance && bypass !== 'allow' ? <MaintenanceCover /> : null}
     </div>
   )
 }

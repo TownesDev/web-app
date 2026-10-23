@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/session'
 import { runQuery, sanityWrite } from '@/lib/client'
 import { stripe } from '@/lib/stripe'
+import { isMaintenanceMode } from '@/lib/maintenance'
+import { maintenanceUnavailableResponse } from '@/lib/maintenanceResponse'
 
 const qClientByUserId = `*[_type == "client" && user._ref == $userId][0]{
   _id,
@@ -11,6 +13,8 @@ const qClientByUserId = `*[_type == "client" && user._ref == $userId][0]{
 }`
 
 export async function POST(request: NextRequest) {
+  if (isMaintenanceMode()) return maintenanceUnavailableResponse()
+
   try {
     // Require authentication
     const session = await requireAuth()

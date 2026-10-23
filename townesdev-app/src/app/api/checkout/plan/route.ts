@@ -2,12 +2,16 @@ import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { runQuery } from '@/lib/client'
 import { getSession } from '@/lib/session'
+import { isMaintenanceMode } from '@/lib/maintenance'
+import { maintenanceUnavailableResponse } from '@/lib/maintenanceResponse'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-10-29.clover',
 })
 
 export async function POST(request: NextRequest) {
+  if (isMaintenanceMode()) return maintenanceUnavailableResponse()
+
   try {
     console.log('🔍 Checkout plan request received')
 

@@ -184,3 +184,37 @@ Purpose: running engineering log for implementation, debugging, and architectura
 - Follow-up Tasks:
   - Run one full post-deploy Stripe test-mode checkout and verify webhook event receipt, client activation, and portal access.
   - Record Stripe verification outcome in this log once completed.
+
+### Entry 006
+
+- Date/Time: 2026-10-23
+- Session Label: CR-TD-01 Neutral Holding Page and Public-Route Lockdown
+- Trigger/Context: Captain approved the exact holding copy in CR-ID-25 and authorized local implementation and validation, with production deployment remaining separately gated.
+- Problem Statement: The maintenance overlay left the legacy public site in the DOM, exposed stale prices and contact data, offered tester access, and left signup and checkout submission paths reachable.
+- Actions Taken:
+  - Changed the public layout to return the holding page before rendering the public header, route content, footer, Sanity live updates, or visual editing.
+  - Replaced the translucent client-side overlay with an opaque semantic holding page containing only the approved copy and Donovan link.
+  - Applied the same holding response and temporary `noindex, nofollow` metadata to `/auth/signup`.
+  - Removed the maintenance bypass endpoint and its post-sign-in client hook.
+  - Blocked the legacy public signup, plan checkout, and product checkout POST endpoints with maintenance-only `503` responses and `X-Robots-Tag: noindex, nofollow`.
+  - Added focused Jest and Playwright coverage for public content, controls, metadata, API lockdown, health, and tester access.
+  - Crawled `/`, `/plans`, `/pricing`, `/contact`, `/examples/bakery`, `/examples/musician`, `/get-started`, and `/auth/signup` against the local production build with maintenance mode enabled.
+- Evidence/Output:
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - `npm test -- --runInBand` passed with 11 suites and 39 tests.
+  - `MAINTENANCE_MODE=true npm run build` passed with 46 generated static pages.
+  - `npx playwright test e2e/maintenance.spec.ts --reporter=line` passed 11/11 tests.
+  - `/api/health` returned `200`; the three legacy submission endpoints returned `503`; `/api/maintenance/bypass` returned `404`.
+  - Desktop preview: `docs/development/evidence/cr-td-01/holding-page.png`.
+  - Mobile preview: `docs/development/evidence/cr-td-01/holding-page-mobile.png`.
+- Decision:
+  - Treat the local holding-page implementation as verified and ready for protected preview/release review.
+  - Stop before production. No deployment, redirect, DNS, MX/email, Stripe data, Sanity content, customer data, or authenticated/admin/portal behavior was changed.
+- Rollback:
+  - Revert the focused CR-TD-01 commit on this branch.
+  - Restore the prior maintenance environment setting for the target environment.
+  - Re-run typecheck, lint, unit tests, build, and the route crawl before any release action.
+- Follow-up Tasks:
+  - Obtain separate Captain GO before creating or promoting any deployment.
+  - If approved later, create a protected preview and verify the same route matrix before production promotion.

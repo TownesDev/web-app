@@ -2,9 +2,13 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createUser, findUserByEmail } from '../../../../lib/auth'
 import { sanityWrite } from '@/lib/client'
 import { createSession } from '@/lib/session'
+import { isMaintenanceMode } from '@/lib/maintenance'
+import { maintenanceUnavailableResponse } from '@/lib/maintenanceResponse'
 import { v4 as uuidv4 } from 'uuid'
 
 export async function POST(request: NextRequest) {
+  if (isMaintenanceMode()) return maintenanceUnavailableResponse()
+
   try {
     const {
       email,
