@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/session'
-import { getClientByUserId, stripe } from '@/lib/stripe'
+import { getClientByUserId, getStripeClient } from '@/lib/stripe'
 
 export async function POST(req: NextRequest) {
   try {
@@ -37,10 +37,11 @@ export async function POST(req: NextRequest) {
       ? `${baseUrl.replace(/\/$/, '')}/app/plans`
       : undefined
 
-    const portalSession = await stripe.billingPortal.sessions.create({
-      customer: client.stripeCustomerId,
-      ...(returnUrl ? { return_url: returnUrl } : {}),
-    })
+    const portalSession =
+      await getStripeClient().billingPortal.sessions.create({
+        customer: client.stripeCustomerId,
+        ...(returnUrl ? { return_url: returnUrl } : {}),
+      })
 
     return NextResponse.json({ url: portalSession.url })
   } catch (error) {

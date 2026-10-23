@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/session'
 import { runQuery, sanityWrite } from '@/lib/client'
-import { stripe } from '@/lib/stripe'
+import { getStripeClient } from '@/lib/stripe'
 import { isMaintenanceMode } from '@/lib/maintenance'
 import { maintenanceUnavailableResponse } from '@/lib/maintenanceResponse'
 
@@ -37,6 +37,8 @@ export async function POST(request: NextRequest) {
         { status: 404 }
       )
     }
+
+    const stripe = getStripeClient()
 
     // Get the Stripe product and prices
     const product = await stripe.products.retrieve(productId, {

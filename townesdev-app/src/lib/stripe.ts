@@ -2,9 +2,15 @@ import Stripe from 'stripe'
 import { runQuery } from './client'
 import { sanityWrite } from './client'
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-10-29.clover',
-})
+let stripeClient: Stripe | undefined
+
+export function getStripeClient(): Stripe {
+  stripeClient ??= new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: '2025-10-29.clover',
+  })
+
+  return stripeClient
+}
 
 /**
  * Get or create a Stripe customer for a client
@@ -21,7 +27,7 @@ export async function getOrCreateCustomer(client: {
   }
 
   // Create new Stripe customer
-  const customer = await stripe.customers.create({
+  const customer = await getStripeClient().customers.create({
     email: client.email,
     name: client.name,
     metadata: {

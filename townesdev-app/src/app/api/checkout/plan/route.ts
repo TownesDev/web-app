@@ -4,10 +4,7 @@ import { runQuery } from '@/lib/client'
 import { getSession } from '@/lib/session'
 import { isMaintenanceMode } from '@/lib/maintenance'
 import { maintenanceUnavailableResponse } from '@/lib/maintenanceResponse'
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-10-29.clover',
-})
+import { getStripeClient } from '@/lib/stripe'
 
 export async function POST(request: NextRequest) {
   if (isMaintenanceMode()) return maintenanceUnavailableResponse()
@@ -164,7 +161,7 @@ export async function POST(request: NextRequest) {
 
     // Create Stripe Checkout Session for subscription
     console.log('🔍 Creating Stripe checkout session...')
-    const session = await stripe.checkout.sessions.create({
+    const session = await getStripeClient().checkout.sessions.create({
       payment_method_types: ['card'],
       line_items,
       mode: 'subscription',

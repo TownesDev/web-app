@@ -1,5 +1,4 @@
-import Stripe from 'stripe'
-import { stripe } from './stripe'
+import { getStripeClient } from './stripe'
 import { sanityWrite } from './client'
 
 interface EnsureInvoiceArgs {
@@ -17,7 +16,7 @@ export async function ensureInvoiceForSubscription({
   planName,
   subscriptionId,
 }: EnsureInvoiceArgs) {
-  const invoices = await stripe.invoices.list({
+  const invoices = await getStripeClient().invoices.list({
     subscription: subscriptionId,
     limit: 1,
   })

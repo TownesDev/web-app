@@ -1,7 +1,11 @@
 import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
 import { getSession } from '../../../lib/session'
-import { getClientByUserId, getPlanById, stripe } from '../../../lib/stripe'
+import {
+  getClientByUserId,
+  getPlanById,
+  getStripeClient,
+} from '../../../lib/stripe'
 import { sanityWrite } from '../../../lib/client'
 import Stripe from 'stripe'
 
@@ -82,7 +86,8 @@ async function ensureRetainerCreated(session: Stripe.Checkout.Session) {
 
     // Get subscription details from Stripe
     const subscriptionId = session.subscription as string
-    const subscription = await stripe.subscriptions.retrieve(subscriptionId)
+    const subscription =
+      await getStripeClient().subscriptions.retrieve(subscriptionId)
     const sub = subscription as unknown as Stripe.Subscription & {
       current_period_start: number
       current_period_end: number

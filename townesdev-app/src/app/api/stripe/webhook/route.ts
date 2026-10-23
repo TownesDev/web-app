@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import Stripe from 'stripe'
+import type Stripe from 'stripe'
 import { runQuery, sanityWrite } from '@/lib/client'
 import { logInfo, logError } from '@/lib/structuredLogger'
 import { randomUUID } from 'crypto'
@@ -14,10 +14,7 @@ import {
 import { runAdminQuery } from '@/lib/admin/client'
 import { qPlanFeatureMappings } from '@/sanity/lib/queries'
 import { ensureInvoiceForSubscription } from '@/lib/invoices'
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-10-29.clover',
-})
+import { getStripeClient } from '@/lib/stripe'
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
@@ -35,7 +32,7 @@ export async function POST(request: NextRequest) {
   let event: Stripe.Event
 
   try {
-    event = stripe.webhooks.constructEvent(body, sig, endpointSecret)
+    event = getStripeClient().webhooks.constructEvent(body, sig, endpointSecret)
     logInfo('webhook.verified', {
       eventType: event.type,
       eventId: event.id,
@@ -372,7 +369,7 @@ async function handlePlanSubscription(session: Stripe.Checkout.Session) {
 
   try {
     // Get subscription details from Stripe
-    const subscription = await stripe.subscriptions.retrieve(
+    const subscription = await getStripeClient().subscriptions.retrieve(
       session.subscription as string
     )
 
@@ -855,7 +852,7 @@ async function handleSelfServiceSubscription(session: Stripe.Checkout.Session) {
 
   try {
     // Get subscription details from Stripe
-    const subscription = await stripe.subscriptions.retrieve(
+    const subscription = await getStripeClient().subscriptions.retrieve(
       session.subscription as string
     )
 
@@ -866,14 +863,14 @@ async function handleSelfServiceSubscription(session: Stripe.Checkout.Session) {
 
     // Get the Stripe invoice and create it in Sanity
     try {
-      const stripeInvoice = await stripe.invoices.retrieve(
+      const stripeInvoice = await getStripeClient().invoices.retrieve(
         subscription.latest_invoice as string,
         { expand: ['payment_intent'] }
       ) // Get product name from metadata or subscription
       let productName = 'Subscription'
       if (productId) {
         try {
-          const product = await stripe.products.retrieve(productId)
+          const product = await getStripeClient().products.retrieve(productId)
           productName = product.name
         } catch {
           console.warn('Could not retrieve product name')

@@ -2,11 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getCurrentClient } from '@/lib/auth'
 import { runQuery } from '@/lib/client'
 import { qFeaturesByType } from '@/sanity/lib/queries'
-import { Stripe } from 'stripe'
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-10-29.clover',
-})
+import { getStripeClient } from '@/lib/stripe'
 
 export async function POST(request: NextRequest) {
   try {
@@ -64,7 +60,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create Stripe Checkout Session
-    const session = await stripe.checkout.sessions.create({
+    const session = await getStripeClient().checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
         {

@@ -1,5 +1,5 @@
-import Stripe from 'stripe'
-import { stripe } from '../stripe'
+import type Stripe from 'stripe'
+import { getStripeClient } from '../stripe'
 
 /**
  * Product tier for categorization
@@ -186,6 +186,8 @@ function extractFeatures(product: Stripe.Product): string[] {
  */
 export async function fetchProducts(): Promise<TownesDevProduct[]> {
   try {
+    const stripe = getStripeClient()
+
     // Fetch all active products with their prices
     const products = await stripe.products.list({
       active: true,
